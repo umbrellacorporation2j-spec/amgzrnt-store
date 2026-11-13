@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+  <title>AMGZRNT STORE | متجر تطبيقات PWA</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05050a;
+      --card: #0f0f1a;
+      --card2: #151528;
+      --primary: #7c3aed;
+      --primary-light: #a78bfa;
+      --accent: #3b82f6;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f1f35;
+      --success: #10b981;
+      --danger: #ef4444;
+      --gradient: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    html, body { width: 100%; max-width: 100vw; overflow-x: hidden; }
+    body {
+      font-family: 'Cairo', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(80px);
+      pointer-events: none; z-index: 0; opacity: 0.32;
+      animation: orbFloat 14s ease-in-out infinite;
+    }
+    .orb-1 { width: 300px; height: 300px; background: #7c3aed; top: -70px; right: -50px; }
+    .orb-2 { width: 220px; height: 220px; background: #3b82f6; bottom: 12%; left: -70px; animation-delay: -5s; }
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(18px, 26px) scale(1.07); }
+    }
+
+    /* Professional buttons with blue press flash */
+    .btn {
+      position: relative;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background 0.25s, border-color 0.25s, color 0.25s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .btn i, .btn span { position: relative; z-index: 2; }
+    .btn i { transition: transform 0.3s var(--ease); }
+.btn:active:not(:disabled) {
+      transform: scale(0.98);
+      filter: brightness(0.96);
+      -webkit-tap-highlight-color: transparent;
+    }
+    a.btn:active { -webkit-tap-highlight-color: transparent; }
+
+    .btn-primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(124,58,237,0.28);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(124,58,237,0.45);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary-light);
+      background: rgba(124,58,237,0.08);
+      transform: translateY(-1px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+    }
+    .btn-ghost:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+    .btn-icon { width: 40px; height: 40px; padding: 0; border-radius: 11px; }
+    .btn-sm { padding: 8px 14px; font-size: 0.82rem; border-radius: 10px; }
+    .btn-sm.btn-icon { width: 36px; height: 36px; }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5,5,10,0.78);
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding: 11px 0;
+      animation: slideDown 0.55s var(--ease);
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .logo {
+      font-size: 1.2rem; font-weight: 900;
+      background: var(--gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      display: flex; align-items: center; gap: 8px; text-decoration: none;
+      transition: transform 0.3s var(--ease);
+    }
+    .logo:hover { transform: scale(1.03); }
+    .logo i { -webkit-text-fill-color: var(--primary); transition: transform 0.4s var(--ease); }
+    .logo:hover i { transform: rotate(-12deg) scale(1.1); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    .lang-toggle {
+      display: flex; gap: 3px; background: rgba(124,58,237,0.1);
+      border: 1px solid var(--border); border-radius: 50px; padding: 3px;
+    }
+    .lang-btn {
+      background: none; border: none; color: var(--muted); font-family: inherit;
+      font-weight: 600; cursor: pointer; padding: 4px 10px; border-radius: 20px;
+      font-size: 0.78rem; transition: all 0.25s var(--ease);
+    }
+    .lang-btn.active { background: var(--primary); color: #fff; }
+
+    .user-bar {
+      display: none; align-items: center; gap: 8px;
+      background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.22);
+      padding: 5px 12px 5px 6px; border-radius: 50px; font-size: 0.82rem;
+      animation: fadeSlide 0.4s var(--ease);
+    }
+    .user-bar.show { display: flex; }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--gradient); display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 800; color: #fff;
+    }
+    .user-bar span { max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 28px 16px 80px; position: relative; z-index: 1; }
+
+    .page-header { text-align: center; margin-bottom: 36px; padding-top: 8px; }
+    .page-header .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3);
+      color: var(--primary-light); padding: 6px 14px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 700; margin-bottom: 16px;
+      animation: fadeSlide 0.65s var(--ease) both;
+    }
+    .page-header h1 {
+      font-size: clamp(1.7rem, 5vw, 2.5rem); font-weight: 900; margin-bottom: 10px;
+      animation: fadeSlide 0.65s 0.07s var(--ease) both;
+    }
+    .page-header h1 span {
+      background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-header p {
+      color: var(--muted); font-size: 0.98rem; max-width: 480px; margin: 0 auto;
+      animation: fadeSlide 0.65s 0.14s var(--ease) both;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .toolbar {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;
+      align-items: center;
+      animation: fadeSlide 0.65s 0.2s var(--ease) both;
+    }
+    .search-box { flex: 1; min-width: 180px; position: relative; }
+    .search-box i {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none; transition: color 0.25s;
+    }
+    .search-box input {
+      width: 100%; padding: 13px 44px 13px 16px;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; color: var(--text); font-family: inherit; font-size: 0.95rem;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .search-box input:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+      background: var(--card2);
+    }
+    .search-box:focus-within i { color: var(--primary-light); }
+    body.en .search-box i { right: auto; left: 14px; }
+    body.en .search-box input { padding: 13px 16px 13px 44px; }
+
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; margin-top: 4px; }
+    .chip {
+      padding: 7px 14px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+      background: var(--card); border: 1px solid var(--border); color: var(--muted);
+      cursor: pointer; transition: all 0.25s var(--ease); font-family: inherit;
+    }
+    .chip:hover { border-color: var(--primary); color: var(--primary-light); transform: translateY(-1px); }
+    .chip.active {
+      background: rgba(124,58,237,0.18); border-color: var(--primary); color: var(--primary-light);
+    }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 16px;
+    }
+    .app-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex; flex-direction: column;
+      transition: transform 0.35s var(--ease), border-color 0.3s, box-shadow 0.35s;
+      opacity: 0;
+      transform: translateY(24px);
+      animation: cardIn 0.55s var(--ease) forwards;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--gradient);
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.4s var(--ease);
+    }
+    body.en .app-card::before { transform-origin: left; }
+    .app-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(124,58,237,0.45);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 0 1px rgba(124,58,237,0.1);
+    }
+    .app-card:hover::before { transform: scaleX(1); }
+    @keyframes cardIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .app-card-top { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 12px; }
+    .app-icon {
+      width: 54px; height: 54px; border-radius: 14px;
+      object-fit: cover; flex-shrink: 0; border: 1px solid var(--border);
+      transition: transform 0.4s var(--ease);
+    }
+    .app-card:hover .app-icon { transform: scale(1.06) rotate(-3deg); }
+    .app-icon-placeholder {
+      width: 54px; height: 54px; border-radius: 14px;
+      background: rgba(124,58,237,0.12);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light); font-size: 1.25rem; flex-shrink: 0;
+      transition: transform 0.4s var(--ease), background 0.3s;
+    }
+    .app-card:hover .app-icon-placeholder {
+      transform: scale(1.06) rotate(-3deg);
+      background: rgba(124,58,237,0.22);
+    }
+    .app-info h3 { font-size: 1.02rem; font-weight: 700; margin-bottom: 2px; }
+    .app-info .dev { font-size: 0.78rem; color: var(--muted); }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 0.68rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+      background: rgba(124,58,237,0.14); color: var(--primary-light); margin-top: 5px;
+    }
+    .app-desc {
+      font-size: 0.86rem; color: var(--muted); margin-bottom: 14px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; flex: 1;
+    }
+    .app-actions { display: flex; gap: 8px; }
+    .app-actions .btn { flex: 1; }
+
+    .state-box {
+      text-align: center; padding: 70px 20px; color: var(--muted);
+      animation: fadeSlide 0.5s var(--ease);
+    }
+    .state-box .icon-wrap {
+      width: 72px; height: 72px; margin: 0 auto 16px;
+      background: rgba(124,58,237,0.1); border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; color: var(--primary-light);
+      animation: pulseSoft 2.4s ease-in-out infinite;
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    .spinner {
+      width: 34px; height: 34px; border: 3px solid var(--border);
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 0.75s linear infinite; margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Side drawer - slides, not face-pop */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 400; opacity: 0; visibility: hidden;
+      transition: opacity 0.35s, visibility 0.35s;
+      backdrop-filter: blur(3px);
+    }
+    .drawer-overlay.active { opacity: 1; visibility: visible; }
+    .drawer {
+      position: fixed; top: 0; bottom: 0; right: 0;
+      width: min(420px, 100vw);
+      background: rgba(15, 15, 26, 0.9);
+      backdrop-filter: blur(28px) saturate(150%);
+      -webkit-backdrop-filter: blur(28px) saturate(150%);
+      border-left: 1px solid rgba(124,58,237,0.22);
+      z-index: 401;
+      transform: translateX(105%);
+      transition: transform 0.4s var(--ease);
+      display: flex; flex-direction: column;
+      box-shadow: -16px 0 50px rgba(0,0,0,0.45);
+    }
+    .drawer.active { transform: translateX(0); }
+    body.en .drawer {
+      right: auto; left: 0;
+      border-left: none; border-right: 1px solid rgba(124,58,237,0.22);
+      transform: translateX(-105%);
+      box-shadow: 16px 0 50px rgba(0,0,0,0.45);
+    }
+    body.en .drawer.active { transform: translateX(0); }
+
+    .drawer-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 22px; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .drawer-header h2 { font-size: 1.2rem; font-weight: 800; }
+    .drawer-body { flex: 1; overflow-y: auto; padding: 22px; }
+
+    .tabs {
+      display: flex; gap: 4px; margin-bottom: 20px;
+      background: var(--bg); padding: 4px; border-radius: 12px;
+    }
+    .tab-btn {
+      flex: 1; padding: 10px; border: none; background: transparent;
+      color: var(--muted); font-family: inherit; font-weight: 700;
+      font-size: 0.88rem; border-radius: 9px; cursor: pointer;
+      transition: all 0.25s var(--ease);
+    }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.86rem; font-weight: 600; margin-bottom: 6px;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 11px; color: var(--text); font-family: inherit; font-size: 0.94rem;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none; border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+    }
+    .form-group textarea { min-height: 90px; resize: vertical; }
+    .form-hint { font-size: 0.76rem; color: var(--muted); margin-top: 5px; }
+    .form-error, .form-success {
+      padding: 11px 14px; border-radius: 11px; font-size: 0.86rem;
+      margin-bottom: 14px; display: none;
+      animation: fadeSlide 0.3s var(--ease);
+    }
+    .form-error {
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.28); color: #fca5a5;
+    }
+    .form-success {
+      background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.28); color: #6ee7b7;
+    }
+    .form-error.show, .form-success.show { display: block; }
+
+    .section-title {
+      font-size: 1.15rem; font-weight: 800; margin: 40px 0 16px;
+      display: flex; align-items: center; gap: 10px;
+      animation: fadeSlide 0.5s var(--ease);
+    }
+    .section-title i {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: rgba(124,58,237,0.12); display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light); font-size: 0.9rem;
+    }
+
+    .toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: rgba(21, 21, 40, 0.95);
+      border: 1px solid rgba(124,58,237,0.3);
+      padding: 12px 22px; border-radius: 14px; font-size: 0.9rem;
+      z-index: 999; transition: transform 0.4s var(--ease);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+      display: flex; align-items: center; gap: 10px;
+      backdrop-filter: blur(12px);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast i { color: var(--primary-light); }
+
+    [data-lang="en"] { display: none !important; }
+    body.en [data-lang="ar"] { display: none !important; }
+    body.en [data-lang="en"] { display: block !important; }
+    body.en span[data-lang="en"], body.en a[data-lang="en"], body.en button span[data-lang="en"] { display: inline !important; }
+    body.en { direction: ltr; font-family: 'Inter', 'Cairo', sans-serif; }
+    body.en .app-desc { text-align: left; }
+
+    @media (max-width: 600px) {
+      .apps-grid { grid-template-columns: 1fr; }
+      .page-header h1 { font-size: 1.55rem; }
+      .nav-actions .hide-sm { display: none; }
+      .drawer { width: 100vw; }
+    }
+
+    /* UX: skeletons */
+    .skeleton-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 16px;
+    }
+    .skeleton-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      overflow: hidden;
+    }
+    .sk {
+      background: linear-gradient(90deg, #151528 25%, #1c1c32 50%, #151528 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .sk-icon { width: 54px; height: 54px; border-radius: 14px; }
+    .sk-line { height: 12px; margin-bottom: 8px; }
+    .sk-line.w60 { width: 60%; }
+    .sk-line.w80 { width: 80%; }
+    .sk-line.w40 { width: 40%; }
+    .sk-btn { height: 36px; border-radius: 10px; margin-top: 12px; }
+
+    .btn.loading {
+      pointer-events: none;
+      opacity: 0.75;
+    }
+    .btn.loading i { animation: spin 0.8s linear infinite; }
+
+    .drawer:focus { outline: none; }
+    .form-group input:invalid:not(:placeholder-shown):not(:focus) {
+      border-color: rgba(239,68,68,0.5);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .orb { display: none; }
+    }
+
+
+    /* Developer profile */
+    .dev-settings-btn {
+      display: none;
+    }
+    .profile-hero {
+      text-align: center;
+      padding: 10px 0 22px;
+    }
+    .avatar-wrap {
+      position: relative;
+      width: 96px; height: 96px;
+      margin: 0 auto 14px;
+    }
+    .avatar-img {
+      width: 96px; height: 96px;
+      border-radius: 24px;
+      object-fit: cover;
+      border: 2px solid rgba(124,58,237,0.35);
+      background: var(--card2);
+    }
+    .avatar-fallback {
+      width: 96px; height: 96px;
+      border-radius: 24px;
+      background: var(--gradient);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 900; color: #fff;
+      border: 2px solid rgba(124,58,237,0.35);
+    }
+    .profile-name { font-size: 1.15rem; font-weight: 800; margin-bottom: 4px; }
+    .profile-email {
+      font-size: 0.88rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      filter: blur(0);
+      user-select: none;
+    }
+    .profile-email.masked {
+      font-family: monospace;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 18px 0 8px;
+    }
+    .stat-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-box strong {
+      display: block;
+      font-size: 1.25rem;
+      color: var(--primary-light);
+    }
+    .stat-box span {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .upload-drawer-wide {
+      width: min(480px, 100vw) !important;
+    }
+
+
+    /* Bottom sheet */
+    .sheet-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      z-index: 600; opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      backdrop-filter: blur(4px);
+    }
+    .sheet-overlay.active { opacity: 1; visibility: visible; }
+    .bottom-sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 601;
+      background: rgba(15,15,26,0.96);
+      backdrop-filter: blur(24px);
+      border-radius: 22px 22px 0 0;
+      border-top: 1px solid rgba(124,58,237,0.3);
+      padding: 12px 20px 28px;
+      transform: translateY(110%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      max-width: 520px; margin: 0 auto;
+      box-shadow: 0 -12px 40px rgba(0,0,0,0.45);
+    }
+    .bottom-sheet.active { transform: translateY(0); }
+    .sheet-handle {
+      width: 42px; height: 4px; border-radius: 4px;
+      background: rgba(255,255,255,0.18);
+      margin: 4px auto 16px;
+    }
+    .sheet-app {
+      display: flex; gap: 14px; align-items: center;
+      margin-bottom: 18px;
+    }
+    .sheet-app img, .sheet-app .sheet-icon-ph {
+      width: 56px; height: 56px; border-radius: 14px;
+      object-fit: cover; flex-shrink: 0;
+    }
+    .sheet-icon-ph {
+      background: rgba(124,58,237,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--primary-light); font-size: 1.3rem;
+    }
+    .sheet-app h3 { font-size: 1.05rem; font-weight: 800; }
+    .sheet-app p { font-size: 0.82rem; color: var(--muted); }
+    .sheet-actions { display: flex; flex-direction: column; gap: 10px; }
+    .sheet-actions .btn { width: 100%; padding: 14px; border-radius: 14px; font-size: 0.95rem; }
+
+    /* ===== Store settings (glass effect + light/dark theme) ===== */
+    :root {
+      --g-nav: rgba(5,5,10,0.78);
+      --g-panel: rgba(15,15,26,0.9);
+      --g-sheet: rgba(15,15,26,0.96);
+      --g-toast: rgba(21,21,40,0.95);
+      --line-soft: rgba(255,255,255,0.06);
+      --switch-off: rgba(120,120,140,0.38);
+    }
+    body.light {
+      --bg: #f5f4fb;
+      --card: #ffffff;
+      --card2: #efecfa;
+      --primary-light: #6d28d9;
+      --text: #1e1b2e;
+      --muted: #6b6880;
+      --border: #e3dff2;
+      --g-nav: rgba(245,244,251,0.82);
+      --g-panel: rgba(255,255,255,0.94);
+      --g-sheet: rgba(255,255,255,0.97);
+      --g-toast: rgba(255,255,255,0.97);
+      --line-soft: rgba(30,27,46,0.08);
+      --switch-off: rgba(120,120,140,0.3);
+    }
+    body.no-glass {
+      --g-nav: var(--bg);
+      --g-panel: var(--card);
+      --g-sheet: var(--card);
+      --g-toast: var(--card2);
+    }
+    nav { background: var(--g-nav); }
+    body.light nav { border-bottom-color: var(--line-soft); }
+    .drawer { background: var(--g-panel); }
+    .drawer-header { border-bottom-color: var(--line-soft); }
+    .bottom-sheet { background: var(--g-sheet); }
+    .toast { background: var(--g-toast); }
+    body.light .orb { opacity: 0.16; }
+    body.light .btn-ghost:hover { background: rgba(30,27,46,0.06); }
+    body.light .sheet-handle { background: rgba(30,27,46,0.2); }
+    body.light .sk { background: linear-gradient(90deg, #ece9f8 25%, #f6f4fd 50%, #ece9f8 75%); background-size: 200% 100%; }
+    body.light .form-error { color: #b91c1c; }
+    body.light .form-success { color: #047857; }
+    body.light .app-card:hover { box-shadow: 0 12px 30px rgba(76,29,149,0.12), 0 0 0 1px rgba(124,58,237,0.1); }
+    body.light .drawer, body.light .bottom-sheet, body.light .toast { box-shadow: 0 -10px 36px rgba(30,27,46,0.14); }
+    body.light .drawer-overlay, body.light .sheet-overlay { background: rgba(30,27,46,0.35); }
+
+    body.no-glass nav,
+    body.no-glass .drawer,
+    body.no-glass .drawer-overlay,
+    body.no-glass .sheet-overlay,
+    body.no-glass .bottom-sheet,
+    body.no-glass .toast {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body.no-glass .orb { display: none; }
+
+    .settings-btn:hover i { transform: rotate(60deg); }
+    .settings-sheet {
+      visibility: hidden;
+      max-height: 92vh; overflow-y: auto;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s;
+      touch-action: pan-y;
+    }
+    .settings-sheet.active { visibility: visible; }
+    .settings-sheet.dragging { transition: none; }
+    .settings-sheet .sheet-handle { cursor: grab; padding: 0; }
+    .settings-title { font-size: 1.05rem; font-weight: 800; text-align: center; margin-bottom: 14px; }
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      padding: 14px 14px; margin-bottom: 10px; cursor: pointer;
+      background: var(--card2); border: 1px solid var(--border); border-radius: 16px;
+      transition: border-color 0.25s;
+    }
+    .setting-row:hover { border-color: rgba(124,58,237,0.4); }
+    .setting-label { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 0.95rem; }
+    .setting-ico {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(124,58,237,0.14); color: var(--primary-light);
+      display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    }
+    .switch { position: relative; width: 51px; height: 31px; flex-shrink: 0; }
+    .switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 2; }
+    .switch .track { position: absolute; inset: 0; border-radius: 31px; background: var(--switch-off); transition: background 0.25s; }
+    .switch .track::after {
+      content: ''; position: absolute; top: 2px; inset-inline-start: 2px;
+      width: 27px; height: 27px; border-radius: 50%; background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+      transition: inset-inline-start 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .switch input:checked + .track { background: var(--primary); }
+    .switch input:checked + .track::after { inset-inline-start: calc(100% - 29px); }
+    .switch input:focus-visible + .track { box-shadow: 0 0 0 3px rgba(124,58,237,0.35); }
+    .settings-save { margin-top: 8px; padding: 14px; border-radius: 14px; font-size: 0.95rem; }
+
+  </style>
+</head>
+<body>
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('amgzrnt-settings') || 'null') || {};
+        if (s.glass === false) document.body.classList.add('no-glass');
+        if (s.light === true) document.body.classList.add('light');
+      } catch (e) {}
+    })();
+  </script>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="./store.html" class="logo">
+        <i class="fa-solid fa-store"></i>
+        STORE
+      </a>
+      <div class="nav-actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">عربي</button>
+          <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <button class="btn btn-outline btn-icon btn-sm settings-btn" id="btnSettings" type="button" aria-label="الإعدادات / Settings" title="الإعدادات / Settings" aria-haspopup="dialog">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+        <div class="user-bar" id="userBar">
+          <div class="user-avatar" id="userAvatar">D</div>
+          <span id="userEmail"></span>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btnLogin" onclick="openDrawer('auth')">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span class="hide-sm" data-lang="ar">دخول المطور</span>
+          <span class="hide-sm" data-lang="en">Dev Login</span>
+        </button>
+        <button class="btn btn-outline btn-sm" id="btnInstallStore" style="display:none" onclick="installStore()"><i class="fa-solid fa-download"></i><span data-lang="ar">تثبيت المتجر</span><span data-lang="en">Install store</span></button>
+        <button class="btn btn-primary btn-sm" id="btnUpload" onclick="openDrawer('upload')" style="display:none;">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span class="hide-sm" data-lang="ar">رفع</span>
+          <span class="hide-sm" data-lang="en">Upload</span>
+        </button>
+        <button class="btn btn-outline btn-sm dev-settings-btn" id="btnDevSettings" onclick="openDrawer('profile')" style="display:none;">
+          <i class="fa-solid fa-user-gear"></i>
+          <span class="hide-sm" data-lang="ar">إعدادات المطور</span>
+          <span class="hide-sm" data-lang="en">Dev Settings</span>
+        </button>
+        <button class="btn btn-ghost btn-icon btn-sm" id="btnLogout" onclick="logout()" style="display:none;" title="Logout">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="eyebrow">
+        <i class="fa-solid fa-bolt"></i>
+        <span data-lang="ar">متجر PWA فقط</span>
+        <span data-lang="en">PWA Only Store</span>
+      </div>
+      <h1 data-lang="ar">اكتشف تطبيقات <span>موثوقة</span></h1>
+      <h1 data-lang="en">Discover <span>Trusted</span> Apps</h1>
+      <p data-lang="ar">تطبيقات مجانية من مطورين يشاركونك قيم الشفافية والاحترام</p>
+      <p data-lang="en">Free apps from developers who share transparency and respect</p>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." oninput="filterApps()">
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip active" data-cat="all" onclick="setCategory('all', this)">
+          <span data-lang="ar">الكل</span><span data-lang="en">All</span>
+        </button>
+        <button class="chip" data-cat="tools" onclick="setCategory('tools', this)">
+          <span data-lang="ar">أدوات</span><span data-lang="en">Tools</span>
+        </button>
+        <button class="chip" data-cat="productivity" onclick="setCategory('productivity', this)">
+          <span data-lang="ar">إنتاجية</span><span data-lang="en">Productivity</span>
+        </button>
+        <button class="chip" data-cat="education" onclick="setCategory('education', this)">
+          <span data-lang="ar">تعليم</span><span data-lang="en">Education</span>
+        </button>
+        <button class="chip" data-cat="other" onclick="setCategory('other', this)">
+          <span data-lang="ar">أخرى</span><span data-lang="en">Other</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="appsContainer">
+      <div class="skeleton-grid" id="skeletonGrid">
+        <div class="skeleton-card"><div style="display:flex;gap:14px;margin-bottom:12px"><div class="sk sk-icon"></div><div style="flex:1"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div></div><div class="sk sk-line w80"></div><div class="sk sk-line w60"></div><div class="sk sk-btn"></div></div>
+        <div class="skeleton-card"><div style="display:flex;gap:14px;margin-bottom:12px"><div class="sk sk-icon"></div><div style="flex:1"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div></div><div class="sk sk-line w80"></div><div class="sk sk-line w60"></div><div class="sk sk-btn"></div></div>
+        <div class="skeleton-card"><div style="display:flex;gap:14px;margin-bottom:12px"><div class="sk sk-icon"></div><div style="flex:1"><div class="sk sk-line w60"></div><div class="sk sk-line w40"></div></div></div><div class="sk sk-line w80"></div><div class="sk sk-line w60"></div><div class="sk sk-btn"></div></div>
+      </div>
+    </div>
+
+    <div id="myAppsSection" style="display:none;">
+      <div class="section-title">
+        <i class="fa-solid fa-layer-group"></i>
+        <span data-lang="ar">تطبيقاتي</span>
+        <span data-lang="en">My Apps</span>
+      </div>
+      <div class="apps-grid" id="myAppsGrid"></div>
+    </div>
+  </div>
+
+  <div class="drawer-overlay" id="authOverlay" onclick="closeDrawer('auth')"></div>
+  <aside class="drawer" id="authDrawer">
+    <div class="drawer-header">
+      <h2 data-lang="ar">حساب المطور</h2>
+      <h2 data-lang="en">Developer Account</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeDrawer('auth')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="tabs">
+        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">
+          <span data-lang="ar">دخول</span><span data-lang="en">Login</span>
+        </button>
+        <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">
+          <span data-lang="ar">حساب جديد</span><span data-lang="en">Register</span>
+        </button>
+      </div>
+      <div class="form-error" id="authError"></div>
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div class="form-group" id="nameGroup" style="display:none;">
+          <label data-lang="ar">اسم المطور</label>
+          <label data-lang="en">Developer Name</label>
+          <input type="text" id="authName" placeholder="اسمك أو فريقك">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">البريد</label>
+          <label data-lang="en">Email</label>
+          <input type="email" id="authEmail" required placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">كلمة المرور</label>
+          <label data-lang="en">Password</label>
+          <input type="password" id="authPassword" required minlength="6" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="authSubmit">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          <span data-lang="ar">دخول</span><span data-lang="en">Login</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="drawer-overlay" id="uploadOverlay" onclick="closeDrawer('upload')"></div>
+  <aside class="drawer upload-drawer-wide" id="uploadDrawer">
+    <div class="drawer-header">
+      <h2 data-lang="ar">رفع تطبيق PWA</h2>
+      <h2 data-lang="en">Upload PWA</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeDrawer('upload')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="form-error" id="uploadError"></div>
+      <div class="form-success" id="uploadSuccess"></div>
+      <form id="uploadForm" onsubmit="handleUpload(event)">
+        <div class="form-group">
+          <label data-lang="ar">اسم التطبيق</label>
+          <label data-lang="en">App Name</label>
+          <input type="text" id="appName" required placeholder="منظم المهام">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">رابط التطبيق</label>
+          <label data-lang="en">App URL</label>
+          <input type="url" id="appUrl" required placeholder="https://myapp.example.com">
+          <div class="form-hint" data-lang="ar">يجب أن يكون مستضافاً ويعمل كـ PWA</div>
+          <div class="form-hint" data-lang="en">Must be hosted and work as a PWA</div>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">رابط الأيقونة</label>
+          <label data-lang="en">Icon URL</label>
+          <input type="url" id="appIcon" placeholder="https://.../icon-192.png">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">الوصف</label>
+          <label data-lang="en">Description</label>
+          <textarea id="appDesc" required placeholder="وصف مختصر..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">التصنيف</label>
+          <label data-lang="en">Category</label>
+          <select id="appCategory">
+            <option value="tools">أدوات / Tools</option>
+            <option value="productivity">إنتاجية / Productivity</option>
+            <option value="education">تعليم / Education</option>
+            <option value="social">اجتماعي / Social</option>
+            <option value="other">أخرى / Other</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="uploadSubmit">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span data-lang="ar">نشر التطبيق</span>
+          <span data-lang="en">Publish App</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  
+  <!-- Profile Settings Drawer -->
+  <div class="drawer-overlay" id="profileOverlay" onclick="closeDrawer('profile')"></div>
+  <aside class="drawer upload-drawer-wide" id="profileDrawer">
+    <div class="drawer-header">
+      <h2 data-lang="ar">إعدادات حساب المطور</h2>
+      <h2 data-lang="en">Developer Settings</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeDrawer('profile')">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <div class="profile-hero">
+        <div class="avatar-wrap" id="profileAvatarBox">
+          <div class="avatar-fallback" id="profileAvatarFallback">D</div>
+          <img class="avatar-img" id="profileAvatarImg" alt="" style="display:none">
+        </div>
+        <div class="profile-name" id="profileDisplayName">—</div>
+        <div class="profile-email masked" id="profileEmailMasked">—</div>
+        <div class="profile-stats">
+          <div class="stat-box">
+            <strong id="profileAppCount">0</strong>
+            <span data-lang="ar">تطبيقاتي</span>
+            <span data-lang="en">My apps</span>
+          </div>
+          <div class="stat-box">
+            <strong data-lang="ar">مطور</strong>
+            <strong data-lang="en">Dev</strong>
+            <span data-lang="ar">الحساب</span>
+            <span data-lang="en">Account</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-error" id="profileError"></div>
+      <div class="form-success" id="profileSuccess"></div>
+
+      <form id="profileForm" onsubmit="handleProfileSave(event)">
+        <div class="form-group">
+          <label data-lang="ar">الاسم الظاهر</label>
+          <label data-lang="en">Display name</label>
+          <input type="text" id="profileName" required placeholder="اسم المطور">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">رابط صورة العرض</label>
+          <label data-lang="en">Avatar image URL</label>
+          <input type="url" id="profilePhoto" placeholder="https://.../avatar.png" oninput="previewProfilePhoto(this.value)">
+          <div class="form-hint" data-lang="ar">مثل متجر التطبيقات — صورة مربعة أفضل (512×512)</div>
+          <div class="form-hint" data-lang="en">Square image works best (512×512)</div>
+        </div>
+        <div class="form-group"><label>نبذة المطوّر / Developer bio</label><textarea id="profileBio" rows="3" placeholder="نبذة قصيرة عنك"></textarea></div>
+        <div class="form-group"><label>روابط التواصل / Social links (one per line)</label><textarea id="profileLinks" rows="3" placeholder="https://..."></textarea></div>
+        <div class="form-group">
+          <label data-lang="ar">البريد (للقراءة فقط)</label>
+          <label data-lang="en">Email (read only)</label>
+          <input type="text" id="profileEmailFull" disabled style="opacity:0.7">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="profileSaveBtn">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span data-lang="ar">حفظ التعديلات</span>
+          <span data-lang="en">Save changes</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+
+
+  <!-- App editor drawer -->
+  <div class="drawer-overlay" id="editOverlay" onclick="closeDrawer('edit')"></div>
+  <aside class="drawer upload-drawer-wide" id="editDrawer">
+    <div class="drawer-header">
+      <h2 data-lang="ar">تعديل التطبيق</h2><h2 data-lang="en">Edit app</h2>
+      <button class="btn btn-ghost btn-icon" onclick="closeDrawer('edit')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-body">
+      <div class="form-error" id="editError"></div>
+      <div class="form-success" id="editSuccess"></div>
+      <form id="editForm" onsubmit="saveAppEdit(event)">
+        <input type="hidden" id="editAppId">
+        <div class="form-group"><label>الاسم بالعربية / Arabic name</label><input id="editNameAr" required></div>
+        <div class="form-group"><label>الاسم بالإنجليزية / English name</label><input id="editNameEn"></div>
+        <div class="form-group"><label>الوصف بالعربية / Arabic description</label><textarea id="editDescAr" rows="3"></textarea></div>
+        <div class="form-group"><label>الوصف بالإنجليزية / English description</label><textarea id="editDescEn" rows="3"></textarea></div>
+        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="other">أخرى / Other</option></select></div>
+        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="url"></div>
+        <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
+        <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="url" required></div>
+        <div class="form-group"><label>لقطات الشاشة (روابط، كل رابط في سطر) / Screenshots (one URL per line)</label><textarea id="editScreenshots" rows="4"></textarea></div>
+        <button class="btn btn-primary btn-block" type="submit" id="editSaveBtn"><i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات / Save</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Install / Open bottom sheet -->
+  <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+  <div class="bottom-sheet" id="bottomSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-app">
+      <div id="sheetIconBox"></div>
+      <div>
+        <h3 id="sheetAppName">App</h3>
+        <p id="sheetAppHint" data-lang="ar">اختر طريقة فتح التطبيق</p>
+        <p id="sheetAppHintEn" data-lang="en" style="display:none">Choose how to open the app</p>
+      </div>
+    </div>
+    <div class="sheet-actions">
+      <button class="btn btn-primary" id="sheetInstallBtn" onclick="sheetInstallAction()">
+        <i class="fa-solid fa-download"></i>
+        <span data-lang="ar">تنزيل / تثبيت</span>
+        <span data-lang="en">Download / Install</span>
+      </button>
+      <button class="btn btn-outline" id="sheetOpenBtn" onclick="sheetOpenAction()">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <span data-lang="ar">فتح الموقع</span>
+        <span data-lang="en">Open website</span>
+      </button>
+      <button class="btn btn-ghost" onclick="closeSheet()">
+        <span data-lang="ar">إلغاء</span>
+        <span data-lang="en">Cancel</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Store settings bottom sheet -->
+  <div class="sheet-overlay" id="settingsOverlay"></div>
+  <div class="bottom-sheet settings-sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settingsTitle">
+    <div class="sheet-handle" id="settingsHandle"></div>
+    <h3 class="settings-title" id="settingsTitle"><span data-lang="ar">الإعدادات</span><span data-lang="en">Settings</span></h3>
+
+    <label class="setting-row" for="optGlass">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-droplet"></i></span>
+        <span data-lang="ar">التأثير الزجاجي</span>
+        <span data-lang="en">Glass effect</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optGlass" role="switch"><span class="track"></span></span>
+    </label>
+
+    <label class="setting-row" for="optLight">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-circle-half-stroke"></i></span>
+        <span data-lang="ar">الوضع الفاتح</span>
+        <span data-lang="en">Light mode</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optLight" role="switch"><span class="track"></span></span>
+    </label>
+
+    <button class="btn btn-primary btn-block settings-save" id="settingsSave" type="button">
+      <i class="fa-solid fa-floppy-disk"></i>
+      <span data-lang="ar">حفظ الإعدادات</span>
+      <span data-lang="en">Save settings</span>
+    </button>
+  </div>
+
+  <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span></span></div>
+
+  
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDQY5rcxoZZUVD6ZZsV9BcQRp0mtjtMO2I",
+      authDomain: "amgzrnt-store.firebaseapp.com",
+      projectId: "amgzrnt-store",
+      storageBucket: "amgzrnt-store.firebasestorage.app",
+      messagingSenderId: "128676036839",
+      appId: "1:128676036839:web:4983eedc52a8b7b7dba242",
+      measurementId: "G-L3BCLL3GM0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let allApps = [];
+    let authMode = 'login';
+    let activeCategory = 'all';
+
+    function isEn() { return document.body.classList.contains('en'); }
+
+    function setBtnLoading(btn, on) {
+      if (!btn) return;
+      if (on) {
+        btn.classList.add('loading');
+        btn.disabled = true;
+        btn.dataset.prevHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch"></i><span>' + (isEn() ? 'Please wait' : 'انتظر...') + '</span>';
+      } else {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        if (btn.dataset.prevHtml) btn.innerHTML = btn.dataset.prevHtml;
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDrawer('auth');
+        closeDrawer('upload');
+        closeDrawer('profile');
+        if (typeof closeSheet === 'function') closeSheet();
+      }
+    });
+
+    // Firebase Auth is asynchronous. All catalogue/developer reads wait for this
+    // promise so an early public read cannot overwrite the signed-in developer view.
+    var authReadyResolve;
+    var authReady = new Promise(function(resolve) { authReadyResolve = resolve; });
+    var loadSequence = 0;
+
+    auth.onAuthStateChanged(async function(user) {
+      currentUser = user || null;
+      var btnLogin = document.getElementById('btnLogin');
+      var btnUpload = document.getElementById('btnUpload');
+      var btnLogout = document.getElementById('btnLogout');
+      var userBar = document.getElementById('userBar');
+      var mySection = document.getElementById('myAppsSection');
+      var btnSettings = document.getElementById('btnDevSettings');
+      if (user) {
+        btnLogin.style.display = 'none'; btnUpload.style.display = 'inline-flex';
+        btnLogout.style.display = 'inline-flex';
+        if (btnSettings) btnSettings.style.display = 'inline-flex';
+        userBar.classList.add('show');
+        var name = user.displayName || user.email || 'D';
+        document.getElementById('userEmail').textContent = maskEmail(user.email || name);
+        document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+        if (user.photoURL) {
+          document.getElementById('userAvatar').style.backgroundImage = 'url(' + esc(user.photoURL) + ')';
+          document.getElementById('userAvatar').style.backgroundSize = 'cover';
+          document.getElementById('userAvatar').textContent = '';
+        }
+        mySection.style.display = 'block';
+        fillProfileForm(user);
+      } else {
+        btnLogin.style.display = 'inline-flex'; btnUpload.style.display = 'none';
+        btnLogout.style.display = 'none';
+        if (btnSettings) btnSettings.style.display = 'none';
+        userBar.classList.remove('show');
+        mySection.style.display = 'none';
+        document.getElementById('myAppsGrid').innerHTML = '';
+      }
+      authReadyResolve(true);
+      // One authoritative reload for every auth transition, including logout.
+      await loadApps();
+    });
+
+    async function loadApps() {
+      var box = document.getElementById('appsContainer');
+      var sequence = ++loadSequence;
+      if (!navigator.onLine) {
+        box.innerHTML = '<div class="state-box"><p>' + (isEn() ? 'You are offline. Connect to the internet and retry.' : 'لا يوجد اتصال بالإنترنت. اتصل بالشبكة ثم أعد المحاولة.') + '</p></div>';
+        return;
+      }
+      box.innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i><p>' + (isEn() ? 'Loading apps...' : 'جارٍ تحميل التطبيقات...') + '</p></div>';
+      try {
+        var snap = await db.collection('apps').orderBy('createdAt', 'desc').get();
+        if (sequence !== loadSequence) return;
+        allApps = [];
+        snap.forEach(function(d) { var obj = d.data(); obj.id = d.id; allApps.push(obj); });
+        filterApps();
+        if (currentUser) await loadDeveloperApps(currentUser);
+      } catch (err) {
+        if (sequence !== loadSequence) return;
+        box.innerHTML = '<div class="state-box"><i class="fa-solid fa-triangle-exclamation"></i><p>' +
+          (isEn() ? 'Could not load apps. Check your connection and Firestore access.' : 'تعذر تحميل التطبيقات. تحقق من الاتصال وصلاحية الوصول إلى Firestore.') +
+          '</p><small>' + escHTML(err.message || '') + '</small></div>';
+      }
+    }
+
+    async function loadDeveloperApps(user) {
+      if (!user || !auth.currentUser || user.uid !== auth.currentUser.uid) return;
+      var grid = document.getElementById('myAppsGrid');
+      grid.innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i><p>' + (isEn() ? 'Loading your apps...' : 'جارٍ تحميل تطبيقاتك...') + '</p></div>';
+      try {
+        // Required stable ownership lookup. It does not use email, name, localStorage or a random id.
+        var ownedSnap = await db.collection('apps').where('ownerUid', '==', user.uid).get();
+        var owned = {};
+        ownedSnap.forEach(function(d) { owned[d.id] = true; });
+        // Compatibility migration for old documents. It only adds fields and never creates a copy.
+        var legacy = allApps.filter(function(a) {
+          return !a.ownerUid && (
+            (a.devId === user.uid) ||
+            (user.email && ((a.devEmail || a.ownerEmail || '').toLowerCase() === user.email.toLowerCase())) ||
+            (user.displayName && ((a.devName || a.ownerName || '').toLowerCase() === user.displayName.toLowerCase()))
+          );
+        });
+        for (var i = 0; i < legacy.length; i++) {
+          try {
+            await db.collection('apps').doc(legacy[i].id).update({
+              ownerUid: user.uid, devId: user.uid,
+              ownerEmail: user.email || '', ownerName: user.displayName || ''
+            });
+            legacy[i].ownerUid = user.uid; legacy[i].devId = user.uid; owned[legacy[i].id] = true;
+          } catch (migrationError) {
+            // Current rules may allow reading but not updating an old record; keep it visible locally.
+            console.warn('Legacy app migration skipped:', migrationError);
+          }
+        }
+        var mine = allApps.filter(function(a) {
+          return a.ownerUid === user.uid || owned[a.id] || (!a.ownerUid && (
+            a.devId === user.uid ||
+            (user.email && (a.devEmail || a.ownerEmail || '').toLowerCase() === user.email.toLowerCase()) ||
+            (user.displayName && (a.devName || a.ownerName || '').toLowerCase() === user.displayName.toLowerCase())
+          ));
+        });
+        renderMyApps(mine);
+        document.getElementById('profileAppCount').textContent = String(mine.length);
+      } catch (err) {
+        // If an ownerUid query is rejected by existing rules, the public snapshot is still
+        // enough to show the developer's apps and the migration remains best effort.
+        var fallback = allApps.filter(function(a) { return a.ownerUid === user.uid || a.devId === user.uid; });
+        renderMyApps(fallback);
+        document.getElementById('profileAppCount').textContent = String(fallback.length);
+        if (!fallback.length) grid.innerHTML = '<div class="state-box"><p>' + (isEn() ? 'Could not load your apps: ' : 'تعذر تحميل تطبيقاتك: ') + escHTML(err.message || '') + '</p></div>';
+      }
+    }
+
+    function getFiltered() {
+      var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      return allApps.filter(function(a) {
+        var catOk = activeCategory === 'all' || a.category === activeCategory;
+        var textOk = !q ||
+          (a.name || '').toLowerCase().indexOf(q) !== -1 ||
+          (a.description || '').toLowerCase().indexOf(q) !== -1 ||
+          (a.devName || '').toLowerCase().indexOf(q) !== -1;
+        return catOk && textOk;
+      });
+    }
+
+    function filterApps() {
+      renderApps(getFiltered());
+    }
+    window.filterApps = filterApps;
+
+    function setCategory(cat, el) {
+      activeCategory = cat;
+      document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('active'); });
+      el.classList.add('active');
+      filterApps();
+    }
+    window.setCategory = setCategory;
+
+    function renderApps(apps) {
+      var box = document.getElementById('appsContainer');
+      if (!apps.length) {
+        box.innerHTML =
+          '<div class="state-box"><div class="icon-wrap"><i class="fa-solid fa-box-open"></i></div>' +
+          '<p data-lang="ar">لا توجد تطبيقات هنا بعد</p><p data-lang="en">No apps here yet</p></div>';
+        return;
+      }
+      var html = '<div class="apps-grid">';
+      for (var i = 0; i < apps.length; i++) html += appCardHTML(apps[i], false, i);
+      html += '</div>';
+      box.innerHTML = html;
+    }
+
+    function appCardHTML(app, showDelete, index) {
+      var delay = Math.min(index * 0.06, 0.45);
+      var icon = app.icon
+        ? '<img class="app-icon" src="' + esc(app.icon) + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' +
+          '<div class="app-icon-placeholder" style="display:none"><i class="fa-solid fa-cube"></i></div>'
+        : '<div class="app-icon-placeholder"><i class="fa-solid fa-cube"></i></div>';
+      var delBtn = showDelete
+        ? '<button class="btn btn-outline btn-sm btn-icon" onclick="editApp(\'' + app.id + '\')" title="Edit"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn btn-outline btn-sm btn-icon" onclick="deleteApp(\'' + app.id + '\')" title="Delete"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>'
+        : '';
+      return (
+        '<div class="app-card" style="animation-delay:' + delay + 's;--app-accent:' + esc(app.primaryColor || '#7c3aed') + '">' +
+          '<div class="app-card-top">' + icon +
+            '<div class="app-info"><h3>' + escHTML((isEn() && app.nameEn) ? app.nameEn : (app.nameAr || app.name)) + '</h3>' +
+            '<div class="dev">' + escHTML(app.devName || app.devEmail || '') + '</div>' +
+            '<span class="badge"><i class="fa-solid fa-mobile-screen"></i> PWA</span></div></div>' +
+          '<p class="app-desc">' + escHTML((isEn() && app.descriptionEn) ? app.descriptionEn : (app.descriptionAr || app.description || '')) + '</p>' +
+          '<div class="app-actions">' +
+            '<button class="btn btn-primary btn-sm" onclick="openAppSheet(\'' + esc(app.name) + '\',\'' + esc(app.url) + '\',\'' + esc(app.icon || '') + '\')">' +
+              '<i class="fa-solid fa-download"></i>' +
+              '<span data-lang="ar">تثبيت</span><span data-lang="en">Install</span></button>' +
+            '<button class="btn btn-outline btn-sm btn-icon" onclick="shareApp(\'' + esc(app.name) + '\',\'' + esc(app.url) + '\')">' +
+              '<i class="fa-solid fa-share-nodes"></i></button>' +
+            delBtn +
+          '</div></div>'
+      );
+    }
+
+    function renderMyApps(mineOverride) {
+      if (!currentUser) return;
+      var mine = mineOverride || allApps.filter(function(a) { return a.ownerUid === currentUser.uid || a.devId === currentUser.uid; });
+      var grid = document.getElementById('myAppsGrid');
+      if (!mine.length) {
+        grid.innerHTML = '<div class="state-box" style="padding:28px"><p data-lang="ar">لم ترفع شيئاً بعد</p><p data-lang="en">Nothing uploaded yet</p></div>';
+        return;
+      }
+      var html = '';
+      for (var i = 0; i < mine.length; i++) html += appCardHTML(mine[i], true, i);
+      grid.innerHTML = html;
+    }
+
+    function shareApp(name, url) {
+      if (navigator.share) {
+        navigator.share({ title: name, url: url }).catch(function(){});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(function() {
+          showToast(isEn() ? 'Link copied' : 'تم نسخ الرابط');
+        });
+      }
+    }
+    window.shareApp = shareApp;
+
+
+    function editApp(id) {
+      var app = allApps.find(function(a){ return a.id === id; });
+      if (!app || !currentUser || (app.ownerUid !== currentUser.uid && app.devId !== currentUser.uid)) {
+        showToast(isEn() ? 'You cannot edit this app.' : 'لا تملك صلاحية تعديل هذا التطبيق.'); return;
+      }
+      document.getElementById('editAppId').value = id;
+      document.getElementById('editNameAr').value = app.nameAr || app.name || '';
+      document.getElementById('editNameEn').value = app.nameEn || '';
+      document.getElementById('editDescAr').value = app.descriptionAr || app.description || '';
+      document.getElementById('editDescEn').value = app.descriptionEn || '';
+      document.getElementById('editCategory').value = app.category || 'other';
+      document.getElementById('editIcon').value = app.icon || '';
+      document.getElementById('editColor').value = app.primaryColor || '#7c3aed';
+      document.getElementById('editUrl').value = app.url || '';
+      document.getElementById('editScreenshots').value = (app.screenshots || []).join('\n');
+      openDrawer('edit');
+    }
+    window.editApp = editApp;
+
+    async function saveAppEdit(e) {
+      e.preventDefault();
+      if (!auth.currentUser) return;
+      var id = document.getElementById('editAppId').value;
+      var app = allApps.find(function(a){ return a.id === id; });
+      if (!app || (app.ownerUid !== auth.currentUser.uid && app.devId !== auth.currentUser.uid)) {
+        document.getElementById('editError').textContent = isEn() ? 'Ownership could not be verified.' : 'تعذر التحقق من ملكية التطبيق.';
+        document.getElementById('editError').classList.add('show'); return;
+      }
+      var btn = document.getElementById('editSaveBtn');
+      setBtnLoading(btn, true);
+      document.getElementById('editError').classList.remove('show');
+      var nameAr = document.getElementById('editNameAr').value.trim();
+      var nameEn = document.getElementById('editNameEn').value.trim();
+      var descAr = document.getElementById('editDescAr').value.trim();
+      var descEn = document.getElementById('editDescEn').value.trim();
+      var payload = {
+        nameAr: nameAr, nameEn: nameEn, name: nameAr || nameEn,
+        descriptionAr: descAr, descriptionEn: descEn, description: descAr || descEn,
+        category: document.getElementById('editCategory').value,
+        icon: document.getElementById('editIcon').value.trim(),
+        primaryColor: document.getElementById('editColor').value,
+        url: document.getElementById('editUrl').value.trim(),
+        screenshots: document.getElementById('editScreenshots').value.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean),
+        ownerUid: auth.currentUser.uid, devId: auth.currentUser.uid,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      try {
+        await db.collection('apps').doc(id).update(payload); // Same document; no duplicate.
+        Object.assign(app, payload);
+        filterApps();
+        await loadDeveloperApps(auth.currentUser);
+        document.getElementById('editSuccess').textContent = isEn() ? 'App updated.' : 'تم تحديث التطبيق.';
+        document.getElementById('editSuccess').classList.add('show');
+        setBtnLoading(btn, false);
+        setTimeout(function(){ closeDrawer('edit'); }, 700);
+      } catch (err) {
+        setBtnLoading(btn, false);
+        document.getElementById('editError').textContent = (isEn() ? 'Update failed: ' : 'فشل التحديث: ') + (err.message || '');
+        document.getElementById('editError').classList.add('show');
+      }
+    }
+    window.saveAppEdit = saveAppEdit;
+
+    function deleteApp(id) {
+      var target = allApps.find(function(a){ return a.id === id; });
+      if (!target || !currentUser || (target.ownerUid !== currentUser.uid && target.devId !== currentUser.uid)) { showToast(isEn() ? 'Not allowed' : 'غير مصرح'); return; }
+      if (!confirm(isEn() ? 'Permanently delete this app?' : 'هل تريد حذف التطبيق نهائياً؟')) return;
+      db.collection('apps').doc(id).delete()
+        .then(function() {
+          allApps = allApps.filter(function(a) { return a.id !== id; });
+          filterApps();
+          renderMyApps();
+          showToast(isEn() ? 'Deleted' : 'تم الحذف');
+        })
+        .catch(function(err) { alert(err.message); });
+    }
+    window.deleteApp = deleteApp;
+
+    function openDrawer(type) {
+      if (type === 'auth') switchTab('login');
+      if (type === 'upload') {
+        document.getElementById('uploadError').classList.remove('show');
+        document.getElementById('uploadSuccess').classList.remove('show');
+      }
+      if (type === 'profile' && currentUser) {
+        document.getElementById('profileError').classList.remove('show');
+        document.getElementById('profileSuccess').classList.remove('show');
+        fillProfileForm(currentUser);
+      }
+      document.getElementById(type + 'Overlay').classList.add('active');
+      document.getElementById(type + 'Drawer').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() {
+        var drawer = document.getElementById(type + 'Drawer');
+        var input = drawer && drawer.querySelector('input:not([type=hidden]), textarea, select');
+        if (input) input.focus();
+      }, 380);
+    }
+    window.openDrawer = openDrawer;
+
+    function closeDrawer(type) {
+      document.getElementById(type + 'Overlay').classList.remove('active');
+      document.getElementById(type + 'Drawer').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    window.closeDrawer = closeDrawer;
+
+    function switchTab(mode) {
+      authMode = mode;
+      document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
+      document.getElementById('nameGroup').style.display = mode === 'register' ? 'block' : 'none';
+      var btn = document.getElementById('authSubmit');
+      btn.innerHTML = mode === 'login'
+        ? '<i class="fa-solid fa-right-to-bracket"></i><span data-lang="ar">دخول</span><span data-lang="en">Login</span>'
+        : '<i class="fa-solid fa-user-plus"></i><span data-lang="ar">إنشاء حساب</span><span data-lang="en">Create Account</span>';
+      document.getElementById('authError').classList.remove('show');
+    }
+    window.switchTab = switchTab;
+
+    function withTimeout(promise, ms) {
+      return new Promise(function(resolve, reject) {
+        var done = false;
+        var timer = setTimeout(function() {
+          if (done) return;
+          done = true;
+          reject(new Error('timeout'));
+        }, ms);
+        promise.then(function(v) {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          resolve(v);
+        }).catch(function(err) {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          reject(err);
+        });
+      });
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      var email = document.getElementById('authEmail').value.trim();
+      var pass = document.getElementById('authPassword').value;
+      var name = document.getElementById('authName').value.trim();
+      var errBox = document.getElementById('authError');
+      errBox.classList.remove('show');
+      var btn = document.getElementById('authSubmit');
+      setBtnLoading(btn, true);
+
+      var origin = location.protocol || '';
+      if (origin.indexOf('http') !== 0) {
+        setBtnLoading(btn, false);
+        errBox.innerHTML = (isEn()
+          ? 'Auth does not work from local files. Host the site on HTTPS (Firebase Hosting) or open via http://localhost'
+          : 'المصادقة لا تعمل من ملف محلي. ارفع الموقع على استضافة HTTPS (مثل Firebase Hosting) أو افتحه عبر http://localhost');
+        errBox.classList.add('show');
+        return;
+      }
+
+      var req = authMode === 'login'
+        ? auth.signInWithEmailAndPassword(email, pass)
+        : auth.createUserWithEmailAndPassword(email, pass).then(function(cred) {
+            if (name) return cred.user.updateProfile({ displayName: name });
+          });
+
+      withTimeout(req, 20000).then(function() {
+        setBtnLoading(btn, false);
+        closeDrawer('auth');
+        showToast(isEn() ? 'Welcome' : 'مرحباً بك');
+      }).catch(function(err) {
+        setBtnLoading(btn, false);
+        var msg = (err && err.message === 'timeout')
+          ? (isEn()
+              ? 'Request timed out. Check Email/Password is enabled in Firebase Authentication, and your domain is authorized.'
+              : 'انتهت المهلة. تأكد أن Email/Password مفعّل في Authentication، وأن النطاق مصرح في Authorized domains.')
+          : friendlyError((err && err.code) || (err && err.message) || 'unknown');
+        errBox.textContent = msg;
+        errBox.classList.add('show');
+      });
+    }
+    window.handleAuth = handleAuth;
+
+    function logout() {
+      auth.signOut().then(function() {
+        allApps = [];
+        showToast(isEn() ? 'Logged out' : 'تم الخروج');
+      }).catch(function(err) { showToast((isEn() ? 'Logout failed: ' : 'تعذر تسجيل الخروج: ') + (err.message || '')); });
+    }
+    window.logout = logout;
+
+    function handleUpload(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      var errBox = document.getElementById('uploadError');
+      var okBox = document.getElementById('uploadSuccess');
+      errBox.classList.remove('show');
+      okBox.classList.remove('show');
+      var btn = document.getElementById('uploadSubmit');
+      setBtnLoading(btn, true);
+
+      var data = {
+        name: document.getElementById('appName').value.trim(),
+        url: document.getElementById('appUrl').value.trim(),
+        icon: document.getElementById('appIcon').value.trim() || '',
+        description: document.getElementById('appDesc').value.trim(),
+        category: document.getElementById('appCategory').value,
+        ownerUid: auth.currentUser.uid,
+        ownerEmail: auth.currentUser.email || '',
+        ownerName: auth.currentUser.displayName || '',
+        devId: auth.currentUser.uid,
+        devEmail: auth.currentUser.email,
+        devName: currentUser.displayName || currentUser.email.split('@')[0],
+        developerBio: document.getElementById('profileBio') ? document.getElementById('profileBio').value.trim() : '',
+        developerSocialLinks: document.getElementById('profileLinks') ? document.getElementById('profileLinks').value.split(/\\r?\\n/).map(function(x){return x.trim();}).filter(Boolean) : [],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      if (!auth.currentUser) { setBtnLoading(btn, false); errBox.textContent = isEn() ? 'Please sign in again.' : 'سجّل الدخول مجدداً.'; errBox.classList.add('show'); return; }
+      db.collection('apps').add(data)
+        .then(async function() {
+          setBtnLoading(btn, false);
+          okBox.textContent = isEn() ? 'Published successfully' : 'تم النشر بنجاح';
+          okBox.classList.add('show');
+          document.getElementById('uploadForm').reset();
+          await loadApps();
+          if (auth.currentUser) await loadDeveloperApps(auth.currentUser);
+          setTimeout(function() { closeDrawer('upload'); }, 900);
+        })
+        .catch(function(err) {
+          setBtnLoading(btn, false);
+          errBox.textContent = err.message;
+          errBox.classList.add('show');
+        });
+    }
+    window.handleUpload = handleUpload;
+
+    function escHTML(s) {
+      var d = document.createElement('div');
+      d.textContent = s || '';
+      return d.innerHTML;
+    }
+    function esc(s) {
+      return (s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function friendlyError(code) {
+      var map = {
+        'auth/email-already-in-use': 'البريد مستخدم / Email in use',
+        'auth/invalid-email': 'بريد غير صالح / Invalid email',
+        'auth/wrong-password': 'كلمة مرور خاطئة / Wrong password',
+        'auth/user-not-found': 'المستخدم غير موجود / User not found',
+        'auth/weak-password': 'كلمة المرور ضعيفة / Weak password',
+        'auth/invalid-credential': 'بيانات غير صحيحة / Invalid credentials'
+      };
+      return map[code] || code;
+    }
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.querySelector('span').textContent = msg;
+      t.classList.add('show');
+      setTimeout(function() { t.classList.remove('show'); }, 2400);
+    }
+
+
+    function maskEmail(email) {
+      if (!email || email.indexOf('@') === -1) return email || '';
+      var parts = email.split('@');
+      var user = parts[0];
+      var domain = parts[1];
+      var vis = user.length <= 2 ? user.charAt(0) : user.substring(0, 2);
+      return vis + '***@' + domain;
+    }
+
+    function fillProfileForm(user) {
+      if (!user) return;
+      var name = user.displayName || '';
+      document.getElementById('profileDisplayName').textContent = name || (user.email || '').split('@')[0];
+      document.getElementById('profileEmailMasked').textContent = maskEmail(user.email || '');
+      document.getElementById('profileName').value = name;
+      document.getElementById('profilePhoto').value = user.photoURL || '';
+      document.getElementById('profileBio').value = '';
+      document.getElementById('profileLinks').value = '';
+      var profileApp = allApps.find(function(a){ return a.ownerUid === user.uid || a.devId === user.uid; });
+      if (profileApp) {
+        document.getElementById('profileBio').value = profileApp.developerBio || '';
+        document.getElementById('profileLinks').value = (profileApp.developerSocialLinks || []).join('\\n');
+      }
+      document.getElementById('profileEmailFull').value = maskEmail(user.email || '');
+      var count = allApps.filter(function(a) { return a.ownerUid === user.uid || a.devId === user.uid; }).length;
+      document.getElementById('profileAppCount').textContent = String(count);
+      previewProfilePhoto(user.photoURL || '');
+      var fb = document.getElementById('profileAvatarFallback');
+      fb.textContent = (name || user.email || 'D').charAt(0).toUpperCase();
+    }
+
+    function previewProfilePhoto(url) {
+      var img = document.getElementById('profileAvatarImg');
+      var fb = document.getElementById('profileAvatarFallback');
+      if (url) {
+        img.onload = function() { img.style.display = 'block'; fb.style.display = 'none'; };
+        img.onerror = function() { img.style.display = 'none'; fb.style.display = 'flex'; };
+        img.src = url;
+      } else {
+        img.style.display = 'none';
+        fb.style.display = 'flex';
+      }
+    }
+    window.previewProfilePhoto = previewProfilePhoto;
+
+    function handleProfileSave(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      var errBox = document.getElementById('profileError');
+      var okBox = document.getElementById('profileSuccess');
+      errBox.classList.remove('show');
+      okBox.classList.remove('show');
+      var btn = document.getElementById('profileSaveBtn');
+      setBtnLoading(btn, true);
+      var name = document.getElementById('profileName').value.trim();
+      var photo = document.getElementById('profilePhoto').value.trim();
+      var bio = document.getElementById('profileBio').value.trim();
+      var socialLinks = document.getElementById('profileLinks').value.split(/\\r?\\n/).map(function(x){return x.trim();}).filter(Boolean);
+      currentUser.updateProfile({
+        displayName: name,
+        photoURL: photo || null
+      }).then(async function() {
+        // Keep profile metadata in the existing apps collection; no new collection is created.
+        var ownedDocs = allApps.filter(function(a){ return a.ownerUid === currentUser.uid || a.devId === currentUser.uid; });
+        var batch = db.batch();
+        ownedDocs.forEach(function(a) {
+          batch.update(db.collection('apps').doc(a.id), {
+            developerBio: bio, developerSocialLinks: socialLinks,
+            developerName: name, developerPhoto: photo || ''
+          });
+          a.developerBio = bio; a.developerSocialLinks = socialLinks;
+          a.developerName = name; a.developerPhoto = photo || '';
+        });
+        if (ownedDocs.length) await batch.commit();
+      }).then(function() {
+        return currentUser.reload();
+      }).then(function() {
+        setBtnLoading(btn, false);
+        okBox.textContent = isEn() ? 'Profile updated' : 'تم تحديث الملف الشخصي';
+        okBox.classList.add('show');
+        // refresh UI
+        auth.currentUser && fillProfileForm(auth.currentUser);
+        var u = auth.currentUser;
+        if (u) {
+          document.getElementById('userEmail').textContent = maskEmail(u.email || '');
+          document.getElementById('userAvatar').textContent = (u.displayName || u.email || 'D').charAt(0).toUpperCase();
+          if (u.photoURL) {
+            document.getElementById('userAvatar').style.backgroundImage = 'url(' + u.photoURL + ')';
+            document.getElementById('userAvatar').style.backgroundSize = 'cover';
+            document.getElementById('userAvatar').textContent = '';
+          } else {
+            document.getElementById('userAvatar').style.backgroundImage = '';
+          }
+        }
+        showToast(isEn() ? 'Saved' : 'تم الحفظ');
+      }).catch(function(err) {
+        setBtnLoading(btn, false);
+        errBox.textContent = err.message;
+        errBox.classList.add('show');
+      });
+    }
+    window.handleProfileSave = handleProfileSave;
+
+
+    var selectedApp = { name: '', url: '', icon: '' };
+    function openAppSheet(name, url, icon) {
+      selectedApp = { name: name || 'App', url: url || '', icon: icon || '' };
+      document.getElementById('sheetAppName').textContent = selectedApp.name;
+      var iconBox = document.getElementById('sheetIconBox');
+      iconBox.className = selectedApp.icon ? '' : 'sheet-icon-ph';
+      iconBox.innerHTML = selectedApp.icon ? '<img src="' + esc(selectedApp.icon) + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
+      document.getElementById('sheetOverlay').classList.add('active');
+      document.getElementById('bottomSheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSheet() {
+      document.getElementById('sheetOverlay').classList.remove('active');
+      document.getElementById('bottomSheet').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function sheetOpenAction() {
+      if (selectedApp.url) window.open(selectedApp.url, '_blank', 'noopener,noreferrer');
+      closeSheet();
+    }
+    async function sheetInstallAction() {
+      if (!selectedApp.url) return;
+      // The store cannot force-install a third-party PWA. Open its URL so the browser
+      // can show that app's own install prompt when available.
+      window.open(selectedApp.url, '_blank', 'noopener,noreferrer');
+      closeSheet();
+    }
+    window.openAppSheet = openAppSheet;
+    window.closeSheet = closeSheet;
+    window.sheetOpenAction = sheetOpenAction;
+    window.sheetInstallAction = sheetInstallAction;
+
+    function setLang(lang) {
+      document.body.classList.toggle('en', lang === 'en');
+      document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('amgzrnt-lang', lang);
+      document.getElementById('searchInput').placeholder = lang === 'en' ? 'Search apps...' : 'ابحث عن تطبيق...';
+    }
+    window.setLang = setLang;
+    setLang(localStorage.getItem('amgzrnt-lang') || 'ar');
+    // loadApps() is called only by onAuthStateChanged after Auth is ready.
+
+    var deferredStorePrompt = null;
+    window.addEventListener('beforeinstallprompt', function(event) {
+      event.preventDefault(); deferredStorePrompt = event;
+      var installBtn = document.getElementById('btnInstallStore');
+      if (installBtn) installBtn.style.display = 'inline-flex';
+    });
+    async function installStore() {
+      if (!deferredStorePrompt) { showToast(isEn() ? 'Install option is not available in this browser.' : 'خيار التثبيت غير متاح حالياً في هذا المتصفح.'); return; }
+      deferredStorePrompt.prompt();
+      try { await deferredStorePrompt.userChoice; } catch(e) {}
+      deferredStorePrompt = null;
+      var installBtn = document.getElementById('btnInstallStore');
+      if (installBtn) installBtn.style.display = 'none';
+    }
+    window.installStore = installStore;
+    window.addEventListener('appinstalled', function() {
+      var installBtn = document.getElementById('btnInstallStore');
+      if (installBtn) installBtn.style.display = 'none';
+    });
+    window.addEventListener('online', function(){ loadApps(); });
+    window.addEventListener('offline', function(){ showToast(isEn() ? 'You are offline' : 'أنت غير متصل بالإنترنت'); });
+
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      navigator.serviceWorker.register('./sw.js').catch(function(){});
+    }
+  </script>
+  <script>
+    (function () {
+      var KEY = 'amgzrnt-settings';
+      var body = document.body;
+      var sheet = document.getElementById('settingsSheet');
+      var overlay = document.getElementById('settingsOverlay');
+      var btn = document.getElementById('btnSettings');
+      var optGlass = document.getElementById('optGlass');
+      var optLight = document.getElementById('optLight');
+      var saveBtn = document.getElementById('settingsSave');
+      var handle = document.getElementById('settingsHandle');
+      if (!sheet || !overlay || !btn || !optGlass || !optLight || !saveBtn) return;
+
+      function readSaved() {
+        try {
+          var s = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
+          return { glass: s.glass !== false, light: s.light === true };
+        } catch (e) { return { glass: true, light: false }; }
+      }
+      function applySettings(s) {
+        body.classList.toggle('no-glass', !s.glass);
+        body.classList.toggle('light', !!s.light);
+      }
+      function notify(msg) {
+        if (typeof window.showToast === 'function') { window.showToast(msg); return; }
+        var t = document.getElementById('toast');
+        if (!t) return;
+        t.querySelector('span').textContent = msg;
+        t.classList.add('show');
+        setTimeout(function () { t.classList.remove('show'); }, 2400);
+      }
+
+      function openSettings() {
+        var s = readSaved();
+        optGlass.checked = s.glass;   // discard any unsaved changes
+        optLight.checked = s.light;
+        sheet.style.transform = '';
+        overlay.classList.add('active');
+        sheet.classList.add('active');
+        sheet.setAttribute('aria-hidden', 'false');
+      }
+      function closeSettings() {
+        overlay.classList.remove('active');
+        sheet.classList.remove('active', 'dragging');
+        sheet.style.transform = '';
+        sheet.setAttribute('aria-hidden', 'true');
+      }
+
+      btn.addEventListener('click', openSettings);
+      overlay.addEventListener('click', closeSettings);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sheet.classList.contains('active')) closeSettings();
+      });
+
+      saveBtn.addEventListener('click', function () {
+        var s = { glass: optGlass.checked, light: optLight.checked };
+        var ok = true;
+        try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { ok = false; }
+        applySettings(s);
+        closeSettings();
+        var en = body.classList.contains('en');
+        notify(ok ? (en ? 'Settings saved successfully' : 'تم حفظ الإعدادات بنجاح')
+                  : (en ? 'Applied, but could not be stored on this device' : 'تم التطبيق، لكن تعذّر حفظها على هذا الجهاز'));
+      });
+
+      // Drag the handle / sheet downward to dismiss
+      var startY = null, dy = 0;
+      function dragStart(e) {
+        if (sheet.scrollTop > 0 && e.target !== handle) return;
+        startY = (e.touches ? e.touches[0] : e).clientY; dy = 0;
+        sheet.classList.add('dragging');
+      }
+      function dragMove(e) {
+        if (startY === null) return;
+        dy = Math.max(0, (e.touches ? e.touches[0] : e).clientY - startY);
+        sheet.style.transform = 'translateY(' + dy + 'px)';
+      }
+      function dragEnd() {
+        if (startY === null) return;
+        startY = null;
+        sheet.classList.remove('dragging');
+        if (dy > 90) closeSettings(); else sheet.style.transform = '';
+      }
+      sheet.addEventListener('touchstart', dragStart, { passive: true });
+      sheet.addEventListener('touchmove', dragMove, { passive: true });
+      sheet.addEventListener('touchend', dragEnd);
+      sheet.addEventListener('touchcancel', dragEnd);
+      handle.addEventListener('mousedown', function (e) {
+        dragStart(e);
+        function mm(ev) { dragMove(ev); }
+        function mu() { document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu); dragEnd(); }
+        document.addEventListener('mousemove', mm);
+        document.addEventListener('mouseup', mu);
+      });
+
+      applySettings(readSaved());
+    })();
+  </script>
+</body>
+</html>
