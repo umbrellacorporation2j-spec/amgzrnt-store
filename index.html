@@ -595,9 +595,114 @@
     .sheet-actions { display: flex; flex-direction: column; gap: 10px; }
     .sheet-actions .btn { width: 100%; padding: 14px; border-radius: 14px; font-size: 0.95rem; }
 
+    /* ===== Store settings (glass effect + light/dark theme) ===== */
+    :root {
+      --g-nav: rgba(5,5,10,0.78);
+      --g-panel: rgba(15,15,26,0.9);
+      --g-sheet: rgba(15,15,26,0.96);
+      --g-toast: rgba(21,21,40,0.95);
+      --line-soft: rgba(255,255,255,0.06);
+      --switch-off: rgba(120,120,140,0.38);
+    }
+    body.light {
+      --bg: #f5f4fb;
+      --card: #ffffff;
+      --card2: #efecfa;
+      --primary-light: #6d28d9;
+      --text: #1e1b2e;
+      --muted: #6b6880;
+      --border: #e3dff2;
+      --g-nav: rgba(245,244,251,0.82);
+      --g-panel: rgba(255,255,255,0.94);
+      --g-sheet: rgba(255,255,255,0.97);
+      --g-toast: rgba(255,255,255,0.97);
+      --line-soft: rgba(30,27,46,0.08);
+      --switch-off: rgba(120,120,140,0.3);
+    }
+    body.no-glass {
+      --g-nav: var(--bg);
+      --g-panel: var(--card);
+      --g-sheet: var(--card);
+      --g-toast: var(--card2);
+    }
+    nav { background: var(--g-nav); }
+    body.light nav { border-bottom-color: var(--line-soft); }
+    .drawer { background: var(--g-panel); }
+    .drawer-header { border-bottom-color: var(--line-soft); }
+    .bottom-sheet { background: var(--g-sheet); }
+    .toast { background: var(--g-toast); }
+    body.light .orb { opacity: 0.16; }
+    body.light .btn-ghost:hover { background: rgba(30,27,46,0.06); }
+    body.light .sheet-handle { background: rgba(30,27,46,0.2); }
+    body.light .sk { background: linear-gradient(90deg, #ece9f8 25%, #f6f4fd 50%, #ece9f8 75%); background-size: 200% 100%; }
+    body.light .form-error { color: #b91c1c; }
+    body.light .form-success { color: #047857; }
+    body.light .app-card:hover { box-shadow: 0 12px 30px rgba(76,29,149,0.12), 0 0 0 1px rgba(124,58,237,0.1); }
+    body.light .drawer, body.light .bottom-sheet, body.light .toast { box-shadow: 0 -10px 36px rgba(30,27,46,0.14); }
+    body.light .drawer-overlay, body.light .sheet-overlay { background: rgba(30,27,46,0.35); }
+
+    body.no-glass nav,
+    body.no-glass .drawer,
+    body.no-glass .drawer-overlay,
+    body.no-glass .sheet-overlay,
+    body.no-glass .bottom-sheet,
+    body.no-glass .toast {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+    body.no-glass .orb { display: none; }
+
+    .settings-btn:hover i { transform: rotate(60deg); }
+    .settings-sheet {
+      visibility: hidden;
+      max-height: 92vh; overflow-y: auto;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.4s;
+      touch-action: pan-y;
+    }
+    .settings-sheet.active { visibility: visible; }
+    .settings-sheet.dragging { transition: none; }
+    .settings-sheet .sheet-handle { cursor: grab; padding: 0; }
+    .settings-title { font-size: 1.05rem; font-weight: 800; text-align: center; margin-bottom: 14px; }
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      padding: 14px 14px; margin-bottom: 10px; cursor: pointer;
+      background: var(--card2); border: 1px solid var(--border); border-radius: 16px;
+      transition: border-color 0.25s;
+    }
+    .setting-row:hover { border-color: rgba(124,58,237,0.4); }
+    .setting-label { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 0.95rem; }
+    .setting-ico {
+      width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+      background: rgba(124,58,237,0.14); color: var(--primary-light);
+      display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    }
+    .switch { position: relative; width: 51px; height: 31px; flex-shrink: 0; }
+    .switch input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 2; }
+    .switch .track { position: absolute; inset: 0; border-radius: 31px; background: var(--switch-off); transition: background 0.25s; }
+    .switch .track::after {
+      content: ''; position: absolute; top: 2px; inset-inline-start: 2px;
+      width: 27px; height: 27px; border-radius: 50%; background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+      transition: inset-inline-start 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .switch input:checked + .track { background: var(--primary); }
+    .switch input:checked + .track::after { inset-inline-start: calc(100% - 29px); }
+    .switch input:focus-visible + .track { box-shadow: 0 0 0 3px rgba(124,58,237,0.35); }
+    .settings-save { margin-top: 8px; padding: 14px; border-radius: 14px; font-size: 0.95rem; }
+
   </style>
 </head>
 <body>
+  <script>
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('amgzrnt-settings') || 'null') || {};
+        if (s.glass === false) document.body.classList.add('no-glass');
+        if (s.light === true) document.body.classList.add('light');
+      } catch (e) {}
+    })();
+  </script>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
 
@@ -612,6 +717,9 @@
           <button class="lang-btn active" id="btn-ar" onclick="setLang('ar')">عربي</button>
           <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
         </div>
+        <button class="btn btn-outline btn-icon btn-sm settings-btn" id="btnSettings" type="button" aria-label="الإعدادات / Settings" title="الإعدادات / Settings" aria-haspopup="dialog">
+          <i class="fa-solid fa-gear"></i>
+        </button>
         <div class="user-bar" id="userBar">
           <div class="user-avatar" id="userAvatar">D</div>
           <span id="userEmail"></span>
@@ -914,6 +1022,37 @@
         <span data-lang="en">Cancel</span>
       </button>
     </div>
+  </div>
+
+  <!-- Store settings bottom sheet -->
+  <div class="sheet-overlay" id="settingsOverlay"></div>
+  <div class="bottom-sheet settings-sheet" id="settingsSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settingsTitle">
+    <div class="sheet-handle" id="settingsHandle"></div>
+    <h3 class="settings-title" id="settingsTitle"><span data-lang="ar">الإعدادات</span><span data-lang="en">Settings</span></h3>
+
+    <label class="setting-row" for="optGlass">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-droplet"></i></span>
+        <span data-lang="ar">التأثير الزجاجي</span>
+        <span data-lang="en">Glass effect</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optGlass" role="switch"><span class="track"></span></span>
+    </label>
+
+    <label class="setting-row" for="optLight">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-circle-half-stroke"></i></span>
+        <span data-lang="ar">الوضع الفاتح</span>
+        <span data-lang="en">Light mode</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optLight" role="switch"><span class="track"></span></span>
+    </label>
+
+    <button class="btn btn-primary btn-block settings-save" id="settingsSave" type="button">
+      <i class="fa-solid fa-floppy-disk"></i>
+      <span data-lang="ar">حفظ الإعدادات</span>
+      <span data-lang="en">Save settings</span>
+    </button>
   </div>
 
   <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span></span></div>
@@ -1612,6 +1751,104 @@
     if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
       navigator.serviceWorker.register('./sw.js').catch(function(){});
     }
+  </script>
+  <script>
+    (function () {
+      var KEY = 'amgzrnt-settings';
+      var body = document.body;
+      var sheet = document.getElementById('settingsSheet');
+      var overlay = document.getElementById('settingsOverlay');
+      var btn = document.getElementById('btnSettings');
+      var optGlass = document.getElementById('optGlass');
+      var optLight = document.getElementById('optLight');
+      var saveBtn = document.getElementById('settingsSave');
+      var handle = document.getElementById('settingsHandle');
+      if (!sheet || !overlay || !btn || !optGlass || !optLight || !saveBtn) return;
+
+      function readSaved() {
+        try {
+          var s = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
+          return { glass: s.glass !== false, light: s.light === true };
+        } catch (e) { return { glass: true, light: false }; }
+      }
+      function applySettings(s) {
+        body.classList.toggle('no-glass', !s.glass);
+        body.classList.toggle('light', !!s.light);
+      }
+      function notify(msg) {
+        if (typeof window.showToast === 'function') { window.showToast(msg); return; }
+        var t = document.getElementById('toast');
+        if (!t) return;
+        t.querySelector('span').textContent = msg;
+        t.classList.add('show');
+        setTimeout(function () { t.classList.remove('show'); }, 2400);
+      }
+
+      function openSettings() {
+        var s = readSaved();
+        optGlass.checked = s.glass;   // discard any unsaved changes
+        optLight.checked = s.light;
+        sheet.style.transform = '';
+        overlay.classList.add('active');
+        sheet.classList.add('active');
+        sheet.setAttribute('aria-hidden', 'false');
+      }
+      function closeSettings() {
+        overlay.classList.remove('active');
+        sheet.classList.remove('active', 'dragging');
+        sheet.style.transform = '';
+        sheet.setAttribute('aria-hidden', 'true');
+      }
+
+      btn.addEventListener('click', openSettings);
+      overlay.addEventListener('click', closeSettings);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sheet.classList.contains('active')) closeSettings();
+      });
+
+      saveBtn.addEventListener('click', function () {
+        var s = { glass: optGlass.checked, light: optLight.checked };
+        var ok = true;
+        try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { ok = false; }
+        applySettings(s);
+        closeSettings();
+        var en = body.classList.contains('en');
+        notify(ok ? (en ? 'Settings saved successfully' : 'تم حفظ الإعدادات بنجاح')
+                  : (en ? 'Applied, but could not be stored on this device' : 'تم التطبيق، لكن تعذّر حفظها على هذا الجهاز'));
+      });
+
+      // Drag the handle / sheet downward to dismiss
+      var startY = null, dy = 0;
+      function dragStart(e) {
+        if (sheet.scrollTop > 0 && e.target !== handle) return;
+        startY = (e.touches ? e.touches[0] : e).clientY; dy = 0;
+        sheet.classList.add('dragging');
+      }
+      function dragMove(e) {
+        if (startY === null) return;
+        dy = Math.max(0, (e.touches ? e.touches[0] : e).clientY - startY);
+        sheet.style.transform = 'translateY(' + dy + 'px)';
+      }
+      function dragEnd() {
+        if (startY === null) return;
+        startY = null;
+        sheet.classList.remove('dragging');
+        if (dy > 90) closeSettings(); else sheet.style.transform = '';
+      }
+      sheet.addEventListener('touchstart', dragStart, { passive: true });
+      sheet.addEventListener('touchmove', dragMove, { passive: true });
+      sheet.addEventListener('touchend', dragEnd);
+      sheet.addEventListener('touchcancel', dragEnd);
+      handle.addEventListener('mousedown', function (e) {
+        dragStart(e);
+        function mm(ev) { dragMove(ev); }
+        function mu() { document.removeEventListener('mousemove', mm); document.removeEventListener('mouseup', mu); dragEnd(); }
+        document.addEventListener('mousemove', mm);
+        document.addEventListener('mouseup', mu);
+      });
+
+      applySettings(readSaved());
+    })();
   </script>
 </body>
 </html>
