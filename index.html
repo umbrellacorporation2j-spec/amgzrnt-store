@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#7c3aed">
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <title>AMGZRNT STORE | متجر تطبيقات PWA</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -737,7 +738,7 @@
   </aside>
 
   <div class="drawer-overlay" id="uploadOverlay" onclick="closeDrawer('upload')"></div>
-  <aside class="drawer" id="uploadDrawer" class="drawer upload-drawer-wide">
+  <aside class="drawer upload-drawer-wide" id="uploadDrawer">
     <div class="drawer-header">
       <h2 data-lang="ar">رفع تطبيق PWA</h2>
       <h2 data-lang="en">Upload PWA</h2>
@@ -966,6 +967,12 @@
       }
     });
 
+    // Firebase Auth is asynchronous. All catalogue/developer reads wait for this
+    // promise so an early public read cannot overwrite the signed-in developer view.
+    var authReadyResolve;
+    var authReady = new Promise(function(resolve) { authReadyResolve = resolve; });
+    var loadSequence = 0;
+
     auth.onAuthStateChanged(async function(user) {
       currentUser = user || null;
       var btnLogin = document.getElementById('btnLogin');
@@ -983,25 +990,28 @@
         document.getElementById('userEmail').textContent = maskEmail(user.email || name);
         document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
         if (user.photoURL) {
-          document.getElementById('userAvatar').style.backgroundImage = 'url(' + user.photoURL + ')';
+          document.getElementById('userAvatar').style.backgroundImage = 'url(' + esc(user.photoURL) + ')';
           document.getElementById('userAvatar').style.backgroundSize = 'cover';
           document.getElementById('userAvatar').textContent = '';
         }
         mySection.style.display = 'block';
         fillProfileForm(user);
-        await loadApps();
       } else {
         btnLogin.style.display = 'inline-flex'; btnUpload.style.display = 'none';
         btnLogout.style.display = 'none';
         if (btnSettings) btnSettings.style.display = 'none';
         userBar.classList.remove('show');
         mySection.style.display = 'none';
-        await loadApps(); // Restore the public catalogue after logout.
+        document.getElementById('myAppsGrid').innerHTML = '';
       }
+      authReadyResolve(true);
+      // One authoritative reload for every auth transition, including logout.
+      await loadApps();
     });
 
     async function loadApps() {
       var box = document.getElementById('appsContainer');
+      var sequence = ++loadSequence;
       if (!navigator.onLine) {
         box.innerHTML = '<div class="state-box"><p>' + (isEn() ? 'You are offline. Connect to the internet and retry.' : 'لا يوجد اتصال بالإنترنت. اتصل بالشبكة ثم أعد المحاولة.') + '</p></div>';
         return;
@@ -1009,11 +1019,13 @@
       box.innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i><p>' + (isEn() ? 'Loading apps...' : 'جارٍ تحميل التطبيقات...') + '</p></div>';
       try {
         var snap = await db.collection('apps').orderBy('createdAt', 'desc').get();
+        if (sequence !== loadSequence) return;
         allApps = [];
         snap.forEach(function(d) { var obj = d.data(); obj.id = d.id; allApps.push(obj); });
         filterApps();
         if (currentUser) await loadDeveloperApps(currentUser);
       } catch (err) {
+        if (sequence !== loadSequence) return;
         box.innerHTML = '<div class="state-box"><i class="fa-solid fa-triangle-exclamation"></i><p>' +
           (isEn() ? 'Could not load apps. Check your connection and Firestore access.' : 'تعذر تحميل التطبيقات. تحقق من الاتصال وصلاحية الوصول إلى Firestore.') +
           '</p><small>' + escHTML(err.message || '') + '</small></div>';
@@ -1021,20 +1033,20 @@
     }
 
     async function loadDeveloperApps(user) {
-      if (!user || !auth.currentUser) return;
+      if (!user || !auth.currentUser || user.uid !== auth.currentUser.uid) return;
       var grid = document.getElementById('myAppsGrid');
       grid.innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i><p>' + (isEn() ? 'Loading your apps...' : 'جارٍ تحميل تطبيقاتك...') + '</p></div>';
       try {
-        // Primary ownership is always the immutable Firebase Auth UID.
+        // Required stable ownership lookup. It does not use email, name, localStorage or a random id.
         var ownedSnap = await db.collection('apps').where('ownerUid', '==', user.uid).get();
         var owned = {};
         ownedSnap.forEach(function(d) { owned[d.id] = true; });
-        // Best-effort migration for older records created before ownerUid existed.
+        // Compatibility migration for old documents. It only adds fields and never creates a copy.
         var legacy = allApps.filter(function(a) {
           return !a.ownerUid && (
-            a.devId === user.uid ||
-            (user.email && a.devEmail && a.devEmail.toLowerCase() === user.email.toLowerCase()) ||
-            (user.displayName && a.devName && a.devName.toLowerCase() === user.displayName.toLowerCase())
+            (a.devId === user.uid) ||
+            (user.email && ((a.devEmail || a.ownerEmail || '').toLowerCase() === user.email.toLowerCase())) ||
+            (user.displayName && ((a.devName || a.ownerName || '').toLowerCase() === user.displayName.toLowerCase()))
           );
         });
         for (var i = 0; i < legacy.length; i++) {
@@ -1045,20 +1057,26 @@
             });
             legacy[i].ownerUid = user.uid; legacy[i].devId = user.uid; owned[legacy[i].id] = true;
           } catch (migrationError) {
-            // If current rules do not permit updating a legacy document, keep showing
-            // it by its existing verified account metadata without changing security rules.
+            // Current rules may allow reading but not updating an old record; keep it visible locally.
+            console.warn('Legacy app migration skipped:', migrationError);
           }
         }
         var mine = allApps.filter(function(a) {
-          return a.ownerUid === user.uid || owned[a.id] ||
-            (!a.ownerUid && (a.devId === user.uid ||
-              (user.email && a.devEmail && a.devEmail.toLowerCase() === user.email.toLowerCase()) ||
-              (user.displayName && a.devName && a.devName.toLowerCase() === user.displayName.toLowerCase())));
+          return a.ownerUid === user.uid || owned[a.id] || (!a.ownerUid && (
+            a.devId === user.uid ||
+            (user.email && (a.devEmail || a.ownerEmail || '').toLowerCase() === user.email.toLowerCase()) ||
+            (user.displayName && (a.devName || a.ownerName || '').toLowerCase() === user.displayName.toLowerCase())
+          ));
         });
         renderMyApps(mine);
         document.getElementById('profileAppCount').textContent = String(mine.length);
       } catch (err) {
-        grid.innerHTML = '<div class="state-box"><p>' + (isEn() ? 'Could not load your apps: ' : 'تعذر تحميل تطبيقاتك: ') + escHTML(err.message || '') + '</p></div>';
+        // If an ownerUid query is rejected by existing rules, the public snapshot is still
+        // enough to show the developer's apps and the migration remains best effort.
+        var fallback = allApps.filter(function(a) { return a.ownerUid === user.uid || a.devId === user.uid; });
+        renderMyApps(fallback);
+        document.getElementById('profileAppCount').textContent = String(fallback.length);
+        if (!fallback.length) grid.innerHTML = '<div class="state-box"><p>' + (isEn() ? 'Could not load your apps: ' : 'تعذر تحميل تطبيقاتك: ') + escHTML(err.message || '') + '</p></div>';
       }
     }
 
@@ -1524,6 +1542,38 @@
     window.handleProfileSave = handleProfileSave;
 
 
+    var selectedApp = { name: '', url: '', icon: '' };
+    function openAppSheet(name, url, icon) {
+      selectedApp = { name: name || 'App', url: url || '', icon: icon || '' };
+      document.getElementById('sheetAppName').textContent = selectedApp.name;
+      var iconBox = document.getElementById('sheetIconBox');
+      iconBox.className = selectedApp.icon ? '' : 'sheet-icon-ph';
+      iconBox.innerHTML = selectedApp.icon ? '<img src="' + esc(selectedApp.icon) + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
+      document.getElementById('sheetOverlay').classList.add('active');
+      document.getElementById('bottomSheet').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSheet() {
+      document.getElementById('sheetOverlay').classList.remove('active');
+      document.getElementById('bottomSheet').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    function sheetOpenAction() {
+      if (selectedApp.url) window.open(selectedApp.url, '_blank', 'noopener,noreferrer');
+      closeSheet();
+    }
+    async function sheetInstallAction() {
+      if (!selectedApp.url) return;
+      // The store cannot force-install a third-party PWA. Open its URL so the browser
+      // can show that app's own install prompt when available.
+      window.open(selectedApp.url, '_blank', 'noopener,noreferrer');
+      closeSheet();
+    }
+    window.openAppSheet = openAppSheet;
+    window.closeSheet = closeSheet;
+    window.sheetOpenAction = sheetOpenAction;
+    window.sheetInstallAction = sheetInstallAction;
+
     function setLang(lang) {
       document.body.classList.toggle('en', lang === 'en');
       document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
@@ -1535,7 +1585,7 @@
     }
     window.setLang = setLang;
     setLang(localStorage.getItem('amgzrnt-lang') || 'ar');
-    loadApps();
+    // loadApps() is called only by onAuthStateChanged after Auth is ready.
 
     var deferredStorePrompt = null;
     window.addEventListener('beforeinstallprompt', function(event) {
