@@ -691,7 +691,204 @@
     .switch input:focus-visible + .track { box-shadow: 0 0 0 3px rgba(124,58,237,0.35); }
     .settings-save { margin-top: 8px; padding: 14px; border-radius: 14px; font-size: 0.95rem; }
 
-  </style>
+  
+/* ===== Pixel / Material You green ===== */
+:root{--primary:#7c3aed;--on-primary:#ffffff;--spring:cubic-bezier(.2,.9,.25,1.08);--gradient:linear-gradient(135deg,#a78bfa,#7c3aed)}
+
+.btn{border-radius:999px;padding:11px 22px;box-shadow:none;letter-spacing:.2px}
+.btn-sm{padding:8px 16px}
+.btn-icon{border-radius:50%;padding:0}
+.btn:active:not(:disabled){transform:scale(.93);border-radius:16px;filter:none}
+.btn-primary{background:var(--primary);color:var(--on-primary);box-shadow:none}
+.btn-primary:hover:not(:disabled){transform:none;box-shadow:0 3px 16px rgba(124,58,237,.4)}
+.btn-outline{background:rgba(124,58,237,.14);border:none;color:var(--primary-light)}
+.btn-outline:hover:not(:disabled){transform:none;background:rgba(124,58,237,.24)}
+.tab-btn.active,.lang-btn.active,.chip.active{background:var(--primary);color:var(--on-primary)}
+.tabs,.lang-toggle{border-radius:999px}.tab-btn{border-radius:999px}
+.chip{border-radius:999px;border:none;background:var(--card2);animation:slideIn .5s var(--ease) both}
+.chip:nth-child(2){animation-delay:.05s}.chip:nth-child(3){animation-delay:.1s}.chip:nth-child(4){animation-delay:.15s}.chip:nth-child(5){animation-delay:.2s}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+body.en .chip{animation-name:slideInL}@keyframes slideInL{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+.search-box input{border-radius:999px;background:var(--card2);border-color:transparent}
+.form-group input,.form-group textarea,.form-group select{border-radius:18px}
+.drawer{transition:transform .5s var(--spring)}
+.bottom-sheet{border-radius:32px 32px 0 0;visibility:hidden;transition:transform .5s var(--spring),visibility .5s}
+.bottom-sheet.active{visibility:visible}
+.sheet-actions .btn{border-radius:999px}
+.switch .track::after{transition:inset-inline-start .35s var(--spring),width .2s}
+.switch input:checked + .track::after{background:var(--on-primary)}
+.icon-preview img{width:48px;height:48px;border-radius:14px;margin-top:8px}
+/* Play-style list */
+.apps-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:2px 28px}
+.app-row{display:flex;align-items:center;gap:14px;padding:12px 8px;border-radius:24px;cursor:pointer;opacity:0;animation:rowIn .55s var(--ease) forwards;transition:background .2s,transform .25s var(--spring);-webkit-tap-highlight-color:transparent}
+@keyframes rowIn{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+body.en .app-row{animation-name:rowInL}@keyframes rowInL{from{opacity:0;transform:translateX(-50px)}to{opacity:1;transform:none}}
+.app-row:active{background:rgba(124,58,237,.14);transform:scale(.97)}
+.row-icon{width:64px;height:64px;border-radius:18px;object-fit:cover;flex-shrink:0;background:var(--card2)}
+.app-icon-placeholder.row-icon,.app-icon-placeholder.ap-icon{display:flex}
+.row-info{flex:1;min-width:0}
+.row-info h3{font-size:1rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-meta{font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-meta i{color:var(--primary-light);font-size:.7rem}
+/* Ads */
+.ads-scroll{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 0 8px;margin-bottom:6px;scrollbar-width:none}
+.ads-scroll::-webkit-scrollbar{display:none}
+.ad-item{flex:0 0 min(92%,560px);scroll-snap-align:center}
+.ad-banner{height:210px;border-radius:30px;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 20px;position:relative;cursor:pointer;color:#fff;overflow:hidden;transition:transform .3s var(--spring)}
+.ad-banner:active{transform:scale(.97)}
+.ad-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(0,0,0,.7))}
+.ad-banner h2{position:relative;z-index:1;font-size:1.35rem;font-weight:800;line-height:1.4}
+.ad-tag{position:absolute;z-index:1;top:14px;inset-inline-start:16px;background:rgba(0,0,0,.5);padding:2px 12px;border-radius:99px;font-size:.72rem}
+.ad-row{opacity:1;animation:none}
+/* App page */
+.app-page{position:fixed;inset:0;z-index:300;background:var(--bg);overflow-y:auto;transform:translateY(100%);visibility:hidden;transition:transform .5s var(--spring),visibility .5s}
+.app-page.active{transform:none;visibility:visible}
+.ap-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:6px;padding:10px 12px;background:var(--g-nav);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+body.en .ap-bar .fa-arrow-right{transform:scaleX(-1)}
+.ap-wrap{max-width:720px;margin:0 auto;padding:6px 18px 70px}
+.ap-head{display:flex;gap:16px;align-items:center;margin:10px 0 22px}
+.ap-icon{width:96px;height:96px;border-radius:26px;object-fit:cover;flex-shrink:0;background:var(--card2)}
+.ap-head h1{font-size:1.5rem;font-weight:800;line-height:1.35}
+.ap-dev{color:var(--primary-light);font-weight:700}
+.ap-stats{display:flex;text-align:center;margin-bottom:22px}
+.ap-stats>div{flex:1;padding:0 6px;border-inline-end:1px solid var(--border)}.ap-stats>div:last-child{border:none}
+.ap-stats b{display:block;font-size:1rem}.ap-stats small{color:var(--muted);font-size:.74rem}
+.ap-install{padding:14px;font-size:1rem;margin-bottom:22px}
+.ap-shots{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+.ap-shots img{height:360px;border-radius:20px;scroll-snap-align:start;flex-shrink:0;background:var(--card2)}
+.ap-h{font-size:1.2rem;font-weight:800;margin:26px 0 10px}
+.ap-desc{color:var(--muted);white-space:pre-wrap}
+.rate-sum{display:flex;gap:18px;align-items:center}
+.rate-big{font-size:3rem;font-weight:800;line-height:1}
+.stars i{color:#f5b942;font-size:.9rem}.stars i.off{color:var(--switch-off)}
+.star-input{display:flex;gap:4px;margin:10px 0 14px;direction:ltr}
+.star-input button{background:none;border:0;font-size:2.1rem;color:var(--switch-off);cursor:pointer;transition:transform .25s var(--spring),color .2s;-webkit-tap-highlight-color:transparent}
+.star-input button.on{color:#f5b942}.star-input button:active{transform:scale(1.35)}
+.rv-field{width:100%;padding:12px 16px;margin-bottom:10px;background:var(--card2);border:1px solid transparent;border-radius:18px;color:var(--text);font-family:inherit;font-size:.92rem}
+.rv-field:focus{outline:none;border-color:var(--primary)}
+.review{padding:14px 16px;margin-top:10px;background:var(--card);border-radius:22px;animation:rowIn .4s var(--ease) both}
+.review b{font-size:.9rem}
+
+/* ===== v3: purple, sections, search, preview, motion ===== */
+.chip{flex:0 0 auto!important;min-width:max-content}
+.chips{padding-inline:2px}
+.btn,.chip,.app-row,.app-tile,.sec-more{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);animation:rip .65s var(--ease) forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+.tabs{overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tab-btn{white-space:nowrap;flex:1}
+.chips{overflow-x:auto;scrollbar-width:none;flex-wrap:nowrap}.chips::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:background .3s,color .3s,transform .3s var(--spring)}
+.chip i{font-size:.85rem}.chip:active{transform:scale(.92)}.chip.active{box-shadow:0 4px 16px rgba(124,58,237,.35)}
+nav{animation:navIn .7s var(--spring) both}@keyframes navIn{from{transform:translateY(-100%)}to{transform:none}}
+.logo i{animation:pop 2.6s var(--spring) infinite}@keyframes pop{0%,86%,100%{transform:none}92%{transform:scale(1.25) rotate(-8deg)}}
+.page-header>*{animation:rise .7s var(--spring) both}.page-header>*:nth-child(2){animation-delay:.08s}.page-header>*:nth-child(3){animation-delay:.14s}.page-header>*:nth-child(4){animation-delay:.2s}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .7s var(--ease),transform .7s var(--spring)}.reveal.in{opacity:1;transform:none}
+.sec{margin:6px 0 18px}.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:1.15rem;font-weight:800}
+.sec-ico{width:34px;height:34px;border-radius:12px;background:rgba(124,58,237,.18);color:var(--primary-light);display:inline-flex;align-items:center;justify-content:center;font-size:.9rem}
+.sec-more{width:38px;height:38px;border-radius:50%;border:none;background:rgba(124,58,237,.14);color:var(--primary-light);cursor:pointer;transition:transform .3s var(--spring)}
+.sec-more:active{transform:scale(.88)}body.en .sec-more i{transform:scaleX(-1)}
+.tiles{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 2px 10px;scrollbar-width:none}.tiles::-webkit-scrollbar{display:none}
+.app-tile{flex:0 0 108px;scroll-snap-align:start;cursor:pointer;text-align:start;border-radius:24px;padding:6px;opacity:0;animation:tileIn .6s var(--spring) forwards;transition:background .2s,transform .3s var(--spring)}
+.app-tile:active{transform:scale(.93);background:rgba(124,58,237,.14)}
+@keyframes tileIn{from{opacity:0;transform:translateX(60px) scale(.9)}to{opacity:1;transform:none}}
+body.en .app-tile{animation-name:tileInL}@keyframes tileInL{from{opacity:0;transform:translateX(-60px) scale(.9)}to{opacity:1;transform:none}}
+.tile-icon{width:96px;height:96px;border-radius:28px;object-fit:cover;background:var(--card2);display:block;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.app-icon-placeholder.tile-icon{display:flex}
+.app-tile h4{font-size:.86rem;font-weight:700;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-box{position:relative}
+.sb-clear{position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%) scale(0);width:30px;height:30px;border-radius:50%;border:none;background:rgba(124,58,237,.2);color:var(--primary-light);cursor:pointer;transition:transform .3s var(--spring)}
+.search-box.has .sb-clear{transform:translateY(-50%) scale(1)}
+.search-box input:focus{box-shadow:0 0 0 3px rgba(124,58,237,.3)}
+.sug-box{position:absolute;inset-inline:0;top:calc(100% + 8px);z-index:60;background:var(--card);border:1px solid var(--border);border-radius:26px;padding:6px;box-shadow:0 18px 50px rgba(0,0,0,.45);max-height:0;opacity:0;visibility:hidden;overflow:hidden;transition:max-height .45s var(--spring),opacity .25s,visibility .25s}
+.sug-box.on{max-height:440px;opacity:1;visibility:visible;overflow-y:auto}
+.sug{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:18px;cursor:pointer;transition:background .2s}
+.sug:active,.sug:hover{background:rgba(124,58,237,.16)}
+.sug img,.sug .app-icon-placeholder{width:44px;height:44px;border-radius:13px;object-fit:cover;flex-shrink:0;background:var(--card2)}
+.sug b{font-size:.92rem;display:block}.sug small{color:var(--muted)}
+.sug-empty{padding:16px;text-align:center;color:var(--muted)}
+.pv-overlay{position:fixed;inset:0;z-index:500;background:rgba(10,8,20,.92);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;padding:10px 12px;opacity:0;visibility:hidden;transform:scale(.94);transition:opacity .35s,transform .5s var(--spring),visibility .35s}
+.pv-overlay.on{opacity:1;visibility:visible;transform:none}
+.pv-bar{display:flex;align-items:center;gap:8px;width:100%;max-width:420px;color:#fff}
+.pv-frame{flex:1;width:100%;max-width:400px;margin:10px 0;border-radius:38px;border:8px solid #1c1a2b;background:#fff;overflow:hidden;position:relative;box-shadow:0 0 0 2px rgba(124,58,237,.5),0 30px 80px rgba(0,0,0,.6)}
+.pv-notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:84px;height:20px;border-radius:12px;background:#1c1a2b;z-index:2}
+.pv-frame iframe{width:100%;height:100%;border:0;background:#fff}
+.pv-note{color:#b9b3d4;font-size:.78rem;text-align:center;max-width:400px}
+.ap-actions{display:flex;gap:10px;margin-bottom:22px}.ap-actions .ap-install{flex:1;margin:0}
+.ap-actions .btn-outline{padding:14px 20px}
+.adm-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,.2);color:var(--primary-light);padding:4px 12px;border-radius:99px;font-size:.78rem;font-weight:700}
+.section-title{display:flex;align-items:center;gap:10px}
+
+/* ===== v4 ===== */
+body{padding-bottom:110px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px 10px}
+.tgrid .app-tile{flex:none}.tgrid .tile-icon,.tgrid .app-icon-placeholder.tile-icon{width:min(96px,100%);height:auto;aspect-ratio:1}
+.tile-mg{display:flex;gap:6px;margin-top:6px}.tile-mg .btn{width:34px;height:34px}
+.bdg{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:99px;background:rgba(124,58,237,.2);color:var(--primary-light)}
+.bdg.red{background:rgba(239,68,68,.18);color:#fca5a5}.bdg.gold{background:rgba(245,185,66,.2);color:#f5b942}
+/* bottom nav */
+.bnav{position:fixed;top:auto;right:auto;height:auto;max-height:none;margin:0;z-index:150;bottom:14px;left:50%;transform:translateX(-50%);width:min(92%,440px);display:flex;padding:6px;border-radius:999px;background:rgba(18,15,34,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:2px solid rgba(124,58,237,.55);box-shadow:0 12px 40px rgba(0,0,0,.5);direction:rtl}
+.bnav button{position:relative;z-index:2;flex:1;background:none;border:0;color:var(--muted);padding:9px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:3px;font:600 .74rem inherit;font-family:inherit;cursor:pointer;transition:color .3s}
+.bnav button i{font-size:1.15rem;transition:transform .5s cubic-bezier(.3,1.8,.5,1)}
+.bnav button.on{color:#fff}.bnav button.on i{transform:translateY(-2px) scale(1.15)}
+.bn-ind{position:absolute;z-index:1;top:6px;bottom:6px;left:0;border-radius:999px;background:var(--primary);box-shadow:0 6px 22px rgba(124,58,237,.55);transition:transform .85s cubic-bezier(.3,1.65,.45,1),width .85s cubic-bezier(.3,1.65,.45,1)}
+/* wave install */
+.wave-btn{position:relative;overflow:hidden;width:100%;height:56px;border:0;border-radius:999px;background:#1a73e8;color:#fff;font-family:inherit;font-weight:800;font-size:1.05rem;cursor:pointer;transition:transform .3s var(--spring)}
+.wave-btn:active{transform:scale(.97)}.wave-btn span{position:relative;z-index:2}
+.wv{position:absolute;left:0;bottom:0;width:200%;height:100%;fill:#fff;opacity:.17;animation:wv 6s linear infinite}
+.wv2{opacity:.12;animation-duration:9.5s;animation-direction:reverse;bottom:-9px}
+@keyframes wv{to{transform:translateX(-50%)}}
+.ap-actions{align-items:stretch}.ap-actions .wave-btn{flex:1}
+.ap-dev{color:#4c9aff;cursor:pointer;font-weight:700}
+.adm-note{display:flex;gap:12px;padding:14px 16px;border-radius:22px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);margin-bottom:16px}
+.adm-note i{color:#f87171;font-size:1.3rem;margin-top:3px}.adm-note p{color:var(--muted);margin-top:2px;font-size:.9rem}
+/* ad stage */
+.stage{position:relative;container-type:inline-size;aspect-ratio:16/7;border-radius:28px;overflow:hidden}
+.stk{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));line-height:1;animation:bob 3.2s ease-in-out infinite;-webkit-user-select:none;user-select:none;touch-action:none}
+@keyframes bob{50%{translate:0 -9%}}
+.stage-txt{position:absolute;inset:auto 0 0 0;padding:14px 18px 14px;background:linear-gradient(transparent,rgba(0,0,0,.68));color:#fff}
+.stage-txt b{display:block;font-size:5.4cqw;font-weight:800;line-height:1.3}.stage-txt small{font-size:3.5cqw;opacity:.92}
+.ad-banner2{position:relative;cursor:pointer;transition:transform .3s var(--spring)}.ad-banner2:active{transform:scale(.97)}
+.ad-item{flex:0 0 min(94%,620px)}
+/* composer */
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmp .stk{cursor:grab}.cmp .stk.sel{outline:2px dashed #fff;outline-offset:4px;border-radius:8px;z-index:3}
+.cmp-bgs{display:flex;gap:8px;overflow-x:auto;padding:2px}.bgsw{flex:0 0 38px;height:38px;border-radius:12px;border:2px solid transparent;cursor:pointer;transition:transform .3s var(--spring)}.bgsw.on{border-color:#fff;transform:scale(1.15)}
+.cmp input[type=text],.cmp-t,.cmp-d,.slrow input[type=text],.slrow select{padding:10px 14px;border-radius:14px;background:var(--card2);border:1px solid transparent;color:var(--text);font-family:inherit;width:100%}
+.cmp-emo{display:flex;flex-wrap:wrap;gap:4px;max-height:132px;overflow-y:auto;padding:6px;background:var(--card2);border-radius:18px}
+.cmp-emo button{width:40px;height:40px;border:0;background:none;font-size:1.5rem;border-radius:12px;cursor:pointer;transition:transform .25s var(--spring)}.cmp-emo button:active{transform:scale(1.4);background:rgba(124,58,237,.2)}
+.cmp-ctl{display:none;gap:10px;align-items:center;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}.cmp-ctl label{display:flex;align-items:center;gap:6px}
+.chk{display:flex;align-items:center;gap:6px;font-size:.85rem}
+.slrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;margin-bottom:8px;background:var(--card2);border-radius:18px}
+.slrow .st{grid-column:1/-1}
+.shot-slide{flex:0 0 200px;height:360px;border-radius:22px;container-type:inline-size;display:flex;align-items:center;justify-content:center;text-align:center;padding:14px;scroll-snap-align:start;line-height:1.4}
+.ap-shots img{width:auto;min-width:180px}
+.fb-tabs{display:flex;gap:8px;margin:6px 0 10px}.fb-tabs button{padding:7px 16px;border-radius:99px;border:0;background:var(--card2);color:var(--text);font-family:inherit;cursor:pointer;transition:all .3s var(--spring)}.fb-tabs button.on{background:var(--primary);color:#fff}
+/* dev page */
+.dv-cover{position:relative;container-type:inline-size;aspect-ratio:16/7;border-radius:0 0 30px 30px;margin:-6px -18px 0;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px}
+.dv-head{display:flex;gap:14px;align-items:center;margin:16px 0}
+.dv-av{width:72px;height:72px;border-radius:24px;background:var(--primary);color:#fff;font-size:2rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dv-feat{display:flex;gap:16px;align-items:center;padding:16px;border-radius:28px;background:linear-gradient(135deg,rgba(124,58,237,.28),rgba(124,58,237,.08));margin:10px 0 20px;cursor:pointer}
+.dv-feat .tile-icon{width:88px;height:88px}
+.cvg{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:8px 0}.cvg button{aspect-ratio:1;border-radius:12px;border:2px solid transparent;cursor:pointer}.cvg button.on{border-color:#fff}
+/* modal */
+.md-ov{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.md-ov.on{opacity:1;visibility:visible}
+.md-card{width:min(100%,460px);max-height:90vh;overflow-y:auto;background:var(--card);border:1px solid var(--border);border-radius:30px;padding:20px;transform:translateY(40px) scale(.95);transition:transform .5s var(--spring)}
+.md-ov.on .md-card{transform:none}.md-card h3{margin-bottom:12px}
+.md-card textarea,.md-card input[type=text]{width:100%;padding:12px 14px;border-radius:16px;background:var(--card2);border:1px solid transparent;color:var(--text);font-family:inherit;margin-bottom:10px}
+.md-act{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
+/* admin */
+.adm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:8px 0 16px}
+.adm-stat{padding:16px;border-radius:24px;background:var(--card);border:1px solid var(--border);animation:rise .6s var(--spring) both}
+.adm-stat b{display:block;font-size:1.8rem}.adm-stat small{color:var(--muted)}
+.adm-tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px}.adm-tabs button{white-space:nowrap;padding:10px 18px;border-radius:99px;border:0;background:var(--card2);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer;transition:all .3s var(--spring)}.adm-tabs button.on{background:var(--primary);color:#fff}
+.adm-row{display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;background:var(--card);border:1px solid var(--border);margin-bottom:8px;animation:rowIn .45s var(--ease) both}
+.adm-row .row-icon{width:52px;height:52px;border-radius:15px}.adm-row .info{flex:1;min-width:0}.adm-row .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.adm-row small{color:var(--muted)}
+.adm-act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.adm-act .btn{width:38px;height:38px;padding:0}
+@media(max-width:560px){.adm-row{flex-wrap:wrap}.adm-act{width:100%;justify-content:flex-start}}
+</style>
 </head>
 <body>
   <script>
@@ -763,22 +960,22 @@
     <div class="toolbar">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." oninput="filterApps()">
+        <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." oninput="filterApps()" autocomplete="off"><button type="button" class="sb-clear" id="sbClear" aria-label="clear"><i class="fa-solid fa-xmark"></i></button><div class="sug-box" id="sugBox"></div>
       </div>
       <div class="chips" id="chips">
-        <button class="chip active" data-cat="all" onclick="setCategory('all', this)">
+        <button class="chip active" data-cat="all" onclick="setCategory('all', this)"><i class="fa-solid fa-border-all"></i>
           <span data-lang="ar">الكل</span><span data-lang="en">All</span>
         </button>
-        <button class="chip" data-cat="tools" onclick="setCategory('tools', this)">
+        <button class="chip" data-cat="tools" onclick="setCategory('tools', this)"><i class="fa-solid fa-screwdriver-wrench"></i>
           <span data-lang="ar">أدوات</span><span data-lang="en">Tools</span>
         </button>
-        <button class="chip" data-cat="productivity" onclick="setCategory('productivity', this)">
+        <button class="chip" data-cat="productivity" onclick="setCategory('productivity', this)"><i class="fa-solid fa-briefcase"></i>
           <span data-lang="ar">إنتاجية</span><span data-lang="en">Productivity</span>
         </button>
-        <button class="chip" data-cat="education" onclick="setCategory('education', this)">
+        <button class="chip" data-cat="education" onclick="setCategory('education', this)"><i class="fa-solid fa-graduation-cap"></i>
           <span data-lang="ar">تعليم</span><span data-lang="en">Education</span>
         </button>
-        <button class="chip" data-cat="other" onclick="setCategory('other', this)">
+        <button class="chip" data-cat="other" onclick="setCategory('other', this)"><i class="fa-solid fa-shapes"></i>
           <span data-lang="ar">أخرى</span><span data-lang="en">Other</span>
         </button>
       </div>
@@ -813,11 +1010,14 @@
     </div>
     <div class="drawer-body">
       <div class="tabs">
-        <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">
+        <button class="tab-btn active" id="tabCollective" onclick="switchTab('collective')"><span data-lang="ar">مطور جماعي</span><span data-lang="en">Team dev</span></button>
+        <button class="tab-btn" id="tabLogin" onclick="switchTab('login')">
           <span data-lang="ar">دخول</span><span data-lang="en">Login</span>
         </button>
+        <button class="tab-btn" id="tabAdmin" onclick="switchTab('admin')"><i class="fa-solid fa-shield-halved"></i> <span data-lang="ar">المدير</span><span data-lang="en">Admin</span></button>
+        <button class="tab-btn" id="tabUser" onclick="switchTab('user')"><i class="fa-solid fa-user"></i> <span data-lang="ar">حساب عادي</span><span data-lang="en">User</span></button>
         <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">
-          <span data-lang="ar">حساب جديد</span><span data-lang="en">Register</span>
+          <span data-lang="ar">مطور جديد</span><span data-lang="en">New dev</span>
         </button>
       </div>
       <div class="form-error" id="authError"></div>
@@ -837,6 +1037,7 @@
           <label data-lang="en">Password</label>
           <input type="password" id="authPassword" required minlength="6" placeholder="••••••••">
         </div>
+        <div class="form-hint" id="authHint" style="margin-bottom:12px"></div>
         <button type="submit" class="btn btn-primary btn-block" id="authSubmit">
           <i class="fa-solid fa-right-to-bracket"></i>
           <span data-lang="ar">دخول</span><span data-lang="en">Login</span>
@@ -866,8 +1067,8 @@
         <div class="form-group">
           <label data-lang="ar">رابط التطبيق</label>
           <label data-lang="en">App URL</label>
-          <input type="url" id="appUrl" required placeholder="https://myapp.example.com">
-          <div class="form-hint" data-lang="ar">يجب أن يكون مستضافاً ويعمل كـ PWA</div>
+          <input type="url" id="appUrl" required oninput="previewIcon()" placeholder="https://myapp.example.com">
+          <div class="form-hint" data-lang="ar">يجب أن يكون مستضافاً ويعمل كـ PWA — الأيقونة تُجلب تلقائياً من الموقع</div><div id="iconPreview" class="icon-preview"></div>
           <div class="form-hint" data-lang="en">Must be hosted and work as a PWA</div>
         </div>
         <div class="form-group">
@@ -891,6 +1092,8 @@
             <option value="other">أخرى / Other</option>
           </select>
         </div>
+        <div class="form-group"><label>إعلان المتجر (مستطيل عريض) — خلفية + إيموجي + عنوان</label><div id="cmpUp"></div></div>
+        <div class="form-group"><label>معاينات التطبيق</label><div id="slUp"></div></div>
         <button type="submit" class="btn btn-primary btn-block" id="uploadSubmit">
           <i class="fa-solid fa-cloud-arrow-up"></i>
           <span data-lang="ar">نشر التطبيق</span>
@@ -989,6 +1192,8 @@
         <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
         <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="url" required></div>
         <div class="form-group"><label>لقطات الشاشة (روابط، كل رابط في سطر) / Screenshots (one URL per line)</label><textarea id="editScreenshots" rows="4"></textarea></div>
+        <div class="form-group"><label>إعلان المتجر</label><div id="cmpEd"></div></div>
+        <div class="form-group"><label>معاينات التطبيق</label><div id="slEd"></div></div>
         <button class="btn btn-primary btn-block" type="submit" id="editSaveBtn"><i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات / Save</button>
       </form>
     </div>
@@ -1055,6 +1260,28 @@
     </button>
   </div>
 
+  <div class="app-page" id="appPage">
+    <div class="ap-bar">
+      <button class="btn btn-ghost btn-icon" onclick="closeAppPage()" aria-label="Back"><i class="fa-solid fa-arrow-right"></i></button>
+      <span style="flex:1"></span>
+      <button class="btn btn-ghost btn-icon" onclick="sharePage()" aria-label="Share"><i class="fa-solid fa-share-nodes"></i></button>
+    </div>
+    <div class="ap-wrap" id="apBody"></div>
+  </div>
+  <div class="pv-overlay" id="pvOverlay">
+    <div class="pv-bar"><button class="btn btn-ghost btn-icon" onclick="closePreview()"><i class="fa-solid fa-xmark"></i></button><b id="pvTitle" style="flex:1"></b><a class="btn btn-outline btn-sm" id="pvOpen" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
+    <div class="pv-frame"><div class="pv-notch"></div><iframe id="pvFrame" title="preview" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" referrerpolicy="no-referrer"></iframe></div>
+    <p class="pv-note" id="pvNote"></p>
+  </div>
+  <div class="bnav" id="bnav"><div class="bn-ind" id="bnInd"></div>
+    <button data-k="home" class="on"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
+    <button data-k="search"><i class="fa-solid fa-magnifying-glass"></i><span>بحث</span></button>
+    <button data-k="cats"><i class="fa-solid fa-table-cells-large"></i><span>الأقسام</span></button>
+    <button data-k="me"><i class="fa-solid fa-circle-user"></i><span>حسابي</span></button>
+  </div>
+  <div class="app-page" id="devPage" style="z-index:290"><div class="ap-bar"><button class="btn btn-ghost btn-icon" onclick="closeDevPage()"><i class="fa-solid fa-arrow-right"></i></button><span style="flex:1"></span></div><div class="ap-wrap" id="dvBody"></div></div>
+  <div class="app-page" id="admPage" style="z-index:310"><div class="ap-bar"><button class="btn btn-ghost btn-icon" onclick="closeAdmin()"><i class="fa-solid fa-arrow-right"></i></button><b style="flex:1"><i class="fa-solid fa-shield-halved"></i> لوحة تحكم المدير</b><button class="btn btn-outline btn-icon btn-sm" onclick="openAdmin()"><i class="fa-solid fa-rotate"></i></button></div><div class="ap-wrap adm-wrap" id="admBody"></div></div>
+  <div class="md-ov" id="mdOv"><div class="md-card" id="mdBody"></div></div>
   <div class="toast" id="toast"><i class="fa-solid fa-check"></i><span></span></div>
 
   
@@ -1850,5 +2077,817 @@
       applySettings(readSaved());
     })();
   </script>
+
+<script>
+(function () {
+  var COL = '@collective.amgzrnt.app', GATE = '2202';
+  var ADMIN_EMAIL = 'admin@amgzrnt.app', ADMIN_HASH = 'd9d686225d601034352d21ba9ba66aa26b4c9f767dccf2210804be0a219c1941';
+  function isAdmin() { return !!(auth.currentUser && auth.currentUser.email === ADMIN_EMAIL); }
+  var ratingsCache = {}, curId = null, pushed = false, myStar = 0;
+  function $(i) { return document.getElementById(i); }
+  function T(a, e) { return isEn() ? e : a; }
+  function nm(a) { return (isEn() && a.nameEn) ? a.nameEn : (a.nameAr || a.name || ''); }
+  function ds(a) { return (isEn() && a.descriptionEn) ? a.descriptionEn : (a.descriptionAr || a.description || ''); }
+  function host(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
+  function iconSrc(a) { var h = host(a.url); return a.icon || (h ? 'https://www.google.com/s2/favicons?sz=128&domain=' + h : ''); }
+  var CAT = { tools: ['أدوات', 'Tools'], productivity: ['إنتاجية', 'Productivity'], education: ['تعليم', 'Education'], social: ['اجتماعي', 'Social'], other: ['أخرى', 'Other'] };
+  function catName(c) { var x = CAT[c] || CAT.other; return isEn() ? x[1] : x[0]; }
+  function isCol(u) { return !!(u && u.email && u.email.indexOf(COL) > 0); }
+
+  window.iconErr = function (img) {
+    if (!img.dataset.t && img.dataset.host) { img.dataset.t = 1; img.src = 'https://icons.duckduckgo.com/ip3/' + img.dataset.host + '.ico'; }
+    else { img.style.display = 'none'; if (img.nextElementSibling) img.nextElementSibling.style.display = 'flex'; }
+  };
+  function iconHTML(a, cls) {
+    var src = iconSrc(a);
+    return (src ? '<img class="' + cls + '" src="' + esc(src) + '" data-host="' + esc(host(a.url)) + '" alt="" referrerpolicy="no-referrer" onerror="iconErr(this)">' : '') +
+      '<div class="app-icon-placeholder ' + cls + '" style="' + (src ? 'display:none' : '') + '"><i class="fa-solid fa-cube"></i></div>';
+  }
+  window.previewIcon = function () {
+    var h = host($('appUrl').value.trim()), box = $('iconPreview');
+    box.innerHTML = h ? '<img src="https://www.google.com/s2/favicons?sz=128&domain=' + h + '" alt="" onerror="this.style.display=\'none\'">' : '';
+  };
+
+  /* ---------- ratings ---------- */
+  function fetchRatings(id, force) {
+    if (!force && ratingsCache[id]) return Promise.resolve(ratingsCache[id]);
+    return db.collection('apps').doc(id).collection('ratings').limit(200).get().then(function (snap) {
+      var list = [], sum = 0;
+      snap.forEach(function (d) { var x = d.data(); x.id = d.id; list.push(x); sum += x.stars || 0; });
+      list.sort(function (a, b) { return ((b.at && b.at.seconds) || 0) - ((a.at && a.at.seconds) || 0); });
+      return (ratingsCache[id] = { count: list.length, avg: list.length ? sum / list.length : 0, list: list });
+    }).catch(function () { return (ratingsCache[id] = { count: 0, avg: 0, list: [], err: true }); });
+  }
+  function rateTxt(r) { return (r && r.count) ? '<i class="fa-solid fa-star"></i> ' + r.avg.toFixed(1) + ' · ' + r.count : 'PWA'; }
+  function loadAllRatings(apps) {
+    apps.slice(0, 30).forEach(function (a) {
+      fetchRatings(a.id).then(function (r) {
+        document.querySelectorAll('[data-rate="' + a.id + '"]').forEach(function (el) { el.innerHTML = rateTxt(r); });
+      });
+    });
+  }
+  function starsHTML(v) {
+    var h = '';
+    for (var i = 1; i <= 5; i++) h += '<i class="fa-solid fa-star' + (i <= Math.round(v) ? '' : ' off') + '"></i>';
+    return h;
+  }
+
+  /* ---------- list ---------- */
+  function rowHTML(a, i, manage) {
+    var mg = manage ? '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
+      '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>' : '';
+    return '<div class="app-row" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+      '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div>' +
+      '<div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>' + mg + '</div>';
+  }
+  function adHTML(a) {
+    var bg = a.adImage ? 'url(' + encodeURI(a.adImage).replace(/\(/g, '%28').replace(/\)/g, '%29') + ') center/cover' : 'linear-gradient(135deg,' + esc(a.primaryColor || '#7c3aed') + ',#2e1065)';
+    return '<div class="ad-item"><div class="ad-banner" style="background:' + bg + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>' +
+      '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+      '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
+      '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openAppSheet(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
+  }
+  var CATI = { tools: 'fa-screwdriver-wrench', productivity: 'fa-briefcase', education: 'fa-graduation-cap', social: 'fa-users', other: 'fa-shapes' };
+  function tileHTML(a, i) {
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+      '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
+  }
+  function secHTML(icon, title, apps, cat) {
+    return '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid ' + icon + '"></i></span>' + title + '</div>' +
+      (cat ? '<button class="sec-more" onclick="gotoCat(\'' + cat + '\')"><i class="fa-solid fa-arrow-left"></i></button>' : '') + '</div><div class="tiles">' + apps.map(tileHTML).join('') + '</div></section>';
+  }
+  window.gotoCat = function (c) {
+    var el = document.querySelector('.chip[data-cat="' + c + '"]');
+    if (el) setCategory(c, el);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  function reveal() {
+    var els = document.querySelectorAll('.reveal:not(.in)');
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('in'); io.unobserve(x.target); } }); }, { threshold: 0.08 });
+    els.forEach(function (e) { io.observe(e); });
+  }
+  window.renderApps = function (apps) {
+    var box = $('appsContainer'), q = ($('searchInput').value || '').trim(), h = '', adm = isAdmin();
+    if (!apps.length) {
+      box.innerHTML = '<div class="state-box"><div class="icon-wrap"><i class="fa-solid fa-' + (q ? 'magnifying-glass' : 'box-open') + '"></i></div><p>' + (q ? T('لا نتائج عن «' + q + '»', 'No results for "' + q + '"') : T('لا توجد تطبيقات هنا بعد', 'No apps here yet')) + '</p></div>';
+      return;
+    }
+    if (q || activeCategory !== 'all') {
+      h = '<div class="section-title"><i class="fa-solid ' + (q ? 'fa-magnifying-glass' : (CATI[activeCategory] || 'fa-shapes')) + '"></i>' +
+        (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="apps-list">' +
+        apps.map(function (a, i) { return rowHTML(a, i, adm); }).join('') + '</div>';
+    } else {
+      var ads = apps.filter(function (a) { return a.adText || a.adImage; });
+      if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
+      h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
+      Object.keys(CAT).forEach(function (c) {
+        var list = apps.filter(function (a) { return (a.category || 'other') === c; });
+        if (list.length) h += secHTML(CATI[c], catName(c), list, c);
+      });
+      h += '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-grip"></i></span>' + T('كل التطبيقات', 'All apps') + '</div></div><div class="apps-list">' +
+        apps.map(function (a, i) { return rowHTML(a, i, adm); }).join('') + '</div></section>';
+    }
+    box.innerHTML = h;
+    reveal();
+    loadAllRatings(apps);
+  };
+  window.renderMyApps = function (mine) {
+    if (!currentUser) return;
+    mine = mine || allApps.filter(function (a) { return a.ownerUid === currentUser.uid || a.devId === currentUser.uid; });
+    var g = $('myAppsGrid'); g.className = 'apps-list';
+    g.innerHTML = mine.length ? mine.map(function (a, i) { return rowHTML(a, i, true); }).join('')
+      : '<div class="state-box" style="padding:28px"><p>' + T('لم ترفع شيئاً بعد', 'Nothing uploaded yet') + '</p></div>';
+  };
+
+  /* ---------- app page ---------- */
+  function findApp(id) { return allApps.find(function (a) { return a.id === id; }); }
+  window.openAppPage = function (id, fromHash) {
+    var a = findApp(id); if (!a) return;
+    curId = id;
+    if (!fromHash && location.hash !== '#app=' + id) { history.pushState(null, '', '#app=' + id); pushed = true; }
+    var shots = (a.screenshots || []).map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('');
+    $('apBody').innerHTML =
+      '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><div class="ap-dev">' + escHTML(a.devName || '') + '</div></div></div>' +
+      '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
+      '<div class="ap-actions"><button class="btn btn-primary ap-install" onclick="openAppSheet(\'' + a.id + '\')"><i class="fa-solid fa-download"></i><span>' + T('تثبيت', 'Install') + '</span></button><button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i><span>' + T('معاينة', 'Preview') + '</span></button></div>' +
+      (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span> <button class="btn btn-outline btn-sm" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-outline btn-sm" onclick="deleteApp(\'' + a.id + '\');closeAppPage()"><i class="fa-solid fa-trash"></i></button></div>' : '') +
+      (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
+      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
+    var p = $('appPage'); p.scrollTop = 0; p.classList.add('active'); document.body.style.overflow = 'hidden';
+    fetchRatings(id).then(function (r) { if (curId === id) renderRatings(a, r); });
+  };
+  function hidePage() { $('appPage').classList.remove('active'); document.body.style.overflow = ''; curId = null; }
+  window.closeAppPage = function () {
+    if (pushed) { pushed = false; history.back(); }
+    else { if (location.hash.indexOf('#app=') === 0) history.replaceState(null, '', location.pathname + location.search); hidePage(); }
+  };
+  window.sharePage = function () {
+    var a = findApp(curId); if (!a) return;
+    var link = location.origin + location.pathname + '#app=' + a.id;
+    if (navigator.share) navigator.share({ title: nm(a), url: link }).catch(function () {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(link).then(function () { showToast(T('تم نسخ الرابط', 'Link copied')); });
+  };
+  function checkHash() {
+    var m = /^#app=([\w-]+)/.exec(location.hash);
+    if (m) { if (curId !== m[1]) window.openAppPage(m[1], true); } else if (curId) hidePage();
+  }
+  window.addEventListener('hashchange', function () { pushed = false; checkHash(); });
+  var _la = window.loadApps;
+  window.loadApps = async function () { await _la(); checkHash(); };
+
+  function renderRatings(a, r) {
+    var st = $('apStat'); if (st) st.innerHTML = '<b>' + (r.count ? r.avg.toFixed(1) + ' ★' : '—') + '</b><small>' + r.count + ' ' + T('تقييم', 'ratings') + '</small>';
+    myStar = parseInt(localStorage.getItem('amgz-my-' + a.id) || '0', 10) || 0;
+    var h = '<h2 class="ap-h">' + T('التقييمات والمراجعات', 'Ratings & reviews') + '</h2>' +
+      '<div class="rate-sum"><div class="rate-big">' + (r.count ? r.avg.toFixed(1) : '—') + '</div><div><div class="stars">' + starsHTML(r.avg) + '</div><small style="color:var(--muted)">' + r.count + ' ' + T('تقييم', 'ratings') + '</small></div></div>' +
+      '<p class="ap-sub" style="margin-top:18px;font-weight:700">' + T('قيّم هذا التطبيق', 'Rate this app') + '</p><div class="star-input" id="starIn">';
+    for (var i = 1; i <= 5; i++) h += '<button type="button" class="' + (i <= myStar ? 'on' : '') + '" onclick="setStar(' + i + ')"><i class="fa-solid fa-star"></i></button>';
+    h += '</div><input class="rv-field" id="rvName" maxlength="40" placeholder="' + T('اسمك (اختياري)', 'Your name (optional)') + '">' +
+      '<textarea class="rv-field" id="rvText" rows="3" maxlength="400" placeholder="' + T('اكتب رأيك (اختياري)', 'Write a review (optional)') + '"></textarea>' +
+      '<button class="btn btn-primary btn-block" onclick="submitRating()">' + T('إرسال التقييم', 'Submit') + '</button>';
+    r.list.forEach(function (x, i) {
+      if (!x.text && !x.name) return;
+      h += '<div class="review" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's"><b>' + escHTML(x.name || T('مستخدم', 'User')) + '</b> <span class="stars">' + starsHTML(x.stars) + '</span><p style="color:var(--muted);font-size:.9rem;margin-top:4px">' + escHTML(x.text || '') + '</p>' + (isAdmin() && x.id ? '<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="delReview(\'' + x.id + '\')"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
+    });
+    $('apRatings').innerHTML = h;
+  }
+  window.setStar = function (n) {
+    myStar = n;
+    document.querySelectorAll('#starIn button').forEach(function (b, i) { b.classList.toggle('on', i < n); });
+  };
+  window.submitRating = function () {
+    if (!curId) return;
+    if (!myStar) { showToast(T('اختر عدد النجوم أولاً', 'Pick a star rating first')); return; }
+    var cid = localStorage.getItem('amgz-cid');
+    if (!cid) { cid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('amgz-cid', cid); }
+    var id = curId, a = findApp(id);
+    db.collection('apps').doc(id).collection('ratings').doc(cid).set({
+      stars: myStar, name: $('rvName').value.trim(), text: $('rvText').value.trim(),
+      at: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function () {
+      localStorage.setItem('amgz-my-' + id, String(myStar));
+      showToast(T('شكراً لتقييمك', 'Thanks for rating'));
+      return fetchRatings(id, true);
+    }).then(function (r) { if (curId === id) renderRatings(a, r); filterApps(); })
+      .catch(function (err) { showToast(T('تعذر حفظ التقييم: ', 'Could not save rating: ') + (err.message || '')); });
+  };
+
+  /* ---------- install sheet (id based, no inline strings) ---------- */
+  window.openAppSheet = function (id) {
+    var a = findApp(id); if (!a) return;
+    window.selectedApp = { name: nm(a), url: a.url, icon: iconSrc(a) };
+    $('sheetAppName').textContent = nm(a);
+    var box = $('sheetIconBox');
+    box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph';
+    box.innerHTML = window.selectedApp.icon ? '<img src="' + esc(window.selectedApp.icon) + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
+    $('sheetOverlay').classList.add('active'); $('bottomSheet').classList.add('active'); document.body.style.overflow = 'hidden';
+  };
+  window.closeSheet = function () {
+    $('sheetOverlay').classList.remove('active'); $('bottomSheet').classList.remove('active');
+    document.body.style.overflow = curId ? 'hidden' : '';
+  };
+
+  /* ---------- collective developer ---------- */
+  function h53(str, seed) {
+    var h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (var i = 0; i < str.length; i++) { var c = str.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (h2 >>> 0).toString(16) + (h1 >>> 0).toString(16);
+  }
+  function colEmail(name) { var k = name.toLowerCase().replace(/\s+/g, ' '); return 'c' + h53(k, 1) + h53(k, 2) + COL; }
+  var _mask = window.maskEmail;
+  window.maskEmail = function (e) {
+    if (e === ADMIN_EMAIL) return T('المدير', 'Admin');
+    if (e && e.indexOf(COL) > 0) return (auth.currentUser && auth.currentUser.displayName) || T('مطور جماعي', 'Team dev');
+    return _mask(e);
+  };
+  window.switchTab = function (m) {
+    authMode = m;
+    ['Collective', 'Login', 'Admin', 'User', 'Register'].forEach(function (t) { $('tab' + t).classList.toggle('active', t.toLowerCase() === m); });
+    $('nameGroup').style.display = (m === 'login' || m === 'admin') ? 'none' : 'block';
+    $('authEmail').closest('.form-group').style.display = (m === 'collective' || m === 'admin') ? 'none' : 'block';
+    $('authEmail').required = (m === 'login' || m === 'register' || m === 'user');
+    $('authName').required = (m === 'register' || m === 'collective' || m === 'user');
+    if (m === 'collective' || m === 'admin') $('authPassword').removeAttribute('minlength'); else $('authPassword').setAttribute('minlength', '6');
+    $('authHint').textContent = m === 'admin' ? T('أدخل كلمة سر المدير.', 'Enter the admin password.') : m === 'collective' ? T('اكتب اسمك وكلمة السر فقط — بدون بريد إلكتروني.', 'Just your name and the access password — no email.') : '';
+    $('authSubmit').innerHTML = (m === 'register' || m === 'user') ? '<i class="fa-solid fa-user-plus"></i><span>' + T('إنشاء حساب', 'Create Account') + '</span>'
+      : '<i class="fa-solid fa-right-to-bracket"></i><span>' + T('دخول', 'Login') + '</span>';
+    $('authError').classList.remove('show');
+  };
+  var _od = window.openDrawer;
+  window.openDrawer = function (t) { _od(t); if (t === 'auth') switchTab('collective'); };
+  var _auth = window.handleAuth;
+  window.handleAuth = function (e) {
+    if (authMode === 'admin') return adminLogin(e);
+    if (authMode === 'user') return userSignup(e);
+    if (authMode !== 'collective') return _auth(e);
+    e.preventDefault();
+    var err = $('authError'), btn = $('authSubmit'), name = $('authName').value.trim(), pass = $('authPassword').value;
+    err.classList.remove('show');
+    function fail(t) { err.textContent = t; err.classList.add('show'); }
+    if (location.protocol.indexOf('http') !== 0) return fail(T('المصادقة تعمل فقط عبر HTTPS', 'Auth needs HTTPS'));
+    if (!name) return fail(T('اكتب الاسم', 'Enter your name'));
+    if (pass !== GATE) return fail(T('كلمة السر غير صحيحة', 'Wrong password'));
+    var em = colEmail(name), fp = 'amgz-' + GATE;
+    setBtnLoading(btn, true);
+    withTimeout(auth.signInWithEmailAndPassword(em, fp).catch(function (er) {
+      if (['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials'].indexOf(er.code) > -1)
+        return auth.createUserWithEmailAndPassword(em, fp).then(function (c) { return c.user.updateProfile({ displayName: name }); });
+      throw er;
+    }), 20000).then(function () {
+      setBtnLoading(btn, false); closeDrawer('auth');
+      var u = auth.currentUser;
+      if (u) { $('userEmail').textContent = u.displayName || name; if (!u.photoURL) $('userAvatar').textContent = (u.displayName || name).charAt(0).toUpperCase(); fillProfileForm(u); }
+      showToast(T('مرحباً بك', 'Welcome'));
+    }).catch(function (er) { setBtnLoading(btn, false); fail(er.message === 'timeout' ? T('انتهت المهلة، تحقق من Firebase Auth', 'Timed out — check Firebase Auth') : friendlyError(er.code || er.message)); });
+  };
+
+  /* ---------- upload / edit with screenshots + ads ---------- */
+  function lines(v) { return v.split(/\r?\n/).map(function (x) { return x.trim(); }).filter(Boolean); }
+  window.handleUpload = function (e) {
+    e.preventDefault();
+    var u = auth.currentUser; if (!u) return;
+    var errBox = $('uploadError'), okBox = $('uploadSuccess'), btn = $('uploadSubmit');
+    errBox.classList.remove('show'); okBox.classList.remove('show'); setBtnLoading(btn, true);
+    var bio = $('profileBio'), links = $('profileLinks');
+    var data = {
+      name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
+      description: $('appDesc').value.trim(), category: $('appCategory').value,
+      screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
+      ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
+      devName: u.displayName || (u.email || '').split('@')[0], collective: isCol(u),
+      developerBio: bio ? bio.value.trim() : '', developerSocialLinks: links ? lines(links.value) : [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    db.collection('apps').add(data).then(async function () {
+      setBtnLoading(btn, false);
+      okBox.textContent = T('تم النشر بنجاح', 'Published successfully'); okBox.classList.add('show');
+      $('uploadForm').reset(); $('iconPreview').innerHTML = ''; cmps.up.set(null); sls.up.set(null);
+      await loadApps();
+      setTimeout(function () { closeDrawer('upload'); }, 900);
+    }).catch(function (er) { setBtnLoading(btn, false); errBox.textContent = er.message; errBox.classList.add('show'); });
+  };
+  var _ed = window.editApp;
+  window.editApp = function (id) {
+    _ed(id); var a = findApp(id);
+    if (a) { cmps.ed.set(a.ad); sls.ed.set(a); }
+  };
+  var _sv = window.saveAppEdit;
+  window.saveAppEdit = async function (e) {
+    e.preventDefault();
+    var id = $('editAppId').value, a = findApp(id);
+    var sv = sls.ed.get(); var extra = { ad: cmps.ed.get(), slides: sv.slides, autoShots: sv.auto };
+    await _sv(e);
+    try { await db.collection('apps').doc(id).update(extra); if (a) Object.assign(a, extra); filterApps(); } catch (x) {}
+  };
+
+  /* ---------- admin ---------- */
+  async function sha(t) {
+    var b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t));
+    return Array.from(new Uint8Array(b)).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+  }
+  window.adminLogin = async function (e) {
+    e.preventDefault();
+    var err = $('authError'), btn = $('authSubmit');
+    err.classList.remove('show');
+    function fail(t) { err.textContent = t; err.classList.add('show'); }
+    if (!window.crypto || !crypto.subtle) return fail(T('يلزم رابط https', 'HTTPS required'));
+    var h = await sha('amgz-admin:' + $('authPassword').value);
+    if (h !== ADMIN_HASH) return fail(T('كلمة السر غير صحيحة', 'Wrong password'));
+    setBtnLoading(btn, true);
+    try {
+      try { await auth.signInWithEmailAndPassword(ADMIN_EMAIL, h); }
+      catch (er) {
+        if (['auth/user-not-found', 'auth/invalid-credential', 'auth/invalid-login-credentials'].indexOf(er.code) < 0) throw er;
+        var c = await auth.createUserWithEmailAndPassword(ADMIN_EMAIL, h);
+        await c.user.updateProfile({ displayName: T('المدير', 'Admin') });
+      }
+      setBtnLoading(btn, false); closeDrawer('auth'); $('authPassword').value = '';
+      showToast(T('أهلاً بالمدير', 'Welcome, admin'));
+      filterApps();
+    } catch (er) { setBtnLoading(btn, false); fail(friendlyError(er.code || er.message)); }
+  };
+  var _del = window.deleteApp;
+  window.deleteApp = function (id) {
+    if (!isAdmin()) return _del(id);
+    if (!confirm(T('حذف التطبيق نهائياً؟', 'Delete this app permanently?'))) return;
+    db.collection('apps').doc(id).delete().then(function () {
+      allApps = allApps.filter(function (a) { return a.id !== id; }); filterApps(); renderMyApps(); showToast(T('تم الحذف', 'Deleted'));
+    }).catch(function (er) { alert(er.message); });
+  };
+  function asOwner(id, fn) {
+    var a = findApp(id), old;
+    if (isAdmin() && a) { old = a.ownerUid; a.ownerUid = auth.currentUser.uid; }
+    var r; try { r = fn(); } finally { if (isAdmin() && a && !(r && r.then)) a.ownerUid = old; }
+    if (r && r.then) return r.then(function (v) { if (isAdmin() && a) a.ownerUid = old; return v; }, function (x) { if (isAdmin() && a) a.ownerUid = old; throw x; });
+    return r;
+  }
+  var _ed2 = window.editApp;
+  window.editApp = function (id) { return asOwner(id, function () { return _ed2(id); }); };
+  var _sv2 = window.saveAppEdit;
+  window.saveAppEdit = function (e) { return asOwner($('editAppId').value, function () { return _sv2(e); }); };
+  window.delReview = function (rid) {
+    if (!isAdmin() || !curId) return;
+    var id = curId, a = findApp(id);
+    db.collection('apps').doc(id).collection('ratings').doc(rid).delete().then(function () { return fetchRatings(id, true); })
+      .then(function (r) { if (curId === id) renderRatings(a, r); showToast(T('تم حذف المراجعة', 'Review deleted')); })
+      .catch(function (er) { showToast(er.message); });
+  };
+
+  /* ---------- live search ---------- */
+  var sb = $('searchInput'), sug = $('sugBox'), sbWrap = sb.parentNode;
+  function updateSug() {
+    var q = sb.value.trim().toLowerCase();
+    sbWrap.classList.toggle('has', !!q);
+    if (!q) { sug.classList.remove('on'); return; }
+    var m = allApps.filter(function (a) { return (!a.suspended || canSee(a)) && (nm(a) + ' ' + ds(a) + ' ' + (a.devName || '')).toLowerCase().indexOf(q) > -1; }).slice(0, 6);
+    sug.innerHTML = m.length ? m.map(function (a) {
+      return '<div class="sug" onmousedown="event.preventDefault()" onclick="openFromSug(\'' + a.id + '\')">' + iconHTML(a, 'sug-i') + '<div><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</small></div></div>';
+    }).join('') : '<div class="sug-empty">' + T('لا نتائج', 'No results') + '</div>';
+    sug.classList.add('on');
+  }
+  sb.addEventListener('input', updateSug);
+  sb.addEventListener('focus', updateSug);
+  sb.addEventListener('blur', function () { setTimeout(function () { sug.classList.remove('on'); }, 150); });
+  sb.addEventListener('keydown', function (e) { if (e.key === 'Enter') sug.classList.remove('on'); });
+  $('sbClear').onclick = function () { sb.value = ''; sbWrap.classList.remove('has'); sug.classList.remove('on'); filterApps(); };
+  window.openFromSug = function (id) { sug.classList.remove('on'); openAppPage(id); };
+
+  /* ---------- preview ---------- */
+  window.openPreview = function (id) {
+    var a = findApp(id); if (!a) return;
+    $('pvTitle').textContent = nm(a); $('pvOpen').href = a.url;
+    $('pvNote').textContent = T('إذا ظهرت الشاشة فارغة فالموقع يمنع المعاينة — استخدم زر الفتح.', 'If the screen stays blank the site blocks previews — use the open button.');
+    $('pvFrame').src = a.url;
+    $('pvOverlay').classList.add('on');
+  };
+  window.closePreview = function () { $('pvOverlay').classList.remove('on'); setTimeout(function () { $('pvFrame').src = 'about:blank'; }, 400); };
+
+  /* ---------- ripple on press ---------- */
+  document.addEventListener('pointerdown', function (e) {
+    var t = e.target.closest && e.target.closest('.btn,.chip,.app-row,.app-tile,.sec-more,.tab-btn'); if (!t) return;
+    var r = t.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, sp = document.createElement('span');
+    sp.className = 'ripple'; sp.style.cssText = 'width:' + d + 'px;height:' + d + 'px;left:' + (e.clientX - r.left - d / 2) + 'px;top:' + (e.clientY - r.top - d / 2) + 'px';
+    if (getComputedStyle(t).position === 'static') t.style.position = 'relative';
+    t.style.overflow = 'hidden'; t.appendChild(sp); setTimeout(function () { sp.remove(); }, 700);
+  }, { passive: true });
+  /* ---------- never stay on endless skeleton ---------- */
+  function stuckMsg() {
+    var b = $('appsContainer'); if (!b || !$('skeletonGrid')) return;
+    var local = location.protocol.indexOf('http') !== 0;
+    b.innerHTML = '<div class="state-box"><div class="icon-wrap"><i class="fa-solid fa-' + (local ? 'cloud-arrow-up' : 'wifi') + '"></i></div><p>' +
+      (local ? T('الملف مفتوح من الجهاز مباشرة. ارفعه على استضافة (https مثل Vercel) وافتحه من الرابط حتى تعمل التطبيقات والحسابات.', 'Opened from local storage. Host it on https (e.g. Vercel) and open the link.')
+             : T('تعذر الاتصال بالخادم. تحقق من الإنترنت ثم أعد المحاولة.', 'Could not reach the server. Check your connection and retry.')) +
+      '</p>' + (local ? '' : '<button class="btn btn-primary" onclick="location.reload()">' + T('إعادة المحاولة', 'Retry') + '</button>') + '</div>';
+  }
+  setTimeout(stuckMsg, local0() ? 600 : 9000);
+  function local0() { return location.protocol.indexOf('http') !== 0; }
+
+  /* =================== v4 =================== */
+  var role = null, usersCache = {}, viewed = {}, kindSel = 'review', admTab = 'apps', admUsers = null;
+  function canSee(a) { var u = auth.currentUser; return !!(isAdmin() || (u && (a.ownerUid === u.uid || a.devId === u.uid))); }
+  function lock() { document.body.style.overflow = document.querySelector('.app-page.active') ? 'hidden' : ''; }
+  var BGS = [
+    ['ملعب كرة', 'radial-gradient(circle,transparent 0 16%,rgba(255,255,255,.75) 16.5% 18%,transparent 18.5%),linear-gradient(90deg,transparent 49.5%,rgba(255,255,255,.75) 49.5% 50.5%,transparent 50.5%),repeating-linear-gradient(90deg,#2e9c3f 0 12.5%,#37b04b 12.5% 25%)'],
+    ['غروب', 'linear-gradient(180deg,#1b1464,#e94057 60%,#f8b042)'], ['بحر', 'linear-gradient(180deg,#89f7fe,#2193b0 55%,#0b3c5d)'],
+    ['فضاء', 'radial-gradient(#fff 1px,transparent 1.5px) 0 0/38px 38px,radial-gradient(circle at 25% 30%,#4b2a8c,transparent 55%),radial-gradient(circle at 80% 75%,#1e3a8a,transparent 55%),#050510'],
+    ['غابة', 'linear-gradient(160deg,#0f5132,#2f9e44 60%,#a9e34b)'], ['صحراء', 'linear-gradient(180deg,#f6d365,#fda085 70%,#c2703b)'],
+    ['ثلج', 'linear-gradient(180deg,#d6ecff,#9cc9ee 60%,#f4faff)'], ['نيون', 'linear-gradient(135deg,#0f0c29,#6a11cb 50%,#ff00c8)'],
+    ['حلوى', 'linear-gradient(135deg,#ff9a9e,#fad0c4 50%,#fbc2eb)'], ['جبال', 'linear-gradient(180deg,#a1c4fd,#c2e9fb 45%,#4b6cb7 46%,#182848)'],
+    ['ساكورا', 'linear-gradient(135deg,#ffd1dc,#ffb6c9 50%,#e68aa8)'],
+    ['سايبر', 'linear-gradient(rgba(0,255,200,.28) 1px,transparent 1px) 0 0/26px 26px,linear-gradient(90deg,rgba(0,255,200,.28) 1px,transparent 1px) 0 0/26px 26px,#06122b'],
+    ['ذهبي', 'linear-gradient(135deg,#232526,#8a6d1d 50%,#f5d060)'], ['مطر', 'linear-gradient(180deg,#373b44,#4286f4)'],
+    ['قوس قزح', 'linear-gradient(120deg,#ff6b6b,#feca57 25%,#48dbfb 50%,#1dd1a1 75%,#a55eea)']
+  ];
+  var COVERS = BGS.map(function (b) { return b[1]; });
+  [['#667eea','#764ba2'],['#f093fb','#f5576c'],['#4facfe','#00f2fe'],['#43e97b','#38f9d7'],['#fa709a','#fee140'],['#30cfd0','#330867'],['#a18cd1','#fbc2eb'],['#fccb90','#d57eeb'],['#e0c3fc','#8ec5fc'],['#f6d365','#fda085'],['#0ba360','#3cba92'],['#ff5858','#f09819'],['#00c6ff','#0072ff'],['#c471f5','#fa71cd'],['#1e3c72','#2a5298']]
+    .forEach(function (c, i) { COVERS.push('radial-gradient(circle at ' + (15 + i * 5) + '% 20%,rgba(255,255,255,.3),transparent 45%),linear-gradient(135deg,' + c[0] + ',' + c[1] + ')'); });
+  var EMO = '⚽🏀🏈🎮🕹️🔥⭐✨💎👑🚀🌙☀️🌈🎯🏆🥇🎁🎉🎊💡📱💻🎵🎧📚🍕🍔☕🌸🐱🐶🦄🌍⚡💜❤️💙💚👍😎🤩🥳🎨✈️🚗🛒💰📈🔔🏖️🌴🎬📷'.match(/(\p{Extended_Pictographic}\uFE0F?)/gu);
+
+  function stageHTML(ad) {
+    ad = ad || {};
+    var items = (ad.items || []).map(function (it, i) {
+      return '<span class="stk" data-i="' + i + '" style="left:' + it.x + '%;top:' + it.y + '%;font-size:' + it.s + 'cqw;--r:' + it.r + 'deg;animation-delay:' + (i * 0.37) + 's">' + it.e + '</span>';
+    }).join('');
+    return '<div class="stage" style="background:' + (BGS[ad.bg] || BGS[0])[1] + '">' + items +
+      ((ad.title || ad.desc) ? '<div class="stage-txt"><b>' + escHTML(ad.title || '') + '</b><small>' + escHTML(ad.desc || '') + '</small></div>' : '') + '</div>';
+  }
+  function mountComposer(box) {
+    var st = { bg: 0, items: [], title: '', desc: '', sel: -1 }, drag = null;
+    box.innerHTML = '<div class="cmp"><div class="cw"></div><div class="cmp-bgs">' + BGS.map(function (b, i) { return '<button type="button" class="bgsw" data-i="' + i + '" style="background:' + b[1] + '" title="' + b[0] + '"></button>'; }).join('') +
+      '</div><input class="cmp-t" placeholder="عنوان الإعلان" maxlength="40"><input class="cmp-d" placeholder="وصف قصير" maxlength="80"><div class="cmp-emo">' +
+      EMO.map(function (e) { return '<button type="button" data-e="' + e + '">' + e + '</button>'; }).join('') +
+      '</div><div class="cmp-ctl"><label>الحجم <input type="range" class="cs" min="6" max="44"></label><label>الميلان <input type="range" class="cr" min="-70" max="70"></label><button type="button" class="btn btn-outline btn-sm cdel"><i class="fa-solid fa-trash"></i></button></div></div>';
+    var cw = box.querySelector('.cw'), ctl = box.querySelector('.cmp-ctl');
+    function draw() {
+      cw.innerHTML = stageHTML(st);
+      var els = cw.querySelectorAll('.stk'); if (st.sel > -1 && els[st.sel]) els[st.sel].classList.add('sel');
+      ctl.style.display = st.sel > -1 ? 'flex' : 'none';
+      if (st.sel > -1) { ctl.querySelector('.cs').value = st.items[st.sel].s; ctl.querySelector('.cr').value = st.items[st.sel].r; }
+      box.querySelectorAll('.bgsw').forEach(function (b, i) { b.classList.toggle('on', i === st.bg); });
+    }
+    cw.addEventListener('pointerdown', function (e) {
+      var t = e.target.closest('.stk');
+      if (!t) { st.sel = -1; draw(); return; }
+      st.sel = +t.dataset.i; draw(); drag = true; e.preventDefault();
+    });
+    cw.addEventListener('pointermove', function (e) {
+      if (!drag || st.sel < 0) return;
+      var r = cw.querySelector('.stage').getBoundingClientRect(), it = st.items[st.sel];
+      it.x = +Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)).toFixed(1);
+      it.y = +Math.min(100, Math.max(0, (e.clientY - r.top) / r.height * 100)).toFixed(1);
+      var el = cw.querySelectorAll('.stk')[st.sel]; el.style.left = it.x + '%'; el.style.top = it.y + '%';
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { cw.addEventListener(ev, function () { drag = null; }); });
+    box.querySelector('.cmp-bgs').onclick = function (e) { var b = e.target.closest('.bgsw'); if (b) { st.bg = +b.dataset.i; draw(); } };
+    box.querySelector('.cmp-emo').onclick = function (e) {
+      var b = e.target.closest('button'); if (!b || st.items.length >= 14) return;
+      st.items.push({ e: b.dataset.e, x: 30 + Math.random() * 40, y: 35 + Math.random() * 20, s: 16, r: 0 }); st.sel = st.items.length - 1; draw();
+    };
+    ctl.querySelector('.cs').oninput = function () { st.items[st.sel].s = +this.value; draw(); };
+    ctl.querySelector('.cr').oninput = function () { st.items[st.sel].r = +this.value; draw(); };
+    ctl.querySelector('.cdel').onclick = function () { st.items.splice(st.sel, 1); st.sel = -1; draw(); };
+    box.querySelector('.cmp-t').oninput = function () { st.title = this.value; draw(); };
+    box.querySelector('.cmp-d').oninput = function () { st.desc = this.value; draw(); };
+    draw();
+    return {
+      get: function () { return (!st.items.length && !st.title && !st.desc) ? null : { bg: st.bg, items: st.items.map(function (x) { return Object.assign({}, x); }), title: st.title, desc: st.desc }; },
+      set: function (ad) {
+        st = { bg: 0, items: [], title: '', desc: '', sel: -1 };
+        if (ad) { st.bg = ad.bg || 0; st.title = ad.title || ''; st.desc = ad.desc || ''; st.items = (ad.items || []).map(function (x) { return Object.assign({}, x); }); }
+        box.querySelector('.cmp-t').value = st.title; box.querySelector('.cmp-d').value = st.desc; draw();
+      }
+    };
+  }
+  function mountSlides(box) {
+    var list = [], auto = true;
+    function draw() {
+      box.innerHTML = '<label class="chk"><input type="checkbox" class="sa"' + (auto ? ' checked' : '') + '> صور المعاينة تلقائياً من الموقع</label>' +
+        list.map(function (x, i) {
+          return '<div class="slrow" data-i="' + i + '"><input type="text" class="st" maxlength="80" value="' + esc(x.t) + '" placeholder="نص الشريحة"><select class="ss">' +
+            [['9', 'صغير'], ['13', 'وسط'], ['18', 'كبير'], ['24', 'ضخم']].map(function (o) { return '<option value="' + o[0] + '"' + (String(x.s) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') +
+            '</select><input type="color" class="sc" value="' + x.c + '"><label class="chk"><input type="checkbox" class="sb"' + (x.b ? ' checked' : '') + '> غامق</label><select class="sg">' +
+            BGS.slice(0, 8).map(function (b, j) { return '<option value="' + j + '"' + (x.bg === j ? ' selected' : '') + '>' + b[0] + '</option>'; }).join('') +
+            '</select><button type="button" class="btn btn-outline btn-icon btn-sm sx"><i class="fa-solid fa-xmark"></i></button></div>';
+        }).join('') + (list.length < 5 ? '<button type="button" class="btn btn-outline btn-sm sadd">+ شريحة نص</button>' : '');
+    }
+    function upd(e) {
+      var t = e.target, row = t.closest('.slrow'); if (t.classList.contains('sa')) { auto = t.checked; return; } if (!row) return;
+      var x = list[+row.dataset.i];
+      if (t.classList.contains('st')) x.t = t.value; else if (t.classList.contains('ss')) x.s = +t.value;
+      else if (t.classList.contains('sc')) x.c = t.value; else if (t.classList.contains('sb')) x.b = t.checked; else if (t.classList.contains('sg')) x.bg = +t.value;
+    }
+    box.addEventListener('input', upd); box.addEventListener('change', upd);
+    box.addEventListener('click', function (e) {
+      if (e.target.closest('.sadd')) { list.push({ t: '', s: 13, c: '#ffffff', b: true, bg: list.length % 8 }); draw(); }
+      var x = e.target.closest('.sx'); if (x) { list.splice(+x.closest('.slrow').dataset.i, 1); draw(); }
+    });
+    draw();
+    return {
+      get: function () { return { slides: list.filter(function (x) { return x.t.trim(); }).map(function (x) { return Object.assign({}, x); }), auto: auto }; },
+      set: function (a) { list = (a && a.slides || []).map(function (x) { return Object.assign({}, x); }); auto = a ? a.autoShots !== false : true; draw(); }
+    };
+  }
+  var cmps = { up: mountComposer($('cmpUp')), ed: mountComposer($('cmpEd')) };
+  var sls = { up: mountSlides($('slUp')), ed: mountSlides($('slEd')) };
+  function slideHTML(x) { return '<div class="shot-slide" style="background:' + BGS[x.bg || 0][1] + '"><span style="font-size:' + x.s + 'cqw;color:' + esc(x.c) + ';font-weight:' + (x.b ? 800 : 500) + '">' + escHTML(x.t) + '</span></div>'; }
+  function autoShots(a) {
+    var u = encodeURI(a.url);
+    return '<img src="https://image.thum.io/get/viewportWidth/390/width/400/crop/760/noanimate/' + u + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+      '<img src="https://image.thum.io/get/viewportWidth/820/width/560/crop/760/noanimate/' + u + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+  }
+
+  /* ---------- visibility + lists ---------- */
+  window.getFiltered = function () {
+    var q = ($('searchInput').value || '').trim().toLowerCase();
+    return allApps.filter(function (a) {
+      if (a.suspended && !canSee(a)) return false;
+      var t = ((a.nameAr || '') + ' ' + (a.name || '') + ' ' + (a.nameEn || '') + ' ' + (a.description || '') + ' ' + (a.devName || '')).toLowerCase();
+      return (activeCategory === 'all' || a.category === activeCategory) && (!q || t.indexOf(q) > -1);
+    });
+  };
+  function tileHTML(a, i, mg) {
+    var b = mg ? '<div class="tile-mg"><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash"></i></button></div>' : '';
+    var f = (a.suspended ? '<span class="bdg red">' + T('موقوف', 'Suspended') + '</span> ' : '') + (a.adminNote && canSee(a) ? '<span class="bdg gold">⚠ ' + T('تنبيه', 'Notice') + '</span>' : '');
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+      '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div>' + f + b + '</div>';
+  }
+  function secHTML(icon, title, apps, cat) {
+    return '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid ' + icon + '"></i></span>' + title + '</div>' +
+      (cat ? '<button class="sec-more" onclick="gotoCat(\'' + cat + '\')"><i class="fa-solid fa-arrow-left"></i></button>' : '') + '</div><div class="tiles">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div></section>';
+  }
+  function adHTML(a) {
+    var ban;
+    if (a.ad) ban = '<div class="ad-banner2" onclick="openAppPage(\'' + a.id + '\')">' + stageHTML(a.ad) + '<span class="ad-tag">' + T('إعلان', 'Ad') + '</span></div>';
+    else ban = '<div class="ad-banner" style="background:' + (a.adImage ? 'url(' + encodeURI(a.adImage) + ') center/cover' : 'linear-gradient(135deg,#7c3aed,#2e1065)') + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>';
+    return '<div class="ad-item">' + ban + '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+      '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
+      '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();installApp(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
+  }
+  window.renderApps = function (apps) {
+    var box = $('appsContainer'), q = ($('searchInput').value || '').trim(), h = '';
+    if (!apps.length) {
+      box.innerHTML = '<div class="state-box"><div class="icon-wrap"><i class="fa-solid fa-' + (q ? 'magnifying-glass' : 'box-open') + '"></i></div><p>' + (q ? T('لا نتائج عن «' + q + '»', 'No results for "' + q + '"') : T('لا توجد تطبيقات هنا بعد', 'No apps here yet')) + '</p></div>'; return;
+    }
+    if (q || activeCategory !== 'all') {
+      h = '<div class="section-title"><i class="fa-solid ' + (q ? 'fa-magnifying-glass' : (CATI[activeCategory] || 'fa-shapes')) + '"></i>' + (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="tgrid">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div>';
+    } else {
+      var ads = apps.filter(function (a) { return a.ad || a.adText || a.adImage; });
+      if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
+      h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
+      Object.keys(CAT).forEach(function (c) { var l = apps.filter(function (a) { return (a.category || 'other') === c; }); if (l.length) h += secHTML(CATI[c], catName(c), l, c); });
+      h += '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-grip"></i></span>' + T('كل التطبيقات', 'All apps') + '</div></div><div class="tgrid">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div></section>';
+    }
+    box.innerHTML = h; reveal(); loadAllRatings(apps);
+  };
+  window.renderMyApps = function (mine) {
+    if (!currentUser) return;
+    mine = mine || allApps.filter(function (a) { return a.ownerUid === currentUser.uid || a.devId === currentUser.uid; });
+    var g = $('myAppsGrid'); g.className = 'tgrid';
+    g.innerHTML = mine.length ? mine.map(function (a, i) { return tileHTML(a, i, true); }).join('') : '<div class="state-box" style="padding:28px"><p>' + T('لم ترفع شيئاً بعد', 'Nothing uploaded yet') + '</p></div>';
+  };
+
+  /* ---------- ratings with complaints/suggestions ---------- */
+  function fetchRatings(id, force) {
+    if (!force && ratingsCache[id]) return Promise.resolve(ratingsCache[id]);
+    return db.collection('apps').doc(id).collection('ratings').limit(300).get().then(function (snap) {
+      var list = [], sum = 0, n = 0;
+      snap.forEach(function (d) { var x = d.data(); x.id = d.id; list.push(x); if ((x.kind || 'review') === 'review' && x.stars > 0) { sum += x.stars; n++; } });
+      list.sort(function (a, b) { return ((b.at && b.at.seconds) || 0) - ((a.at && a.at.seconds) || 0); });
+      return (ratingsCache[id] = { count: n, avg: n ? sum / n : 0, list: list });
+    }).catch(function () { return (ratingsCache[id] = { count: 0, avg: 0, list: [], err: true }); });
+  }
+  var KINDS = [['review', 'تقييم', 'Review'], ['complaint', 'شكوى', 'Complaint'], ['suggest', 'اقتراح', 'Suggestion']];
+  function rvHTML(x, i) {
+    var k = x.kind || 'review', kn = KINDS.filter(function (q) { return q[0] === k; })[0];
+    return '<div class="review" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's"><b>' + escHTML(x.name || T('مستخدم', 'User')) + '</b> ' + (k === 'review' ? '<span class="stars">' + starsHTML(x.stars) + '</span>' : '<span class="bdg ' + (k === 'complaint' ? 'red' : 'gold') + '">' + kn[1] + '</span>') +
+      (x.text ? '<p style="color:var(--muted);font-size:.9rem;margin-top:4px">' + escHTML(x.text) + '</p>' : '') +
+      (isAdmin() ? '<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="delReview(\'' + x.id + '\')"><i class="fa-solid fa-trash"></i></button>' : '') + '</div>';
+  }
+  function renderRatings(a, r) {
+    var st = $('apStat'); if (st) st.innerHTML = '<b>' + (r.count ? r.avg.toFixed(1) + ' ★' : '—') + '</b><small>' + r.count + ' ' + T('تقييم', 'ratings') + '</small>';
+    myStar = parseInt(localStorage.getItem('amgz-my-' + a.id) || '0', 10) || 0;
+    var pub = r.list.filter(function (x) { return (x.kind || 'review') === 'review' && (x.text || x.name); });
+    var fb = r.list.filter(function (x) { return x.kind && x.kind !== 'review'; });
+    var h = '<h2 class="ap-h">' + T('التقييمات والمراجعات', 'Ratings & reviews') + '</h2><div class="rate-sum"><div class="rate-big">' + (r.count ? r.avg.toFixed(1) : '—') + '</div><div><div class="stars">' + starsHTML(r.avg) + '</div><small style="color:var(--muted)">' + r.count + ' ' + T('تقييم', 'ratings') + '</small></div></div>' +
+      '<div class="fb-tabs">' + KINDS.map(function (k) { return '<button type="button" class="' + (k[0] === kindSel ? 'on' : '') + '" onclick="setKind(\'' + k[0] + '\',this)">' + T(k[1], k[2]) + '</button>'; }).join('') + '</div><div class="star-input" id="starIn">';
+    for (var i = 1; i <= 5; i++) h += '<button type="button" class="' + (i <= myStar ? 'on' : '') + '" onclick="setStar(' + i + ')"><i class="fa-solid fa-star"></i></button>';
+    h += '</div><input class="rv-field" id="rvName" maxlength="40" placeholder="' + T('اسمك (اختياري)', 'Your name (optional)') + '"><textarea class="rv-field" id="rvText" rows="3" maxlength="500" placeholder="' + T('اكتب هنا...', 'Write here...') + '"></textarea>' +
+      '<button class="btn btn-primary btn-block" onclick="submitRating()">' + T('إرسال', 'Submit') + '</button>';
+    h += pub.map(rvHTML).join('');
+    if (canSee(a) && fb.length) h += '<h2 class="ap-h">' + T('الشكاوي والاقتراحات', 'Complaints & suggestions') + '</h2>' + fb.map(rvHTML).join('');
+    $('apRatings').innerHTML = h;
+  }
+  window.setKind = function (k, el) { kindSel = k; document.querySelectorAll('.fb-tabs button').forEach(function (b) { b.classList.toggle('on', b === el); }); $('starIn').style.display = k === 'review' ? 'flex' : 'none'; };
+  window.submitRating = function () {
+    if (!curId) return;
+    var text = $('rvText').value.trim(), kind = kindSel;
+    if (kind === 'review' && !myStar) { showToast(T('اختر عدد النجوم أولاً', 'Pick stars first')); return; }
+    if (kind !== 'review' && !text) { showToast(T('اكتب النص أولاً', 'Write something first')); return; }
+    var cid = localStorage.getItem('amgz-cid');
+    if (!cid) { cid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('amgz-cid', cid); }
+    var id = curId, a = findApp(id), nmv = $('rvName').value.trim() || (auth.currentUser && auth.currentUser.displayName) || '';
+    db.collection('apps').doc(id).collection('ratings').doc(cid + '_' + kind).set({ kind: kind, stars: kind === 'review' ? myStar : 0, name: nmv, text: text, at: firebase.firestore.FieldValue.serverTimestamp() })
+      .then(function () { if (kind === 'review') localStorage.setItem('amgz-my-' + id, String(myStar)); showToast(T('شكراً لك', 'Thank you')); return fetchRatings(id, true); })
+      .then(function (r) { if (curId === id) renderRatings(a, r); filterApps(); })
+      .catch(function (er) { showToast(T('تعذر الإرسال: ', 'Failed: ') + (er.message || '')); });
+  };
+  function fetchViews(id) { return db.collection('apps').doc(id).collection('views').limit(500).get().then(function (s) { return s.size; }).catch(function () { return 0; }); }
+
+  /* ---------- app page (Play style) ---------- */
+  window.installApp = function (id) { var a = findApp(id); if (a) window.open(a.url, '_blank', 'noopener'); };
+  window.openAppSheet = window.installApp;
+  var WAVE = '<path d="M0 30 Q75 6 150 30 T300 30 T450 30 T600 30 T750 30 T900 30 T1050 30 T1200 30 V60 H0Z"/>';
+  window.openAppPage = function (id, fromHash) {
+    var a = findApp(id); if (!a) return;
+    if (a.suspended && !canSee(a)) { showToast(T('التطبيق غير متاح حالياً', 'App unavailable')); return; }
+    curId = id;
+    if (!fromHash && location.hash !== '#app=' + id) { history.pushState(null, '', '#app=' + id); pushed = true; }
+    if (!viewed[id]) {
+      viewed[id] = 1; var cid = localStorage.getItem('amgz-cid') || (Math.random().toString(36).slice(2) + Date.now().toString(36)); localStorage.setItem('amgz-cid', cid);
+      db.collection('apps').doc(id).collection('views').doc(cid).set({ at: firebase.firestore.FieldValue.serverTimestamp() }).catch(function () {});
+    }
+    var uid = a.ownerUid || a.devId || '';
+    var shots = (a.slides || []).map(slideHTML).join('') + (a.autoShots !== false ? autoShots(a) : '') + (a.screenshots || []).map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('');
+    $('apBody').innerHTML =
+      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('مخفي عن جميع المستخدمين.', 'Hidden from everyone.') + '</p></div></div>' : '') +
+      (a.adminNote && canSee(a) ? '<div class="adm-note"><i class="fa-solid fa-triangle-exclamation"></i><div><b>' + T('تنبيه من الإدارة', 'Notice from admin') + '</b><p>' + escHTML(a.adminNote) + '</p></div></div>' : '') +
+      '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><div class="ap-dev" onclick="openDevPage(\'' + uid + '\')">' + escHTML(a.devName || '') + '</div></div></div>' +
+      '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
+      '<div class="ap-actions"><button class="wave-btn" onclick="installApp(\'' + a.id + '\')"><svg class="wv" viewBox="0 0 1200 60" preserveAspectRatio="none">' + WAVE + '</svg><svg class="wv wv2" viewBox="0 0 1200 60" preserveAspectRatio="none">' + WAVE + '</svg><span>' + T('تثبيت', 'Install') + '</span></button>' +
+      '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
+      (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
+      (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
+      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
+    var p = $('appPage'); p.scrollTop = 0; p.classList.add('active'); lock();
+    fetchRatings(id).then(function (r) { if (curId === id) renderRatings(a, r); });
+  };
+
+  /* ---------- developer page ---------- */
+  function getUser(uid) { if (usersCache[uid]) return Promise.resolve(usersCache[uid]); return db.collection('users').doc(uid).get().then(function (d) { return (usersCache[uid] = d.exists ? d.data() : {}); }).catch(function () { return {}; }); }
+  function coverHTML(c) {
+    if (!c) return '';
+    return '<div class="dv-cover" style="background:' + (COVERS[c.id] || COVERS[0]) + '">' + (c.text ? '<span style="font-size:' + (c.s || 8) + 'cqw;color:' + esc(c.c || '#fff') + ';font-weight:' + (c.b ? 800 : 500) + ';text-shadow:0 2px 12px rgba(0,0,0,.35)">' + escHTML(c.text) + '</span>' : '') + '</div>';
+  }
+  window.openDevPage = async function (uid) {
+    if (!uid) return;
+    var pg = $('devPage'); $('dvBody').innerHTML = '<div class="state-box"><i class="fa-solid fa-circle-notch fa-spin"></i></div>'; pg.classList.add('active'); lock();
+    var p = await getUser(uid), apps = allApps.filter(function (x) { return (x.ownerUid || x.devId) === uid && (!x.suspended || canSee(x)); });
+    var views = await Promise.all(apps.map(function (x) { return fetchViews(x.id); })), best = -1, bv = -1;
+    apps.forEach(function (x, i) { if (views[i] > bv) { bv = views[i]; best = i; } });
+    var name = p.name || (apps[0] && apps[0].devName) || T('مطور', 'Developer'), own = auth.currentUser && auth.currentUser.uid === uid;
+    var f = best > -1 ? apps[best] : null, rest = apps.filter(function (x) { return x !== f; });
+    $('dvBody').innerHTML = coverHTML(p.cover) +
+      '<div class="dv-head"><div class="dv-av">' + escHTML(name.charAt(0).toUpperCase()) + '</div><div style="flex:1"><h1 style="font-size:1.4rem;font-weight:800">' + escHTML(name) + '</h1><small style="color:var(--muted)">' + apps.length + ' ' + T('تطبيق', 'apps') + '</small></div>' +
+      (own ? '<button class="btn btn-outline btn-sm" onclick="openCoverEditor()"><i class="fa-solid fa-palette"></i> ' + T('تخصيص', 'Customize') + '</button>' : '') + '</div>' +
+      (p.bio ? '<p class="ap-desc" style="margin-bottom:12px">' + escHTML(p.bio) + '</p>' : '') +
+      (f ? '<div class="dv-feat" onclick="openAppPage(\'' + f.id + '\')">' + iconHTML(f, 'tile-icon') + '<div><span class="bdg gold">⭐ ' + T('تطبيق مميز', 'Featured') + '</span><h3 style="margin:6px 0 2px">' + escHTML(nm(f)) + '</h3><small style="color:var(--muted)">' + bv + ' ' + T('معاينة', 'views') + '</small></div></div>' : '') +
+      (rest.length ? '<div class="tgrid">' + rest.map(function (x, i) { return tileHTML(x, i); }).join('') + '</div>' : '');
+    loadAllRatings(apps);
+  };
+  window.closeDevPage = function () { $('devPage').classList.remove('active'); lock(); };
+  function showModal(h) { $('mdBody').innerHTML = h; $('mdOv').classList.add('on'); }
+  window.closeModal = function () { $('mdOv').classList.remove('on'); };
+  $('mdOv').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+  window.openCoverEditor = async function () {
+    var u = auth.currentUser; if (!u) return; var p = await getUser(u.uid), c = p.cover || { id: 0, text: '', c: '#ffffff', s: 8, b: true }, sel = c.id;
+    showModal('<h3>' + T('تخصيص صفحتي', 'Customize my page') + '</h3><div class="cvg">' + COVERS.map(function (g, i) { return '<button type="button" data-i="' + i + '" class="' + (i === sel ? 'on' : '') + '" style="background:' + g + '"></button>'; }).join('') + '</div>' +
+      '<input type="text" id="cvText" maxlength="50" placeholder="' + T('نص على الغلاف', 'Cover text') + '" value="' + esc(c.text || '') + '"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><input type="color" id="cvCol" value="' + (c.c || '#ffffff') + '"><select id="cvSize" class="rv-field" style="margin:0">' + [[6, 'صغير'], [8, 'وسط'], [11, 'كبير'], [15, 'ضخم']].map(function (o) { return '<option value="' + o[0] + '"' + (+c.s === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select><label class="chk"><input type="checkbox" id="cvB"' + (c.b ? ' checked' : '') + '> ' + T('غامق', 'Bold') + '</label></div>' +
+      '<textarea id="cvBio" rows="3" maxlength="300" placeholder="' + T('نبذة عنك', 'About you') + '">' + escHTML(p.bio || '') + '</textarea><div class="md-act"><button class="btn btn-outline" onclick="closeModal()">' + T('إلغاء', 'Cancel') + '</button><button class="btn btn-outline" id="cvNone">' + T('بدون غلاف', 'No cover') + '</button><button class="btn btn-primary" id="cvSave">' + T('حفظ', 'Save') + '</button></div>');
+    $('mdBody').querySelector('.cvg').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; sel = +b.dataset.i; this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); };
+    function save(cover) {
+      var data = { cover: cover, bio: $('cvBio').value.trim(), name: u.displayName || p.name || '' };
+      db.collection('users').doc(u.uid).set(data, { merge: true }).then(function () { usersCache[u.uid] = Object.assign(p, data); closeModal(); openDevPage(u.uid); showToast(T('تم الحفظ', 'Saved')); }).catch(function (er) { showToast(er.message); });
+    }
+    $('cvSave').onclick = function () { save({ id: sel, text: $('cvText').value.trim(), c: $('cvCol').value, s: +$('cvSize').value, b: $('cvB').checked }); };
+    $('cvNone').onclick = function () { save(null); };
+  };
+
+  /* ---------- roles ---------- */
+  function applyRole() {
+    var pub = role === 'dev' || role === 'admin';
+    var up = $('btnUpload'), ds2 = $('btnDevSettings'), ms = $('myAppsSection');
+    if (!auth.currentUser) return;
+    if (up) up.style.display = pub ? '' : 'none';
+    if (ds2) ds2.style.display = pub ? '' : 'none';
+    if (ms) ms.style.display = pub ? '' : 'none';
+    var note = allApps.filter(function (a) { return (a.ownerUid === auth.currentUser.uid || a.devId === auth.currentUser.uid) && (a.adminNote || a.suspended); });
+    if (role === 'dev' && note.length && !sessionStorage.getItem('amgz-note')) { sessionStorage.setItem('amgz-note', '1'); showToast(T('لديك تنبيه من الإدارة على أحد تطبيقاتك', 'You have a notice from admin')); }
+  }
+  auth.onAuthStateChanged(async function (u) {
+    role = null; if (!u) { return; }
+    var prof;
+    try {
+      var d = await db.collection('users').doc(u.uid).get();
+      if (d.exists) prof = d.data();
+      else { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : (window._pendingRole || 'dev'), name: u.displayName || '', email: u.email || '', collective: isCol(u) }; db.collection('users').doc(u.uid).set(Object.assign({ createdAt: firebase.firestore.FieldValue.serverTimestamp() }, prof)).catch(function () {}); }
+    } catch (e) { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : 'dev' }; }
+    if (prof.deleted) { auth.signOut(); showToast(T('تم حذف هذا الحساب من قبل الإدارة', 'This account was removed by admin')); return; }
+    usersCache[u.uid] = prof; role = u.email === ADMIN_EMAIL ? 'admin' : prof.role; applyRole();
+  });
+  window.userSignup = async function (e) {
+    e.preventDefault();
+    var err = $('authError'), btn = $('authSubmit'), name = $('authName').value.trim(), em = $('authEmail').value.trim(), pw = $('authPassword').value;
+    err.classList.remove('show');
+    function fail(t) { err.textContent = t; err.classList.add('show'); }
+    if (!name) return fail(T('اكتب اسمك', 'Enter your name'));
+    setBtnLoading(btn, true); window._pendingRole = 'user';
+    try {
+      var c = await auth.createUserWithEmailAndPassword(em, pw); await c.user.updateProfile({ displayName: name });
+      await db.collection('users').doc(c.user.uid).set({ role: 'user', name: name, email: em, createdAt: firebase.firestore.FieldValue.serverTimestamp() }).catch(function () {});
+      role = 'user'; setBtnLoading(btn, false); closeDrawer('auth'); showToast(T('تم إنشاء حسابك', 'Account created'));
+      var ue = $('userEmail'); if (ue) ue.textContent = name;
+    } catch (er) { setBtnLoading(btn, false); fail(friendlyError(er.code || er.message)); }
+    window._pendingRole = null;
+  };
+
+  /* ---------- admin dashboard ---------- */
+  function askText(title, init, cb) {
+    showModal('<h3>' + title + '</h3><textarea id="mdTxt" rows="5" maxlength="600">' + escHTML(init || '') + '</textarea><div class="md-act"><button class="btn btn-outline" onclick="closeModal()">' + T('إلغاء', 'Cancel') + '</button><button class="btn btn-primary" id="mdOk">' + T('حفظ', 'Save') + '</button></div>');
+    $('mdOk').onclick = function () { var v = $('mdTxt').value.trim(); closeModal(); cb(v); };
+  }
+  function devList() {
+    var map = {};
+    (admUsers || []).forEach(function (u) { if (!u.deleted && u.role !== 'admin') map[u.id] = u; });
+    allApps.forEach(function (a) { var id = a.ownerUid || a.devId; if (id && !map[id]) map[id] = { id: id, role: 'dev', name: a.devName || '', email: a.devEmail || a.ownerEmail || '' }; });
+    return Object.keys(map).map(function (k) { return map[k]; });
+  }
+  window.openAdmin = async function () {
+    if (!isAdmin()) return;
+    $('admPage').classList.add('active'); lock(); renderAdmin();
+    try { var sn = await db.collection('users').get(); admUsers = []; sn.forEach(function (d) { var x = d.data(); x.id = d.id; admUsers.push(x); }); } catch (e) { admUsers = []; }
+    renderAdmin();
+  };
+  window.closeAdmin = function () { $('admPage').classList.remove('active'); lock(); };
+  window.admTabSet = function (t) { admTab = t; renderAdmin(); };
+  function renderAdmin() {
+    var devs = devList(), users = (admUsers || []).filter(function (u) { return u.role === 'user' && !u.deleted; });
+    var susp = allApps.filter(function (a) { return a.suspended; }), notes = allApps.filter(function (a) { return a.adminNote; });
+    var h = '<div class="adm-stats">' + [['التطبيقات', allApps.length, 'fa-cubes'], ['الموقوفة', susp.length, 'fa-ban'], ['المطورون', devs.length, 'fa-code'], ['الأعضاء', users.length, 'fa-users']].map(function (x, i) { return '<div class="adm-stat" style="animation-delay:' + i * 0.07 + 's"><i class="fa-solid ' + x[2] + '" style="color:var(--primary-light)"></i><b>' + x[1] + '</b><small>' + x[0] + '</small></div>'; }).join('') + '</div>' +
+      '<div class="adm-tabs">' + [['apps', 'التطبيقات'], ['devs', 'المطورون والحسابات'], ['notes', 'التنبيهات']].map(function (t) { return '<button class="' + (admTab === t[0] ? 'on' : '') + '" onclick="admTabSet(\'' + t[0] + '\')">' + t[1] + '</button>'; }).join('') + '</div>';
+    if (admTab === 'apps') {
+      h += allApps.map(function (a, i) {
+        return '<div class="adm-row" style="animation-delay:' + Math.min(i * 0.04, 0.4) + 's">' + iconHTML(a, 'row-icon') + '<div class="info"><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.devName || '') + '</small> ' + (a.suspended ? '<span class="bdg red">موقوف</span>' : '<span class="bdg">نشط</span>') + (a.adminNote ? ' <span class="bdg gold">تنبيه</span>' : '') + '</div>' +
+          '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="openAppPage(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn btn-outline" title="تنبيه" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-triangle-exclamation"></i></button><button class="btn btn-outline" title="إيقاف/تفعيل" onclick="admSuspend(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.suspended ? 'play' : 'pause') + '"></i></button>' +
+          '<button class="btn btn-outline" title="حذف" onclick="deleteApp(\'' + a.id + '\');setTimeout(renderAdmin,600)"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button></div></div>';
+      }).join('') || '<div class="state-box"><p>لا توجد تطبيقات</p></div>';
+    } else if (admTab === 'devs') {
+      h += devs.concat(users).map(function (d, i) {
+        var n = allApps.filter(function (a) { return (a.ownerUid || a.devId) === d.id; }).length, em = (d.email || '').indexOf(COL) > 0 ? 'مطور جماعي' : (d.email || '');
+        return '<div class="adm-row" style="animation-delay:' + Math.min(i * 0.04, 0.4) + 's"><div class="dv-av" style="width:48px;height:48px;font-size:1.3rem;border-radius:16px">' + escHTML((d.name || '?').charAt(0).toUpperCase()) + '</div><div class="info"><b>' + escHTML(d.name || '—') + '</b><small>' + escHTML(em) + '</small> <span class="bdg">' + (d.role === 'user' ? 'عضو' : 'مطور') + '</span> <small>' + n + ' تطبيق</small></div>' +
+          '<div class="adm-act">' + (d.role !== 'user' ? '<button class="btn btn-outline" title="صفحته" onclick="openDevPage(\'' + d.id + '\')"><i class="fa-solid fa-id-card"></i></button>' : '') + '<button class="btn btn-outline" title="حذف الحساب" onclick="admDelDev(\'' + d.id + '\')"><i class="fa-solid fa-user-xmark" style="color:var(--danger)"></i></button></div></div>';
+      }).join('') || '<div class="state-box"><p>لا توجد حسابات</p></div>';
+    } else {
+      h += notes.map(function (a) {
+        return '<div class="adm-row">' + iconHTML(a, 'row-icon') + '<div class="info"><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.adminNote) + '</small></div><div class="adm-act"><button class="btn btn-outline" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline" onclick="admClearNote(\'' + a.id + '\')"><i class="fa-solid fa-check"></i></button></div></div>';
+      }).join('') || '<div class="state-box"><p>لا توجد تنبيهات</p></div>';
+    }
+    $('admBody').innerHTML = h;
+  }
+  function admUpdate(id, data, msg) {
+    return db.collection('apps').doc(id).update(data).then(function () { var a = findApp(id); if (a) Object.assign(a, data); renderAdmin(); filterApps(); showToast(msg); }).catch(function (er) { alert(er.message); });
+  }
+  window.admSuspend = function (id) { var a = findApp(id); admUpdate(id, { suspended: !a.suspended }, a.suspended ? 'تم التفعيل' : 'تم إيقاف التطبيق'); };
+  window.admNote = function (id) { var a = findApp(id); askText('وصف المشكلة (يظهر للمطور)', a.adminNote, function (v) { admUpdate(id, { adminNote: v, adminNoteAt: Date.now() }, 'تم إرسال التنبيه'); }); };
+  window.admClearNote = function (id) { admUpdate(id, { adminNote: '' }, 'تمت إزالة التنبيه'); };
+  window.admDelDev = async function (uid) {
+    if (!confirm('حذف الحساب وجميع تطبيقاته نهائياً؟')) return;
+    try {
+      await Promise.all(allApps.filter(function (a) { return (a.ownerUid || a.devId) === uid; }).map(function (a) { return db.collection('apps').doc(a.id).delete(); }));
+      await db.collection('users').doc(uid).set({ deleted: true, deletedAt: Date.now() }, { merge: true });
+      allApps = allApps.filter(function (a) { return (a.ownerUid || a.devId) !== uid; });
+      (admUsers || []).forEach(function (u) { if (u.id === uid) u.deleted = true; });
+      renderAdmin(); filterApps(); showToast('تم حذف الحساب');
+    } catch (er) { alert(er.message); }
+  };
+
+  /* ---------- bottom nav with sliding wave pill ---------- */
+  var bn = $('bnav'), bnInd = $('bnInd'), bnCur = 'home';
+  function bnSet(k) {
+    var b = bn.querySelector('[data-k="' + k + '"]'); if (!b) return; bnCur = k;
+    bn.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    bnInd.style.width = b.offsetWidth + 'px'; bnInd.style.transform = 'translateX(' + b.offsetLeft + 'px)';
+  }
+  bn.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var k = b.dataset.k; bnSet(k);
+    if (k === 'home') { sb.value = ''; sbWrap.classList.remove('has'); var all = document.querySelector('.chip[data-cat="all"]'); if (all) setCategory('all', all); else filterApps(); ['appPage', 'devPage', 'admPage'].forEach(function (i) { $(i).classList.remove('active'); }); lock(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    else if (k === 'search') { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { sb.focus(); }, 450); }
+    else if (k === 'cats') { var c = $('chips'); c.scrollIntoView({ behavior: 'smooth', block: 'center' }); c.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 700, easing: 'cubic-bezier(.3,1.6,.5,1)' }); }
+    else if (k === 'me') {
+      var u = auth.currentUser;
+      if (!u) openDrawer('auth'); else if (isAdmin()) openAdmin(); else if (role === 'dev') openDevPage(u.uid);
+      else if (confirm(T('تسجيل الخروج؟', 'Log out?'))) logout();
+    }
+  });
+  window.addEventListener('resize', function () { bnSet(bnCur); });
+  setTimeout(function () { bnSet('home'); }, 120); window.addEventListener('load', function () { bnSet(bnCur); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && curId && !$('bottomSheet').classList.contains('active')) closeAppPage();
+  });
+})();
+</script>
 </body>
 </html>
