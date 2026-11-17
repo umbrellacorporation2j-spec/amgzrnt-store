@@ -873,9 +873,9 @@ body{padding-bottom:110px}
 .dv-feat .tile-icon{width:88px;height:88px}
 .cvg{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:8px 0}.cvg button{aspect-ratio:1;border-radius:12px;border:2px solid transparent;cursor:pointer}.cvg button.on{border-color:#fff}
 /* modal */
-.md-ov{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
-.md-ov.on{opacity:1;visibility:visible}
-.md-card{width:min(100%,460px);max-height:90vh;overflow-y:auto;background:var(--card);border:1px solid var(--border);border-radius:30px;padding:20px;transform:translateY(40px) scale(.95);transition:transform .5s var(--spring)}
+.md-ov{position:fixed;inset:0;z-index:700;background:rgba(4,3,12,.22);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,visibility .2s}
+.md-ov.on{opacity:1;visibility:visible;pointer-events:auto}
+.md-card{width:min(100%,460px);max-height:90vh;overflow-y:auto;background:var(--card);border:1px solid var(--border);border-radius:30px;padding:20px;transform:translateY(10px) scale(.98);transition:transform .22s var(--motion-ease, cubic-bezier(.2,.75,.25,1))}
 .md-ov.on .md-card{transform:none}.md-card h3{margin-bottom:12px}
 .md-card textarea,.md-card input[type=text]{width:100%;padding:12px 14px;border-radius:16px;background:var(--card2);border:1px solid transparent;color:var(--text);font-family:inherit;margin-bottom:10px}
 .md-act{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}
@@ -2603,7 +2603,7 @@ body{padding-bottom:110px}
   window.getFiltered = function () {
     var q = ($('searchInput').value || '').trim().toLowerCase();
     return allApps.filter(function (a) {
-      if (a.suspended && !canSee(a)) return false;
+      /* Keep suspended apps visible so visitors see the manager warning. */
       var t = ((a.nameAr || '') + ' ' + (a.name || '') + ' ' + (a.nameEn || '') + ' ' + (a.description || '') + ' ' + (a.devName || '')).toLowerCase();
       return (activeCategory === 'all' || a.category === activeCategory) && (!q || t.indexOf(q) > -1);
     });
@@ -2702,7 +2702,7 @@ body{padding-bottom:110px}
   var WAVE = '<path d="M0 30 Q75 6 150 30 T300 30 T450 30 T600 30 T750 30 T900 30 T1050 30 T1200 30 V60 H0Z"/>';
   window.openAppPage = function (id, fromHash) {
     var a = findApp(id); if (!a) return;
-    if (a.suspended && !canSee(a)) { showToast(T('التطبيق غير متاح حالياً', 'App unavailable')); return; }
+    /* Suspended apps remain visible with a clear warning for all visitors. */
     curId = id;
     if (!fromHash && location.hash !== '#app=' + id) { history.pushState(null, '', '#app=' + id); pushed = true; }
     if (!viewed[id]) {
@@ -2712,7 +2712,7 @@ body{padding-bottom:110px}
     var uid = a.ownerUid || a.devId || '';
     var shots = (a.slides || []).map(slideHTML).join('') + (a.autoShots !== false ? autoShots(a) : '') + (a.screenshots || []).map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('');
     $('apBody').innerHTML =
-      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('مخفي عن جميع المستخدمين.', 'Hidden from everyone.') + '</p></div></div>' : '') +
+      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('هذا التطبيق متوقف مؤقتاً أو محذوف من المتجر.', 'This app is temporarily suspended or removed from the store.') + '</p></div></div>' : '') +
       (a.adminNote && canSee(a) ? '<div class="adm-note"><i class="fa-solid fa-triangle-exclamation"></i><div><b>' + T('تنبيه من الإدارة', 'Notice from admin') + '</b><p>' + escHTML(a.adminNote) + '</p></div></div>' : '') +
       '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><div class="ap-dev" onclick="openDevPage(\'' + uid + '\')">' + escHTML(a.devName || '') + '</div></div></div>' +
       '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
@@ -2831,7 +2831,7 @@ body{padding-bottom:110px}
       h += allApps.map(function (a, i) {
         return '<div class="adm-row" style="animation-delay:' + Math.min(i * 0.04, 0.4) + 's">' + iconHTML(a, 'row-icon') + '<div class="info"><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.devName || '') + '</small> ' + (a.suspended ? '<span class="bdg red">موقوف</span>' : '<span class="bdg">نشط</span>') + (a.adminNote ? ' <span class="bdg gold">تنبيه</span>' : '') + '</div>' +
           '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="openAppPage(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
-          '<button class="btn btn-outline" title="تنبيه" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-triangle-exclamation"></i></button><button class="btn btn-outline" title="إيقاف/تفعيل" onclick="admSuspend(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.suspended ? 'play' : 'pause') + '"></i></button>' +
+          '<button class="btn btn-outline" title="تنبيه" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-triangle-exclamation"></i></button><button class="btn btn-outline" title="إيقاف/تفعيل" onclick="admSuspend(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.suspended ? 'play' : 'pause') + '"></i></button><button class="btn btn-outline" title="حذف الإعلان" onclick="admRemoveAd(\'' + a.id + '\')"><i class="fa-solid fa-bullhorn"></i></button>' +
           '<button class="btn btn-outline" title="حذف" onclick="deleteApp(\'' + a.id + '\');setTimeout(renderAdmin,600)"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button></div></div>';
       }).join('') || '<div class="state-box"><p>لا توجد تطبيقات</p></div>';
     } else if (admTab === 'devs') {
@@ -2853,6 +2853,7 @@ body{padding-bottom:110px}
   window.admSuspend = function (id) { var a = findApp(id); admUpdate(id, { suspended: !a.suspended }, a.suspended ? 'تم التفعيل' : 'تم إيقاف التطبيق'); };
   window.admNote = function (id) { var a = findApp(id); askText('وصف المشكلة (يظهر للمطور)', a.adminNote, function (v) { admUpdate(id, { adminNote: v, adminNoteAt: Date.now() }, 'تم إرسال التنبيه'); }); };
   window.admClearNote = function (id) { admUpdate(id, { adminNote: '' }, 'تمت إزالة التنبيه'); };
+  window.admRemoveAd = function (id) { if (!isAdmin()) return; admUpdate(id, { ad: null, adText: '', adImage: '' }, 'تمت إزالة الإعلان'); };
   window.admDelDev = async function (uid) {
     if (!confirm('حذف الحساب وجميع تطبيقاته نهائياً؟')) return;
     try {
@@ -2889,5 +2890,160 @@ body{padding-bottom:110px}
   });
 })();
 </script>
+
+  <style id="store-stability-fixes">
+    /* Prevent closed overlays from capturing taps and causing the apparent black screen. */
+    .drawer-overlay, .sheet-overlay, .bottom-sheet, .drawer, .app-page, .pv-overlay, .modal-overlay, .md-ov { pointer-events: none; }
+    .drawer-overlay.active, .sheet-overlay.active, .bottom-sheet.active, .drawer.active, .app-page.active, .pv-overlay.on, .modal-overlay.on, .md-ov.on { pointer-events: auto; }
+    .bottom-sheet { max-height: min(88vh, 680px); overflow-y: auto; }
+    .wave-btn { isolation: isolate; }
+    .wave-btn .wv, .wave-btn .wv2 { pointer-events: none; }
+    .install-progress { display:block; height:4px; margin:8px 4px 0; border-radius:99px; background:rgba(255,255,255,.18); overflow:hidden; }
+    .install-progress i { display:block; height:100%; width:0; border-radius:inherit; background:#fff; transition:width .18s ease; }
+    .notif-button { position:relative; }
+    .notif-badge { position:absolute; top:-3px; inset-inline-end:-3px; min-width:18px; height:18px; padding:0 4px; border-radius:99px; background:#ef4444; color:#fff; font:700 11px/18px Inter,sans-serif; text-align:center; border:2px solid var(--bg); }
+    .notif-list { display:grid; gap:10px; margin-top:14px; }
+    .notif-item { padding:12px 14px; border:1px solid var(--border); background:var(--card2); border-radius:16px; }
+    .notif-item small { display:block; color:var(--muted); margin-top:3px; }
+    .app-status-warning { margin-bottom:16px; }
+    .notif-pop { position:fixed; top:72px; inset-inline-end:14px; z-index:1000; width:min(360px,calc(100vw - 28px)); max-height:min(60vh,420px); overflow:auto; padding:14px; border:1px solid rgba(124,58,237,.28); border-radius:22px; background:var(--g-panel); box-shadow:0 14px 42px rgba(0,0,0,.28); opacity:0; transform:translateY(-8px) scale(.98); pointer-events:none; transition:opacity .18s var(--motion-ease),transform .18s var(--motion-ease); }
+    .notif-pop.on { opacity:1; transform:none; pointer-events:auto; }
+    .notif-pop-head { display:flex; align-items:center; justify-content:space-between; gap:10px; font-weight:800; }
+    .notif-pop .notif-item { margin-top:9px; }
+    @media(max-width:600px){ .notif-pop { top:64px; inset-inline:12px; width:auto; } }
+  </style>
+  <script>
+  /* Final compatibility layer: the file contains legacy UI versions, so keep one authoritative API. */
+  (function () {
+    var installedKey = 'amgzrnt-installed-apps';
+    var getInstalled = function () { try { return JSON.parse(localStorage.getItem(installedKey) || '{}') || {}; } catch (e) { return {}; } };
+    var setInstalled = function (x) { try { localStorage.setItem(installedKey, JSON.stringify(x)); } catch (e) {} };
+    var installed = getInstalled();
+    var appById = function (id) { var list = (typeof allApps !== 'undefined' ? allApps : []); return list.find(function (a) { return a.id === id; }); };
+    function text(a, e) { return typeof isEn === 'function' && isEn() ? e : a; }
+    function requireUser() {
+      if (typeof auth !== 'undefined' && auth.currentUser) return true;
+      if (typeof openDrawer === 'function') { openDrawer('auth'); if (typeof switchTab === 'function') switchTab('user'); }
+      if (typeof showToast === 'function') showToast(text('سجّل حساباً عادياً أولاً لحفظ التطبيقات المثبتة', 'Create a user account first to save installed apps'));
+      return false;
+    }
+    function appFromArgs(id, url, icon) {
+      var a = appById(id);
+      if (a) return a;
+      var list = (typeof allApps !== 'undefined' ? allApps : []); return list.find(function (x) { return x.url === url || x.name === id || x.nameAr === id; }) || { id: id, name: id, url: url || '', icon: icon || '' };
+    }
+    window.openAppSheet = function (id, url, icon) {
+      var a = appFromArgs(id, url, icon); if (!a || !a.url) return;
+      window.selectedApp = { id: a.id, name: (typeof nm === 'function' ? nm(a) : (a.nameAr || a.name || 'App')), url: a.url, icon: (typeof iconSrc === 'function' ? iconSrc(a) : (a.icon || '')) };
+      var name = document.getElementById('sheetAppName'), box = document.getElementById('sheetIconBox');
+      if (name) name.textContent = window.selectedApp.name;
+      if (box) { box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph'; box.innerHTML = window.selectedApp.icon ? '<img src="' + esc(window.selectedApp.icon) + '" alt="" loading="lazy">' : '<i class="fa-solid fa-cube"></i>'; }
+      var b = document.getElementById('sheetInstallBtn'), o = document.getElementById('sheetOpenBtn');
+      var done = !!installed[a.id];
+      if (b) { b.style.display = 'inline-flex'; b.disabled = false; b.innerHTML = '<i class="fa-solid fa-' + (done ? 'check' : 'download') + '"></i><span>' + text(done ? 'مثبت — فتح' : 'تثبيت', done ? 'Installed — Open' : 'Install') + '</span>'; }
+      if (o) o.style.display = done ? 'inline-flex' : 'none';
+      document.getElementById('sheetOverlay').classList.add('active'); document.getElementById('bottomSheet').classList.add('active'); document.body.style.overflow = 'hidden';
+    };
+    window.sheetOpenAction = function () { var a = window.selectedApp; if (a && a.url) window.open(a.url, '_blank', 'noopener,noreferrer'); window.closeSheet(); };
+    window.sheetInstallAction = function () {
+      var a = window.selectedApp; if (!a || !a.url) return; if (!requireUser()) return;
+      var b = document.getElementById('sheetInstallBtn'); if (b) { b.disabled = true; b.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i><span>' + text('جارٍ التثبيت...', 'Installing...') + '</span>'; }
+      installed[a.id] = { at: Date.now(), url: a.url, name: a.name }; setInstalled(installed);
+      var write = typeof auth !== 'undefined' && auth.currentUser && typeof db !== 'undefined' ? db.collection('users').doc(auth.currentUser.uid).collection('installedApps').doc(a.id).set({ url:a.url, name:a.name, installedAt:firebase.firestore.FieldValue.serverTimestamp() }, {merge:true}).catch(function(){}) : Promise.resolve();
+      setTimeout(function () { write.then(function () { if (b) { b.disabled = false; b.innerHTML = '<i class="fa-solid fa-check"></i><span>' + text('مثبت — فتح', 'Installed — Open') + '</span>'; } var o=document.getElementById('sheetOpenBtn'); if(o) o.style.display='inline-flex'; if(typeof showToast==='function') showToast(text('تم حفظ التطبيق في حسابك', 'App saved to your account')); }); }, 260);
+    };
+    window.installApp = function (id) {
+      var a = appById(id); if (!a) return; if (!requireUser()) return;
+      if (installed[id]) { window.open(a.url, '_blank', 'noopener,noreferrer'); return; }
+      window.openAppSheet(id);
+    };
+    function updateInstallButtons() {
+      document.querySelectorAll('.wave-btn').forEach(function (b) { var m = /installApp\([\'\"]([^\'\"]+)/.exec(b.getAttribute('onclick') || ''); if (!m) return; var ok=!!installed[m[1]], sp=b.querySelector('span'); if(sp) sp.textContent=text(ok?'مثبت — فتح': 'تثبيت',ok?'Installed — Open':'Install'); });
+    }
+    /* Red notification bell; notifications are optional and never block the store. */
+    var bell = document.createElement('button'); bell.id='btnNotifications'; bell.className='btn btn-ghost btn-icon notif-button'; bell.type='button'; bell.title=text('الإشعارات','Notifications'); bell.innerHTML='<i class="fa-solid fa-bell"></i><b class="notif-badge" hidden>0</b>';
+    var actions=document.querySelector('.nav-actions'); if(actions) actions.insertBefore(bell, actions.firstChild);
+    var badge=bell.querySelector('.notif-badge'), notices=[];
+    function renderNotices() {
+      var old = document.getElementById('notifPop');
+      if (old) { old.classList.toggle('on'); return; }
+      var pop = document.createElement('div'); pop.id = 'notifPop'; pop.className = 'notif-pop on';
+      var title = text('الإشعارات', 'Notifications');
+      var body = notices.length ? notices.map(function(n) { return '<div class="notif-item"><b>' + escHTML(n.title || text('تنبيه','Notice')) + '</b><small>' + escHTML(n.body || '') + '</small></div>'; }).join('') : '<div class="notif-item"><small>' + text('لا توجد إشعارات جديدة', 'No new notifications') + '</small></div>';
+      pop.innerHTML = '<div class="notif-pop-head"><span><i class="fa-solid fa-bell"></i> ' + title + '</span><button type="button" class="btn btn-ghost btn-icon btn-sm" aria-label="close"><i class="fa-solid fa-xmark"></i></button></div>' + body;
+      document.body.appendChild(pop);
+      pop.querySelector('button').onclick = function() { pop.classList.remove('on'); setTimeout(function(){pop.remove();}, 180); };
+      notices = []; badge.hidden = true;
+    }
+    bell.onclick = renderNotices;
+    function watchNotices(u) { if(!u || typeof db === 'undefined') return; db.collection('users').doc(u.uid).collection('notifications').orderBy('createdAt','desc').limit(20).onSnapshot(function(s){notices=[];s.forEach(function(d){var n=d.data();n.id=d.id;notices.push(n);}); badge.textContent=String(notices.length); badge.hidden=!notices.length;},function(){}); }
+    if(typeof auth !== 'undefined') auth.onAuthStateChanged(function(u){ watchNotices(u); if(u){ db.collection('users').doc(u.uid).collection('installedApps').get().then(function(s){s.forEach(function(d){installed[d.id]=d.data();});setInstalled(installed);updateInstallButtons();}).catch(function(){}); } });
+    /* Inform developers when the manager suspends/notes an app. */
+    var oldAdmUpdate=window.admUpdate;
+    if(oldAdmUpdate) window.admUpdate=function(id,data,msg){ var a=appById(id); return oldAdmUpdate(id,data,msg).then(function(r){ var uid=a&&(a.ownerUid||a.devId); if(uid&&typeof db !== 'undefined'){ return db.collection('users').doc(uid).collection('notifications').add({title:text('رسالة من الإدارة','Message from admin'),body:data.suspended?text('تم إيقاف تطبيقك مؤقتاً','Your app was temporarily suspended'):(data.adminNote||msg||''),createdAt:firebase.firestore.FieldValue.serverTimestamp()}).catch(function(){}).then(function(){return r;}); } return r; }); };
+    /* Make the first legacy card call use the id-based installer. */
+    var oldRender = window.renderApps;
+    if(oldRender) window.renderApps=function(a){ oldRender(a); updateInstallButtons(); };
+    var oldPage = window.openAppPage;
+    if(oldPage) window.openAppPage=function(id,hash){ oldPage(id,hash); updateInstallButtons(); };
+  })();
+  </script>
+
+  <style id="mobile-ux-and-motion-fixes">
+    /* Stable motion system: no overshoot, no button enlargement, no black flash. */
+    :root { --motion-ease: cubic-bezier(.2,.75,.25,1); --motion-fast: 180ms; --motion-normal: 280ms; }
+    .btn, .chip, .tab-btn, .app-row, .app-tile, .sec-more, .wave-btn, .drawer, .app-page, .bottom-sheet, .drawer-overlay, .sheet-overlay, .pv-overlay, .md-card {
+      transition-timing-function: var(--motion-ease) !important;
+    }
+    .btn:active:not(:disabled), .chip:active, .app-row:active, .app-tile:active, .wave-btn:active { transform: scale(.98) !important; }
+    .btn:active:not(:disabled) { border-radius: inherit !important; }
+    .drawer { height: 100dvh; max-height: 100dvh; }
+    .drawer-body { min-height: 0; padding-bottom: calc(34px + env(safe-area-inset-bottom, 0px)); overflow-x: hidden; }
+    .tabs { display: flex; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 4px; gap: 5px; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 0 0 auto !important; min-width: max-content; white-space: nowrap; padding: 10px 15px; line-height: 1.3; }
+    .tab-btn i { margin-inline-end: 4px; }
+    .drawer-header { flex: 0 0 auto; padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
+    .drawer-body form { padding-bottom: 18px; }
+    .form-group input, .form-group textarea, .form-group select { min-height: 48px; }
+    .app-page, .drawer, .bottom-sheet { will-change: transform; }
+    @media (max-width: 600px) {
+      .drawer { width: 100%; right: 0; left: 0; border-inline: 0; }
+      .drawer-header h2 { font-size: 1.12rem; }
+      .drawer-body { padding-inline: 16px; }
+      .tabs { margin-inline: -4px; }
+      .tab-btn { font-size: .78rem; padding-inline: 13px; }
+      .app-page { transition-duration: 280ms !important; }
+      .drawer, .bottom-sheet { transition-duration: 260ms !important; }
+      .bnav button i { transition-duration: 220ms !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn:active:not(:disabled), .chip:active, .app-row:active, .app-tile:active, .wave-btn:active { transform: none !important; }
+    }
+  </style>
+  <script>
+  (function () {
+    /* Keep body scrolling locked only while a real page/overlay is open. */
+    var oldCloseDrawer = window.closeDrawer;
+    if (oldCloseDrawer) window.closeDrawer = function (type) {
+      oldCloseDrawer(type);
+      if (document.querySelector('.app-page.active')) document.body.style.overflow = 'hidden';
+    };
+    var oldSwitchTab = window.switchTab;
+    if (oldSwitchTab) window.switchTab = function (mode) {
+      oldSwitchTab(mode);
+      var ar = document.querySelector('#authDrawer .drawer-header h2[data-lang="ar"]');
+      var en = document.querySelector('#authDrawer .drawer-header h2[data-lang="en"]');
+      var normal = mode === 'user';
+      if (ar) ar.textContent = normal ? 'حساب عادي' : 'حساب المطور';
+      if (en) en.textContent = normal ? 'User Account' : 'Developer Account';
+      var body = document.getElementById('authDrawer');
+      if (body) body.classList.toggle('user-auth-mode', normal);
+    };
+    /* Ensure the account panel always starts in a readable state on mobile. */
+    var auth = document.getElementById('authDrawer');
+    if (auth) auth.addEventListener('transitionend', function () { if (!auth.classList.contains('active')) auth.scrollTop = 0; });
+  })();
+  </script>
 </body>
 </html>
