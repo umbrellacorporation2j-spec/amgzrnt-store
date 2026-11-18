@@ -931,7 +931,7 @@ body{padding-bottom:110px}
           <span class="hide-sm" data-lang="ar">دخول المطور</span>
           <span class="hide-sm" data-lang="en">Dev Login</span>
         </button>
-        <button class="btn btn-outline btn-sm" id="btnInstallStore" style="display:none" onclick="installStore()"><i class="fa-solid fa-download"></i><span data-lang="ar">تثبيت المتجر</span><span data-lang="en">Install store</span></button>
+        <button class="btn btn-outline btn-sm" id="btnInstallStore" style="display:inline-flex" onclick="installStore()"><i class="fa-solid fa-download"></i><span data-lang="ar">تثبيت المتجر</span><span data-lang="en">Install store</span></button>
         <button class="btn btn-primary btn-sm" id="btnUpload" onclick="openDrawer('upload')" style="display:none;">
           <i class="fa-solid fa-cloud-arrow-up"></i>
           <span class="hide-sm" data-lang="ar">رفع</span>
@@ -1965,7 +1965,16 @@ body{padding-bottom:110px}
       if (installBtn) installBtn.style.display = 'inline-flex';
     });
     async function installStore() {
-      if (!deferredStorePrompt) { showToast(isEn() ? 'Install option is not available in this browser.' : 'خيار التثبيت غير متاح حالياً في هذا المتصفح.'); return; }
+      if (!deferredStorePrompt) {
+        var standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+        var secure = window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+        showToast(standalone
+          ? (isEn() ? 'The store is already installed.' : 'المتجر مثبت بالفعل على جهازك.')
+          : (!secure
+            ? (isEn() ? 'Open the store from an HTTPS address to install it.' : 'افتح المتجر من رابط HTTPS حتى يظهر التثبيت.')
+            : (isEn() ? 'Use your browser menu and choose Add to Home screen.' : 'افتح قائمة المتصفح واختر إضافة إلى الشاشة الرئيسية.')));
+        return;
+      }
       deferredStorePrompt.prompt();
       try { await deferredStorePrompt.userChoice; } catch(e) {}
       deferredStorePrompt = null;
