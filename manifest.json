@@ -1,13 +1,20 @@
 {
   "name": "AMGZRNT STORE",
   "short_name": "AMGZRNT",
-  "description": "متجر تطبيقات PWA",
-  "start_url": "./store.html",
-  "display": "standalone",
-  "dir": "rtl",
+  "description": "متجر تطبيقات PWA سريع وآمن",
   "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#05050a",
   "theme_color": "#7c3aed",
+  "categories": [
+    "shopping",
+    "utilities",
+    "lifestyle"
+  ],
   "icons": [
     {
       "src": "./icon-192.png",

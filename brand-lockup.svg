@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c084fc"/><stop offset=".48" stop-color="#7c3aed"/><stop offset="1" stop-color="#22d3ee"/></linearGradient><filter id="gl"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <rect width="1200" height="700" rx="80" fill="#05030d"/>
+  <rect x="38" y="38" width="1124" height="624" rx="62" fill="#130b32" stroke="#7c3aed" stroke-opacity=".4" stroke-width="3"/>
+  <g transform="translate(330 55) scale(.47)"><rect x="22" y="22" width="468" height="468" rx="104" fill="#20104f" stroke="#c084fc" stroke-width="6"/><path d="M180 218v-30c0-50 34-82 76-82s76 32 76 82v30" fill="none" stroke="#fff" stroke-width="17" stroke-linecap="round"/><path d="M151 205h210l25 177c3 22-14 42-37 42H163c-23 0-40-20-37-42l25-177Z" fill="url(#g)" stroke="#fff" stroke-width="5"/><path d="M205 323l41-76 18 32 21-36 38 80h-36l-14-27-18 31-15-25-15 21Z" fill="#fff"/></g>
+  <text x="600" y="510" text-anchor="middle" font-family="Cairo,Arial,sans-serif" font-weight="800" font-size="84" fill="url(#g)">متجر AMGZRNT</text>
+  <text x="600" y="575" text-anchor="middle" font-family="Inter,Arial,sans-serif" letter-spacing="12" font-size="28" fill="#ede9fe">AMGZRNT STORE</text>
+  <path d="M180 608h840" stroke="#a855f7" stroke-opacity=".55"/><path d="M330 608h540" stroke="#22d3ee" stroke-opacity=".8" filter="url(#gl)"/>
+</svg>

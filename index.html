@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#7c3aed">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AMGZRNT STORE">
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
@@ -975,6 +980,9 @@ body{padding-bottom:110px}
         <button class="chip" data-cat="education" onclick="setCategory('education', this)"><i class="fa-solid fa-graduation-cap"></i>
           <span data-lang="ar">تعليم</span><span data-lang="en">Education</span>
         </button>
+        <button class="chip" data-cat="social" onclick="setCategory('social', this)"><i class="fa-solid fa-users"></i>
+          <span data-lang="ar">اجتماعي</span><span data-lang="en">Social</span>
+        </button>
         <button class="chip" data-cat="other" onclick="setCategory('other', this)"><i class="fa-solid fa-shapes"></i>
           <span data-lang="ar">أخرى</span><span data-lang="en">Other</span>
         </button>
@@ -1434,7 +1442,7 @@ body{padding-bottom:110px}
             (user.displayName && (a.devName || a.ownerName || '').toLowerCase() === user.displayName.toLowerCase())
           ));
         });
-        renderMyApps(mine);
+        (typeof window.renderMyApps === 'function' ? window.renderMyApps(mine) : renderMyApps(mine));
         document.getElementById('profileAppCount').textContent = String(mine.length);
       } catch (err) {
         // If an ownerUid query is rejected by existing rules, the public snapshot is still
@@ -1448,14 +1456,11 @@ body{padding-bottom:110px}
 
     function getFiltered() {
       var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
-      return allApps.filter(function(a) {
+      return (typeof window.getFiltered === 'function' ? window.getFiltered() : allApps.filter(function(a) {
         var catOk = activeCategory === 'all' || a.category === activeCategory;
-        var textOk = !q ||
-          (a.name || '').toLowerCase().indexOf(q) !== -1 ||
-          (a.description || '').toLowerCase().indexOf(q) !== -1 ||
-          (a.devName || '').toLowerCase().indexOf(q) !== -1;
-        return catOk && textOk;
-      });
+        var text = [a.name,a.nameAr,a.nameEn,a.description,a.descriptionAr,a.descriptionEn,a.devName].filter(Boolean).join(' ').toLowerCase();
+        return catOk && (!q || text.indexOf(q) !== -1);
+      }));
     }
 
     function filterApps() {
@@ -1503,7 +1508,7 @@ body{padding-bottom:110px}
             '<span class="badge"><i class="fa-solid fa-mobile-screen"></i> PWA</span></div></div>' +
           '<p class="app-desc">' + escHTML((isEn() && app.descriptionEn) ? app.descriptionEn : (app.descriptionAr || app.description || '')) + '</p>' +
           '<div class="app-actions">' +
-            '<button class="btn btn-primary btn-sm" onclick="openAppSheet(\'' + esc(app.name) + '\',\'' + esc(app.url) + '\',\'' + esc(app.icon || '') + '\')">' +
+            '<button class="btn btn-primary btn-sm" onclick="openAppSheet(\'' + esc(app.id) + '\')">' +
               '<i class="fa-solid fa-download"></i>' +
               '<span data-lang="ar">تثبيت</span><span data-lang="en">Install</span></button>' +
             '<button class="btn btn-outline btn-sm btn-icon" onclick="shareApp(\'' + esc(app.name) + '\',\'' + esc(app.url) + '\')">' +
@@ -1581,7 +1586,6 @@ body{padding-bottom:110px}
         primaryColor: document.getElementById('editColor').value,
         url: document.getElementById('editUrl').value.trim(),
         screenshots: document.getElementById('editScreenshots').value.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean),
-        ownerUid: auth.currentUser.uid, devId: auth.currentUser.uid,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
       try {
@@ -1754,7 +1758,7 @@ body{padding-bottom:110px}
         devEmail: auth.currentUser.email,
         devName: currentUser.displayName || currentUser.email.split('@')[0],
         developerBio: document.getElementById('profileBio') ? document.getElementById('profileBio').value.trim() : '',
-        developerSocialLinks: document.getElementById('profileLinks') ? document.getElementById('profileLinks').value.split(/\\r?\\n/).map(function(x){return x.trim();}).filter(Boolean) : [],
+        developerSocialLinks: document.getElementById('profileLinks') ? document.getElementById('profileLinks').value.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean) : [],
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
@@ -1825,7 +1829,7 @@ body{padding-bottom:110px}
       var profileApp = allApps.find(function(a){ return a.ownerUid === user.uid || a.devId === user.uid; });
       if (profileApp) {
         document.getElementById('profileBio').value = profileApp.developerBio || '';
-        document.getElementById('profileLinks').value = (profileApp.developerSocialLinks || []).join('\\n');
+        document.getElementById('profileLinks').value = (profileApp.developerSocialLinks || []).join('\n');
       }
       document.getElementById('profileEmailFull').value = maskEmail(user.email || '');
       var count = allApps.filter(function(a) { return a.ownerUid === user.uid || a.devId === user.uid; }).length;
@@ -1861,11 +1865,12 @@ body{padding-bottom:110px}
       var name = document.getElementById('profileName').value.trim();
       var photo = document.getElementById('profilePhoto').value.trim();
       var bio = document.getElementById('profileBio').value.trim();
-      var socialLinks = document.getElementById('profileLinks').value.split(/\\r?\\n/).map(function(x){return x.trim();}).filter(Boolean);
+      var socialLinks = document.getElementById('profileLinks').value.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);
       currentUser.updateProfile({
         displayName: name,
         photoURL: photo || null
       }).then(async function() {
+        await db.collection('users').doc(currentUser.uid).set({ name: name, email: currentUser.email || '', bio: bio, socialLinks: socialLinks, photoURL: photo || '', updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
         // Keep profile metadata in the existing apps collection; no new collection is created.
         var ownedDocs = allApps.filter(function(a){ return a.ownerUid === currentUser.uid || a.devId === currentUser.uid; });
         var batch = db.batch();
@@ -2509,7 +2514,7 @@ body{padding-bottom:110px}
   function stageHTML(ad) {
     ad = ad || {};
     var items = (ad.items || []).map(function (it, i) {
-      return '<span class="stk" data-i="' + i + '" style="left:' + it.x + '%;top:' + it.y + '%;font-size:' + it.s + 'cqw;--r:' + it.r + 'deg;animation-delay:' + (i * 0.37) + 's">' + it.e + '</span>';
+      return '<span class="stk" data-i="' + i + '" style="left:' + it.x + '%;top:' + it.y + '%;font-size:' + it.s + 'cqw;--r:' + it.r + 'deg;animation-delay:' + (i * 0.37) + 's">' + escHTML(it.e || '') + '</span>';
     }).join('');
     return '<div class="stage" style="background:' + (BGS[ad.bg] || BGS[0])[1] + '">' + items +
       ((ad.title || ad.desc) ? '<div class="stage-txt"><b>' + escHTML(ad.title || '') + '</b><small>' + escHTML(ad.desc || '') + '</small></div>' : '') + '</div>';
@@ -2896,7 +2901,16 @@ body{padding-bottom:110px}
     .drawer-overlay, .sheet-overlay, .bottom-sheet, .drawer, .app-page, .pv-overlay, .modal-overlay, .md-ov { pointer-events: none; }
     .drawer-overlay.active, .sheet-overlay.active, .bottom-sheet.active, .drawer.active, .app-page.active, .pv-overlay.on, .modal-overlay.on, .md-ov.on { pointer-events: auto; }
     .bottom-sheet { max-height: min(88vh, 680px); overflow-y: auto; }
-    .wave-btn { isolation: isolate; }
+    .wave-btn { isolation:isolate; overflow:hidden; position:relative; min-height:48px; background:linear-gradient(135deg,#7c3aed,#4c1d95); }
+    .wave-btn .wv, .wave-btn .wv2 { position:absolute; left:-2%; bottom:-10%; width:104%; height:125%; pointer-events:none; z-index:1; opacity:.26; fill:#fff; animation:installWave 5s linear infinite; }
+    .wave-btn .wv2 { opacity:.16; bottom:-18%; animation-duration:7.5s; animation-direction:reverse; }
+    .wave-btn.install-wave > span { position:relative; z-index:3; }
+    .wave-btn.wave-loading { cursor:wait; filter:saturate(1.15); }
+    .wave-btn.wave-loading .wv { opacity:.52; animation-duration:var(--install-duration,5s); }
+    .wave-btn.wave-loading .wv2 { opacity:.28; animation-duration:calc(var(--install-duration,5s) * 1.45); }
+    .wave-btn.install-done { background:linear-gradient(135deg,#059669,#047857); }
+    @keyframes installWave { from { transform:translateX(-18%) translateY(8%) rotate(-2deg); } 50% { transform:translateX(0) translateY(-5%) rotate(2deg); } to { transform:translateX(18%) translateY(8%) rotate(-2deg); } }
+    @media (prefers-reduced-motion:reduce) { .wave-btn .wv,.wave-btn .wv2 { animation-duration:2s !important; } }
     .wave-btn .wv, .wave-btn .wv2 { pointer-events: none; }
     .install-progress { display:block; height:4px; margin:8px 4px 0; border-radius:99px; background:rgba(255,255,255,.18); overflow:hidden; }
     .install-progress i { display:block; height:100%; width:0; border-radius:inherit; background:#fff; transition:width .18s ease; }
@@ -2906,6 +2920,13 @@ body{padding-bottom:110px}
     .notif-item { padding:12px 14px; border:1px solid var(--border); background:var(--card2); border-radius:16px; }
     .notif-item small { display:block; color:var(--muted); margin-top:3px; }
     .app-status-warning { margin-bottom:16px; }
+    /* Composer preview must stay a short banner; rebuilding it must never create a page-sized purple panel. */
+    .cmp .cw { width:100%; height:clamp(160px, 32vw, 260px); min-height:160px; max-height:260px; overflow:hidden; border-radius:28px; flex:0 0 auto; }
+    .cmp .cw .stage { width:100%; height:100%; min-height:0; max-height:none; aspect-ratio:auto; }
+    .cmp .cw .stk { max-width:28%; max-height:28%; }
+    .cmp button, .cmp input, .cmp select, .cmp textarea, #editSaveBtn, #uploadSubmit { touch-action:manipulation; }
+    .cmp-emo button:active { transform:scale(1.05) !important; }
+    .bgsw:active { transform:scale(1.02) !important; }
     .notif-pop { position:fixed; top:72px; inset-inline-end:14px; z-index:1000; width:min(360px,calc(100vw - 28px)); max-height:min(60vh,420px); overflow:auto; padding:14px; border:1px solid rgba(124,58,237,.28); border-radius:22px; background:var(--g-panel); box-shadow:0 14px 42px rgba(0,0,0,.28); opacity:0; transform:translateY(-8px) scale(.98); pointer-events:none; transition:opacity .18s var(--motion-ease),transform .18s var(--motion-ease); }
     .notif-pop.on { opacity:1; transform:none; pointer-events:auto; }
     .notif-pop-head { display:flex; align-items:center; justify-content:space-between; gap:10px; font-weight:800; }
@@ -2976,7 +2997,13 @@ body{padding-bottom:110px}
       notices = []; badge.hidden = true;
     }
     bell.onclick = renderNotices;
-    function watchNotices(u) { if(!u || typeof db === 'undefined') return; db.collection('users').doc(u.uid).collection('notifications').orderBy('createdAt','desc').limit(20).onSnapshot(function(s){notices=[];s.forEach(function(d){var n=d.data();n.id=d.id;notices.push(n);}); badge.textContent=String(notices.length); badge.hidden=!notices.length;},function(){}); }
+    var stopNotices = null;
+    function watchNotices(u) {
+      if (stopNotices) { stopNotices(); stopNotices = null; }
+      notices = []; badge.textContent = '0'; badge.hidden = true;
+      if (!u || typeof db === 'undefined') return;
+      stopNotices = db.collection('users').doc(u.uid).collection('notifications').orderBy('createdAt','desc').limit(20).onSnapshot(function(s){ notices=[]; s.forEach(function(d){var n=d.data();n.id=d.id;notices.push(n);}); badge.textContent=String(notices.length); badge.hidden=!notices.length; },function(){});
+    }
     if(typeof auth !== 'undefined') auth.onAuthStateChanged(function(u){ watchNotices(u); if(u){ db.collection('users').doc(u.uid).collection('installedApps').get().then(function(s){s.forEach(function(d){installed[d.id]=d.data();});setInstalled(installed);updateInstallButtons();}).catch(function(){}); } });
     /* Inform developers when the manager suspends/notes an app. */
     var oldAdmUpdate=window.admUpdate;
@@ -3043,6 +3070,56 @@ body{padding-bottom:110px}
     /* Ensure the account panel always starts in a readable state on mobile. */
     var auth = document.getElementById('authDrawer');
     if (auth) auth.addEventListener('transitionend', function () { if (!auth.classList.contains('active')) auth.scrollTop = 0; });
+  })();
+  </script>
+  <style id="full-system-stability">
+    .drawer-overlay:not(.active), .sheet-overlay:not(.active), .drawer:not(.active), .bottom-sheet:not(.active), .app-page:not(.active), .pv-overlay:not(.on), .md-ov:not(.on) { pointer-events:none !important; }
+  </style>
+  <script>
+  (function () {
+    function syncBodyLock() { document.body.style.overflow = document.querySelector('.drawer.active,.bottom-sheet.active,.app-page.active,.pv-overlay.on,.md-ov.on,.drawer-overlay.active,.sheet-overlay.active') ? 'hidden' : ''; }
+    window.syncBodyLock = syncBodyLock;
+    if (window.MutationObserver) new MutationObserver(syncBodyLock).observe(document.body, {subtree:true, attributes:true, attributeFilter:['class']});
+    ['closeDrawer','closeSheet','closeAppPage','closeDevPage','closeAdmin','closeModal'].forEach(function(n){ var f=window[n]; if(f) window[n]=function(){var r=f.apply(this,arguments);syncBodyLock();return r;}; });
+    syncBodyLock();
+  })();
+  </script>
+  <script id="timed-wave-installer">
+  (function () {
+    var DURATION_SET = [10, 12, 17, 9, 17];
+    var STORE_KEY = 'amgzrnt-installed-apps';
+    function readInstalled(){ try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')||{};}catch(e){return {}; } }
+    function writeInstalled(x){ try{localStorage.setItem(STORE_KEY,JSON.stringify(x));}catch(e){} }
+    function durationFor(id){ var text=String(id||''), n=0; for(var i=0;i<text.length;i++) n=(n+text.charCodeAt(i)*(i+1))%997; return DURATION_SET[n%DURATION_SET.length]; }
+    function waveMarkup(label){ return '<svg class="wv" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 72 Q75 18 150 72 T300 72 T450 72 T600 72 V120 H0Z"></path></svg><svg class="wv2" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 82 Q75 32 150 82 T300 82 T450 82 T600 82 V120 H0Z"></path></svg><span>' + label + '</span>'; }
+    function appFor(id){ var list=window.allApps||[]; return list.find(function(a){return a.id===id;}); }
+    function userRequired(){ if(typeof auth!=='undefined'&&auth.currentUser)return true; if(typeof openDrawer==='function'){openDrawer('auth');if(typeof switchTab==='function')switchTab('user');} if(typeof showToast==='function')showToast('سجّل حساباً عادياً أولاً لحفظ التطبيق'); return false; }
+    function decorateSheet(){
+      var a=window.selectedApp, b=document.getElementById('sheetInstallBtn'); if(!a||!b)return;
+      var installed=readInstalled();
+      b.classList.add('wave-btn','install-wave'); b.style.setProperty('--install-duration',durationFor(a.id)+'s');
+      if(installed[a.id]){b.classList.add('install-done');b.innerHTML=waveMarkup('مثبت — فتح');} else {b.classList.remove('install-done');b.innerHTML=waveMarkup('تثبيت');}
+    }
+    var originalOpen=window.openAppSheet;
+    window.openAppSheet=function(id,url,icon){ var result=originalOpen&&originalOpen.apply(this,arguments); setTimeout(decorateSheet,0); return result; };
+    window.sheetInstallAction=async function(){
+      var a=window.selectedApp,b=document.getElementById('sheetInstallBtn'); if(!a||!a.url)return;
+      var existing=readInstalled();
+      if(existing[a.id]){window.open(a.url,'_blank','noopener,noreferrer');if(typeof closeSheet==='function')closeSheet();return;}
+      if(!userRequired())return;
+      var seconds=durationFor(a.id), end=Date.now()+seconds*1000, timer;
+      b.disabled=true;b.classList.add('wave-btn','install-wave','wave-loading');b.classList.remove('install-done');b.style.setProperty('--install-duration',seconds+'s');
+      function tick(){var left=Math.max(0,Math.ceil((end-Date.now())/1000));b.innerHTML=waveMarkup('جارٍ التثبيت… '+left+' ث');if(left<=0)clearInterval(timer);}
+      tick();timer=setInterval(tick,250);
+      await new Promise(function(resolve){setTimeout(resolve,seconds*1000);});
+      var installed=readInstalled();installed[a.id]={at:Date.now(),url:a.url,name:a.name};writeInstalled(installed);
+      if(typeof auth!=='undefined'&&auth.currentUser&&typeof db!=='undefined'){await db.collection('users').doc(auth.currentUser.uid).collection('installedApps').doc(a.id).set({url:a.url,name:a.name,installedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(){});}
+      b.disabled=false;b.classList.remove('wave-loading');b.classList.add('install-done');b.innerHTML=waveMarkup('مثبت — فتح');
+      var open=document.getElementById('sheetOpenBtn');if(open)open.style.display='inline-flex';
+      if(typeof showToast==='function')showToast('تم تثبيت التطبيق، اضغط فتح للمتابعة');
+    };
+    window.installApp=function(id){var a=appFor(id),installed=readInstalled();if(!a)return;if(installed[id]){window.open(a.url,'_blank','noopener,noreferrer');return;}if(!userRequired())return;window.openAppSheet(id);};
+    document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#sheetInstallBtn');if(b&&!b.disabled){e.preventDefault();e.stopImmediatePropagation();window.sheetInstallAction();}},true);
   })();
   </script>
 </body>
