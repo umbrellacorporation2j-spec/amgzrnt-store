@@ -1255,7 +1255,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.7</strong>
+      <strong class="version-number" dir="ltr">V3.8</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -3680,3 +3680,216 @@ body{padding-bottom:110px}
 
 </body>
 </html>
+
+
+<!-- V3.8: single authoritative install/open flow + developer profile navigation -->
+<style id="v38-final-ui-fixes">
+  /* Real liquid fill: keep the liquid behind the label, not in normal text flow. */
+  #sheetInstallBtn, .install-wave {
+    position:relative!important; isolation:isolate!important; overflow:hidden!important;
+    min-height:58px!important; border-radius:18px!important;
+    background:linear-gradient(135deg,#4f46e5,#6d28d9 55%,#312e81)!important;
+    color:#fff!important; box-shadow:0 10px 28px rgba(79,70,229,.24);
+  }
+  #sheetInstallBtn > .wave-liquid, .install-wave > .wave-liquid {
+    position:absolute!important; left:0!important; right:0!important; bottom:0!important;
+    top:auto!important; width:100%!important; height:var(--wave-progress,0%)!important;
+    display:block!important; z-index:1!important; pointer-events:none!important;
+    background:linear-gradient(180deg,rgba(167,139,250,.95),rgba(91,33,182,.98))!important;
+    transition:height .12s linear!important; border-radius:0!important;
+  }
+  #sheetInstallBtn > .wave-liquid::before, #sheetInstallBtn > .wave-liquid::after,
+  .install-wave > .wave-liquid::before, .install-wave > .wave-liquid::after {
+    content:""; position:absolute; left:-35%; width:170%; height:22px; top:-11px;
+    border-radius:42%; background:rgba(255,255,255,.34);
+    animation:v38-liquid-wave 3.2s linear infinite; pointer-events:none;
+  }
+  #sheetInstallBtn > .wave-liquid::after, .install-wave > .wave-liquid::after {
+    top:-7px; opacity:.55; background:rgba(255,255,255,.22);
+    animation-duration:4.7s; animation-direction:reverse;
+  }
+  #sheetInstallBtn > .wave-label, .install-wave > .wave-label {
+    position:relative!important; z-index:3!important; display:inline-flex!important;
+    align-items:center; justify-content:center; pointer-events:none!important;
+    color:#fff!important; font-weight:800!important;
+  }
+  #sheetInstallBtn.wave-loading, .install-wave.wave-loading { filter:saturate(1.1); cursor:progress!important; }
+  #sheetInstallBtn.install-done, .install-wave.install-done {
+    background:linear-gradient(135deg,#047857,#059669)!important;
+    box-shadow:0 10px 28px rgba(5,150,105,.24)!important;
+  }
+  #sheetInstallBtn.install-done > .wave-liquid, .install-wave.install-done > .wave-liquid {
+    height:100%!important; background:linear-gradient(135deg,#10b981,#047857)!important;
+  }
+  #sheetInstallBtn:disabled, .install-wave:disabled { opacity:1!important; }
+  @keyframes v38-liquid-wave { from { transform:translateX(-7%) rotate(0deg); } to { transform:translateX(7%) rotate(360deg); } }
+
+  /* Developer profile must sit above the app details page it was opened from. */
+  #devPage { z-index:360!important; }
+  #appPage { z-index:300!important; }
+  #toast { z-index:2147483647!important; position:fixed!important; }
+  #toast.show { z-index:2147483647!important; }
+  @media(prefers-reduced-motion:reduce) {
+    #sheetInstallBtn > .wave-liquid::before, #sheetInstallBtn > .wave-liquid::after,
+    .install-wave > .wave-liquid::before, .install-wave > .wave-liquid::after { animation:none!important; }
+  }
+</style>
+<script id="v38-authoritative-flow">
+(function(){
+  'use strict';
+  var durations=[17,12,15,10,4,9,6,3];
+  var timers=Object.create(null);
+  var baseOpenAppSheet=window.openAppSheet;
+  var navigating=false;
+
+  function apps(){
+    try { if(typeof allApps!=='undefined' && Array.isArray(allApps)) return allApps; } catch(e){}
+    return Array.isArray(window.allApps)?window.allApps:[];
+  }
+  function findApp(id){
+    var key=String(id==null?'':id);
+    return apps().find(function(a){return a && String(a.id)===key;}) ||
+      (typeof window.findApp==='function'?window.findApp(key):null);
+  }
+  function normalize(value){
+    var raw=String(value==null?'':value).trim();
+    if(!raw) return '';
+    raw=raw.replace(/^['"]|['"]$/g,'').trim();
+    if(/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) raw='https://'+raw;
+    try {
+      var u=new URL(raw);
+      if((u.protocol==='https:'||u.protocol==='http:') && u.hostname) return u.href;
+    } catch(e){}
+    return '';
+  }
+  function toast(msg){
+    var node=document.getElementById('toast');
+    if(node){
+      node.style.zIndex='2147483647';
+      if(typeof window.showToast==='function') window.showToast(msg);
+      else { var span=node.querySelector('span'); if(span) span.textContent=msg; node.classList.add('show'); }
+    }
+  }
+  function getDuration(id){
+    var s=String(id==null?'':id), h=0;
+    for(var i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
+    return durations[h%durations.length];
+  }
+  function closeSheet(){
+    var ov=document.getElementById('sheetOverlay'), sh=document.getElementById('bottomSheet');
+    if(ov) ov.classList.remove('active');
+    if(sh) sh.classList.remove('active');
+    if(typeof window.syncBodyLock==='function') window.syncBodyLock();
+    else document.body.style.overflow=document.querySelector('.app-page.active')?'hidden':'';
+  }
+  function openDestination(url){
+    var target=normalize(url);
+    if(!target){ toast('رابط التطبيق غير صالح. تأكد من الرابط المحفوظ في بيانات التطبيق.'); return; }
+    if(navigating) return;
+    navigating=true;
+    closeSheet();
+    // Same-tab navigation is intentional: browser Back returns to the store.
+    window.location.href=target;
+  }
+  function resetButton(btn,label){
+    if(!btn) return;
+    var liquid=btn.querySelector('.wave-liquid');
+    if(!liquid){ liquid=document.createElement('span'); liquid.className='wave-liquid'; liquid.setAttribute('aria-hidden','true'); }
+    btn.innerHTML='';
+    btn.appendChild(liquid);
+    var text=document.createElement('span'); text.className='wave-label'; text.textContent=label||'تثبيت'; btn.appendChild(text);
+    btn.disabled=false; btn.dataset.installState='idle'; btn.dataset.targetUrl='';
+    btn.style.setProperty('--wave-progress','0%');
+    btn.classList.remove('wave-loading','install-done');
+    btn.setAttribute('aria-label',label||'تثبيت');
+  }
+  function begin(btn,id,urlValue){
+    if(!btn) return;
+    if(btn.dataset.installState==='loading') return;
+    if(btn.dataset.installState==='ready') { openDestination(btn.dataset.targetUrl); return; }
+    var app=findApp(id);
+    var raw=urlValue || (app&&app.url) || '';
+    var target=normalize(raw);
+    if(!target){ toast('لم أجد رابطًا صالحًا لهذا التطبيق. افتح بياناته وتأكد من الرابط.'); return; }
+    btn.dataset.targetUrl=target; // Capture once; never look the app up again after the animation.
+    var key=String(id)+':'+(btn.id||btn.dataset.appId||'details');
+    if(timers[key]) clearInterval(timers[key]);
+    var total=getDuration(id)*1000, start=Date.now();
+    btn.dataset.installState='loading'; btn.disabled=true;
+    btn.classList.add('wave-loading'); btn.classList.remove('install-done');
+    btn.style.setProperty('--wave-progress','0%');
+    var label=btn.querySelector('.wave-label');
+    if(label) label.textContent='جارٍ التحميل 0%';
+    var timer=setInterval(function(){
+      if(!btn.isConnected){ clearInterval(timer); delete timers[key]; return; }
+      var pct=Math.min(100,Math.floor((Date.now()-start)/total*100));
+      btn.style.setProperty('--wave-progress',pct+'%');
+      if(label) label.textContent='جارٍ التحميل '+pct+'%';
+      if(pct>=100){
+        clearInterval(timer); delete timers[key];
+        btn.disabled=false; btn.dataset.installState='ready';
+        btn.classList.remove('wave-loading'); btn.classList.add('install-done');
+        if(label) label.textContent='فتح التطبيق';
+        btn.setAttribute('aria-label','فتح التطبيق');
+      }
+    },80);
+    timers[key]=timer;
+  }
+
+  // The app-detail page button uses this one flow.
+  window.startAppInstall=function(id,button){
+    var app=findApp(id);
+    begin(button,id,app&&app.url);
+  };
+  // The bottom-sheet button uses the exact same flow and preserves its URL.
+  window.sheetInstallAction=function(){
+    var selected=window.selectedApp;
+    if(!selected){toast('اختر تطبيقًا أولًا.');return;}
+    begin(document.getElementById('sheetInstallBtn'),selected.id,selected.url);
+  };
+  window.sheetOpenAction=function(){
+    var selected=window.selectedApp;
+    if(!selected){toast('اختر تطبيقًا أولًا.');return;}
+    openDestination(selected.url);
+  };
+  window.installApp=function(id){ if(typeof window.openAppSheet==='function') window.openAppSheet(id); };
+  window.openAppSheet=function(id){
+    if(typeof baseOpenAppSheet==='function') baseOpenAppSheet.apply(this,arguments);
+    var app=findApp(id);
+    if(!app){toast('لم يتم العثور على التطبيق.');return;}
+    window.selectedApp={id:app.id,name:(typeof window.nm==='function'?window.nm(app):(app.nameAr||app.name||'App')),url:app.url||'',icon:(typeof window.iconSrc==='function'?window.iconSrc(app):(app.icon||''))};
+    // Run after legacy wrappers so they cannot replace the install button label.
+    setTimeout(function(){ resetButton(document.getElementById('sheetInstallBtn'),'تثبيت'); },0);
+  };
+  window.closeSheet=closeSheet;
+
+  // Developer page is a real navigable layer: it can open its apps, and
+  // the app detail page can then open the developer profile again.
+  var baseOpenAppPage=window.openAppPage;
+  window.openAppPage=function(){
+    var result=baseOpenAppPage&&baseOpenAppPage.apply(this,arguments);
+    var dp=document.getElementById('devPage'), ap=document.getElementById('appPage');
+    if(dp&&dp.classList.contains('active')&&ap) ap.style.zIndex='380';
+    return result;
+  };
+  var baseCloseDevPage=window.closeDevPage;
+  window.closeDevPage=function(){
+    if(baseCloseDevPage) baseCloseDevPage.apply(this,arguments);
+    var dp=document.getElementById('devPage'); if(dp) dp.style.zIndex='290';
+    var ap=document.getElementById('appPage'); if(ap) ap.style.zIndex='300';
+  };
+  window.openDeveloperFromApp=function(uid){
+    if(!uid){toast('صفحة المطور غير متاحة لهذا التطبيق.');return;}
+    var page=document.getElementById('devPage');
+    if(page) page.style.zIndex='390';
+    if(typeof window.openDevPage==='function') window.openDevPage(uid);
+    else toast('تعذر فتح صفحة المطور.');
+  };
+
+  // Keep the toast above all pages and sheets, regardless of their stacking contexts.
+  var toastNode=document.getElementById('toast');
+  if(toastNode) toastNode.style.zIndex='2147483647';
+  window.addEventListener('pageshow',function(){navigating=false;});
+  window.addEventListener('pagehide',function(){Object.keys(timers).forEach(function(k){clearInterval(timers[k]);delete timers[k];});});
+})();
+</script>
