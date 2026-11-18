@@ -1257,7 +1257,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.3</strong>
+      <strong class="version-number" dir="ltr">V3.4</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -2386,7 +2386,7 @@ body{padding-bottom:110px}
     var data = {
       name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
       description: $('appDesc').value.trim(), category: $('appCategory').value,
-      pwaKitAvailable: true, pwaKitVersion: '3.3',
+      pwaKitAvailable: true, pwaKitVersion: '3.4',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
       devName: u.displayName || (u.email || '').split('@')[0], collective: isCol(u),
@@ -2431,7 +2431,112 @@ body{padding-bottom:110px}
     };
     var sw = `const CACHE_NAME = 'amgzrnt-pwa-${Date.now()}';\nconst START_URL = ${JSON.stringify(base.href)};\nself.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.add(START_URL).catch(() => {})).then(() => self.skipWaiting())); });\nself.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });\nself.addEventListener('fetch', event => { const req = event.request; if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return; event.respondWith(fetch(req).then(res => { if (res && res.ok) { const copy = res.clone(); caches.open(CACHE_NAME).then(cache => cache.put(req, copy)); } return res; }).catch(() => caches.match(req).then(hit => hit || caches.match(START_URL)))); });\n`;
     var installJs = `(function(){\n let deferred=null;\n const btn=document.createElement('button'); btn.type='button'; btn.textContent='حمّل تطبيقنا'; btn.setAttribute('aria-label','حمّل تطبيقنا');\n Object.assign(btn.style,{position:'fixed',zIndex:'2147483000',bottom:'18px',left:'50%',transform:'translateX(-50%)',padding:'12px 22px',border:'0',borderRadius:'999px',background:'#6d28d9',color:'#fff',font:'bold 16px system-ui',boxShadow:'0 8px 28px #0005',display:'none'}); document.body.appendChild(btn);\n window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.style.display='block';});\n btn.addEventListener('click',async()=>{if(!deferred){btn.textContent='افتح قائمة المتصفح واختر إضافة إلى الشاشة';return;} deferred.prompt(); await deferred.userChoice; deferred=null; btn.style.display='none';});\n window.addEventListener('appinstalled',()=>{btn.style.display='none';});\n if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err));\n})();\n`;
-    var snippet = `<!-- أضف هذا داخل <head> -->\n<link rel="manifest" href="./manifest.json">\n<meta name="theme-color" content="#6d28d9">\n\n<!-- أضف هذا قبل </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
+    var snippet = `<!-- أضف هذا داخل <head> -->\n<link rel="manifest" href="./manifest.json">\n<meta name="theme-color" content="#6d28d9">\n\n<!-- أضف هذا قبل 
+  <script id="v34-unified-app-navigation">
+  (function () {
+    'use strict';
+    var pendingNavigation = false;
+    function getApp(id) {
+      if (id == null) return null;
+      try {
+        if (typeof window.findApp === 'function') {
+          var found = window.findApp(String(id));
+          if (found) return found;
+        }
+      } catch (e) {}
+      try {
+        if (typeof allApps !== 'undefined' && Array.isArray(allApps)) {
+          return allApps.find(function (a) { return a && String(a.id) === String(id); }) || null;
+        }
+      } catch (e) {}
+      return null;
+    }
+    function safeUrl(value) {
+      try {
+        var u = new URL(String(value || ''), location.href);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+      } catch (e) { return ''; }
+    }
+    function toast(message) {
+      if (typeof window.showToast === 'function') window.showToast(message);
+    }
+    function closeSheetSafely() {
+      var overlay = document.getElementById('sheetOverlay');
+      var sheet = document.getElementById('bottomSheet');
+      if (overlay) overlay.classList.remove('active');
+      if (sheet) sheet.classList.remove('active');
+      if (typeof window.syncBodyLock === 'function') window.syncBodyLock();
+      else document.body.style.overflow = '';
+    }
+    function renderSheet(app) {
+      window.selectedApp = {
+        id: app.id,
+        name: (typeof window.nm === 'function' ? window.nm(app) : (app.nameAr || app.name || 'App')),
+        url: app.url || '',
+        icon: (typeof window.iconSrc === 'function' ? window.iconSrc(app) : (app.icon || ''))
+      };
+      var name = document.getElementById('sheetAppName');
+      var box = document.getElementById('sheetIconBox');
+      var install = document.getElementById('sheetInstallBtn');
+      var open = document.getElementById('sheetOpenBtn');
+      if (name) name.textContent = window.selectedApp.name;
+      if (box) {
+        box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph';
+        box.innerHTML = window.selectedApp.icon ? '<img src="' + String(window.selectedApp.icon).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
+      }
+      if (install) {
+        install.disabled = false;
+        install.classList.remove('wave-loading','install-done');
+        install.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i><span>فتح التطبيق</span>';
+      }
+      if (open) open.style.display = 'none';
+      var overlay = document.getElementById('sheetOverlay');
+      var sheet = document.getElementById('bottomSheet');
+      if (overlay) overlay.classList.add('active');
+      if (sheet) sheet.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    window.openAppSheet = function (id) {
+      var app = getApp(id);
+      if (!app || !app.url) { toast('تعذر العثور على رابط التطبيق. حدّث قائمة التطبيقات وحاول مجددًا.'); return; }
+      renderSheet(app);
+    };
+    window.closeSheet = closeSheetSafely;
+    function navigateToSelected() {
+      var selected = window.selectedApp;
+      var app = selected && selected.id != null ? getApp(selected.id) : null;
+      // If the list refreshed while the sheet was open, retain its already validated URL.
+      var url = safeUrl((app && app.url) || (selected && selected.url));
+      if (!url) { toast('رابط التطبيق غير صالح أو غير متوفر.'); return; }
+      if (pendingNavigation) return;
+      pendingNavigation = true;
+      closeSheetSafely();
+      // Same-tab navigation makes the device Back action return naturally to the store.
+      // It does not create a fake installed record or require a user account.
+      try { location.assign(url); }
+      catch (e) { pendingNavigation = false; toast('تعذر فتح التطبيق. حاول مرة أخرى.'); }
+    }
+    window.sheetInstallAction = navigateToSelected;
+    window.sheetOpenAction = navigateToSelected;
+    window.installApp = function (id) {
+      var app = getApp(id);
+      if (!app || !app.url) { toast('تعذر العثور على التطبيق. حدّث الصفحة وحاول مجددًا.'); return; }
+      window.openAppSheet(app.id);
+    };
+    // Do not let old inline handlers and legacy listeners execute a second action.
+    document.addEventListener('click', function (event) {
+      var button = event.target && event.target.closest ? event.target.closest('#sheetInstallBtn,#sheetOpenBtn') : null;
+      if (!button) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (button.id === 'sheetInstallBtn' || button.id === 'sheetOpenBtn') navigateToSelected();
+    }, true);
+    window.addEventListener('pageshow', function () { pendingNavigation = false; });
+    window.addEventListener('pagehide', function () { pendingNavigation = false; });
+  })();
+  </script>
+
+</body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
     var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
     function crc32(bytes){var c=~0;for(var i=0;i<bytes.length;i++){c^=bytes[i];for(var j=0;j<8;j++)c=(c>>>1)^((c&1)?0xEDB88320:0);}return (~c)>>>0;}
@@ -3347,5 +3452,110 @@ body{padding-bottom:110px}
       .toast, .app-page, .bnav { transition: none !important; }
     }
   </style>
+
+  <script id="v34-unified-app-navigation">
+  (function () {
+    'use strict';
+    var pendingNavigation = false;
+    function getApp(id) {
+      if (id == null) return null;
+      try {
+        if (typeof window.findApp === 'function') {
+          var found = window.findApp(String(id));
+          if (found) return found;
+        }
+      } catch (e) {}
+      try {
+        if (typeof allApps !== 'undefined' && Array.isArray(allApps)) {
+          return allApps.find(function (a) { return a && String(a.id) === String(id); }) || null;
+        }
+      } catch (e) {}
+      return null;
+    }
+    function safeUrl(value) {
+      try {
+        var u = new URL(String(value || ''), location.href);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+      } catch (e) { return ''; }
+    }
+    function toast(message) {
+      if (typeof window.showToast === 'function') window.showToast(message);
+    }
+    function closeSheetSafely() {
+      var overlay = document.getElementById('sheetOverlay');
+      var sheet = document.getElementById('bottomSheet');
+      if (overlay) overlay.classList.remove('active');
+      if (sheet) sheet.classList.remove('active');
+      if (typeof window.syncBodyLock === 'function') window.syncBodyLock();
+      else document.body.style.overflow = '';
+    }
+    function renderSheet(app) {
+      window.selectedApp = {
+        id: app.id,
+        name: (typeof window.nm === 'function' ? window.nm(app) : (app.nameAr || app.name || 'App')),
+        url: app.url || '',
+        icon: (typeof window.iconSrc === 'function' ? window.iconSrc(app) : (app.icon || ''))
+      };
+      var name = document.getElementById('sheetAppName');
+      var box = document.getElementById('sheetIconBox');
+      var install = document.getElementById('sheetInstallBtn');
+      var open = document.getElementById('sheetOpenBtn');
+      if (name) name.textContent = window.selectedApp.name;
+      if (box) {
+        box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph';
+        box.innerHTML = window.selectedApp.icon ? '<img src="' + String(window.selectedApp.icon).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
+      }
+      if (install) {
+        install.disabled = false;
+        install.classList.remove('wave-loading','install-done');
+        install.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i><span>فتح التطبيق</span>';
+      }
+      if (open) open.style.display = 'none';
+      var overlay = document.getElementById('sheetOverlay');
+      var sheet = document.getElementById('bottomSheet');
+      if (overlay) overlay.classList.add('active');
+      if (sheet) sheet.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    window.openAppSheet = function (id) {
+      var app = getApp(id);
+      if (!app || !app.url) { toast('تعذر العثور على رابط التطبيق. حدّث قائمة التطبيقات وحاول مجددًا.'); return; }
+      renderSheet(app);
+    };
+    window.closeSheet = closeSheetSafely;
+    function navigateToSelected() {
+      var selected = window.selectedApp;
+      var app = selected && selected.id != null ? getApp(selected.id) : null;
+      // If the list refreshed while the sheet was open, retain its already validated URL.
+      var url = safeUrl((app && app.url) || (selected && selected.url));
+      if (!url) { toast('رابط التطبيق غير صالح أو غير متوفر.'); return; }
+      if (pendingNavigation) return;
+      pendingNavigation = true;
+      closeSheetSafely();
+      // Same-tab navigation makes the device Back action return naturally to the store.
+      // It does not create a fake installed record or require a user account.
+      try { location.assign(url); }
+      catch (e) { pendingNavigation = false; toast('تعذر فتح التطبيق. حاول مرة أخرى.'); }
+    }
+    window.sheetInstallAction = navigateToSelected;
+    window.sheetOpenAction = navigateToSelected;
+    window.installApp = function (id) {
+      var app = getApp(id);
+      if (!app || !app.url) { toast('تعذر العثور على التطبيق. حدّث الصفحة وحاول مجددًا.'); return; }
+      window.openAppSheet(app.id);
+    };
+    // Do not let old inline handlers and legacy listeners execute a second action.
+    document.addEventListener('click', function (event) {
+      var button = event.target && event.target.closest ? event.target.closest('#sheetInstallBtn,#sheetOpenBtn') : null;
+      if (!button) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (button.id === 'sheetInstallBtn' || button.id === 'sheetOpenBtn') navigateToSelected();
+    }, true);
+    window.addEventListener('pageshow', function () { pendingNavigation = false; });
+    window.addEventListener('pagehide', function () { pendingNavigation = false; });
+  })();
+  </script>
+
 </body>
 </html>
