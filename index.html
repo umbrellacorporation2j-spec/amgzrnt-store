@@ -2481,11 +2481,19 @@ body{padding-bottom:110px}
 
   /* ---------- ripple on press ---------- */
   document.addEventListener('pointerdown', function (e) {
-    var t = e.target.closest && e.target.closest('.btn,.chip,.app-row,.app-tile,.sec-more,.tab-btn'); if (!t) return;
-    var r = t.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, sp = document.createElement('span');
-    sp.className = 'ripple'; sp.style.cssText = 'width:' + d + 'px;height:' + d + 'px;left:' + (e.clientX - r.left - d / 2) + 'px;top:' + (e.clientY - r.top - d / 2) + 'px';
-    if (getComputedStyle(t).position === 'static') t.style.position = 'relative';
-    t.style.overflow = 'hidden'; t.appendChild(sp); setTimeout(function () { sp.remove(); }, 700);
+    var t = e.target.closest && e.target.closest('.btn,.chip,.sec-more,.tab-btn');
+    if (!t || t.disabled || e.button > 0) return;
+    var r = t.getBoundingClientRect();
+    var d = Math.min(Math.max(r.width, r.height) * 1.35, 120);
+    var sp = document.createElement('span');
+    sp.className = 'ripple';
+    sp.setAttribute('aria-hidden', 'true');
+    sp.style.width = d + 'px';
+    sp.style.height = d + 'px';
+    sp.style.left = Math.max(0, Math.min(r.width - d, e.clientX - r.left - d / 2)) + 'px';
+    sp.style.top = Math.max(0, Math.min(r.height - d, e.clientY - r.top - d / 2)) + 'px';
+    t.appendChild(sp);
+    window.setTimeout(function () { if (sp.isConnected) sp.remove(); }, 680);
   }, { passive: true });
   /* ---------- never stay on endless skeleton ---------- */
   function stuckMsg() {
@@ -3131,5 +3139,53 @@ body{padding-bottom:110px}
     document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#sheetInstallBtn');if(b&&!b.disabled){e.preventDefault();e.stopImmediatePropagation();window.sheetInstallAction();}},true);
   })();
   </script>
+
+  <style id="final-layout-and-touch-guard">
+    /* One predictable press state: never resize or reshape controls on tap. */
+    button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+    button { max-width: 100%; }
+    .btn, .chip, .tab-btn, .sec-more, .wave-btn,
+    .app-row, .app-tile, .bnav button, .star-input button,
+    .cmp button, .adm-tabs button {
+      transform-origin: center;
+      -webkit-touch-callout: none;
+    }
+    .btn:active:not(:disabled), .chip:active, .tab-btn:active,
+    .sec-more:active, .wave-btn:active, .app-row:active,
+    .app-tile:active, .bnav button:active, .star-input button:active,
+    .cmp button:active, .adm-tabs button:active {
+      transform: none !important;
+      border-radius: inherit;
+    }
+    .btn:focus-visible, .chip:focus-visible, .tab-btn:focus-visible,
+    .wave-btn:focus-visible, .bnav button:focus-visible {
+      outline: 2px solid var(--primary-light);
+      outline-offset: 3px;
+    }
+    .ripple {
+      position: absolute;
+      display: block;
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .18;
+      transform: scale(0);
+      animation: rip .62s ease-out forwards;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .btn, .chip, .tab-btn, .sec-more { position: relative; overflow: hidden; }
+    .wave-btn { isolation: isolate; }
+    .wave-btn > span { position: relative; z-index: 3; }
+    .wave-btn .wv, .wave-btn .wv2 { pointer-events: none; }
+    .bnav { box-sizing: border-box; }
+    .bnav button { min-width: 0; }
+    .drawer, .bottom-sheet, .app-page { overscroll-behavior: contain; }
+    @media (prefers-reduced-motion: reduce) {
+      .ripple { animation: none; opacity: 0; }
+    }
+  </style>
+
 </body>
 </html>
