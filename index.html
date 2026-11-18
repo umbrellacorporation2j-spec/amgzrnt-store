@@ -1255,7 +1255,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.6</strong>
+      <strong class="version-number" dir="ltr">V3.7</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -2384,7 +2384,7 @@ body{padding-bottom:110px}
     var data = {
       name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
       description: $('appDesc').value.trim(), category: $('appCategory').value,
-      pwaKitAvailable: true, pwaKitVersion: '3.6',
+      pwaKitAvailable: true, pwaKitVersion: '3.7',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
       devName: u.displayName || (u.email || '').split('@')[0], collective: isCol(u),
@@ -2541,7 +2541,9 @@ body{padding-bottom:110px}
     window.addEventListener('pageshow', function () { pendingNavigation = false; });
     window.addEventListener('pagehide', function () { pendingNavigation = false; });
   })();
-  </script>
+  <\/script>
+
+
 
 </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
@@ -3453,107 +3455,228 @@ body{padding-bottom:110px}
     }
   </style>
 
-  <script id="v36-unified-wave-install-flow">
-  (function () {
-    'use strict';
-    var timers = Object.create(null);
-    var durations = [17,12,15,10,4,9,6,3];
-    var pendingNavigation = false;
-    function findApp(id) {
-      try { if (typeof window.findApp === 'function') { var x=window.findApp(String(id)); if(x)return x; } } catch(e) {}
-      var pools=[window.allApps,window.apps,window.allApplications];
-      for(var p=0;p<pools.length;p++) if(Array.isArray(pools[p])) { var hit=pools[p].find(function(a){return a&&String(a.id)===String(id);}); if(hit)return hit; }
-      return null;
+  <script id="v37-unified-install-flow">
+(function () {
+  'use strict';
+  var timers = Object.create(null);
+  var durations = [17, 12, 15, 10, 4, 9, 6, 3];
+  var pendingNavigation = false;
+
+  function lookupApp(id) {
+    var key = String(id == null ? '' : id);
+    try {
+      if (typeof allApps !== 'undefined' && Array.isArray(allApps)) {
+        var a = allApps.find(function (x) { return x && String(x.id) === key; });
+        if (a) return a;
+      }
+    } catch (e) {}
+    try {
+      if (typeof window.findApp === 'function') {
+        var found = window.findApp(key);
+        if (found) return found;
+      }
+    } catch (e) {}
+    var pools = [window.allApps, window.apps, window.allApplications];
+    for (var p = 0; p < pools.length; p++) {
+      if (Array.isArray(pools[p])) {
+        var hit = pools[p].find(function (x) { return x && String(x.id) === key; });
+        if (hit) return hit;
+      }
     }
-    function validUrl(value) {
-      var raw=String(value||'').trim(); if(!raw)return '';
-      if(/^www\./i.test(raw)) raw='https://'+raw;
-      if(!/^https?:\/\//i.test(raw)) return '';
-      try { var u=new URL(raw); return (u.protocol==='https:'||u.protocol==='http:')?u.href:''; } catch(e) { return ''; }
+    return null;
+  }
+
+  // Treat the publisher's URL field as the destination. Do not try to
+  // identify the site, inspect its PWA metadata, or rewrite its path/query.
+  function normalizeUrl(value) {
+    var raw = String(value == null ? '' : value).trim();
+    if (!raw) return '';
+    raw = raw.replace(/^['"]|['"]$/g, '').trim();
+    if (/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) raw = 'https://' + raw;
+    try {
+      var u = new URL(raw);
+      if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+      if (!u.hostname) return '';
+      return u.href;
+    } catch (e) { return ''; }
+  }
+
+  function notify(message) {
+    var t = document.getElementById('toast');
+    if (t) {
+      t.style.zIndex = '2147483647';
+      if (typeof window.showToast === 'function') window.showToast(message);
+      else {
+        var span = t.querySelector('span');
+        if (span) span.textContent = message;
+        t.classList.add('show');
+        clearTimeout(t._v37Timer);
+        t._v37Timer = setTimeout(function () { t.classList.remove('show'); }, 2800);
+      }
     }
-    function notify(msg) { if(typeof window.showToast==='function')window.showToast(msg); }
-    function secondsFor(id) { var h=0,s=String(id||''); for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0; return durations[h%durations.length]; }
-    function resetButton(b) {
-      if(!b)return;
-      b.disabled=false; b.dataset.installState='idle'; b.classList.remove('wave-loading','install-done');
-      b.style.setProperty('--wave-progress','0%');
-      b.innerHTML='<span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">تثبيت</span>';
+  }
+
+  function secondsFor(id) {
+    var h = 0, s = String(id == null ? '' : id);
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return durations[h % durations.length];
+  }
+
+  function getSelected() {
+    var s = window.selectedApp;
+    if (!s) return null;
+    var app = lookupApp(s.id);
+    var url = normalizeUrl((app && app.url) || s.url);
+    if (!url) return null;
+    return { id: s.id, url: url, name: s.name || (app && (app.nameAr || app.name)) || 'App' };
+  }
+
+  function closeSheet() {
+    var overlay = document.getElementById('sheetOverlay');
+    var sheet = document.getElementById('bottomSheet');
+    if (overlay) overlay.classList.remove('active');
+    if (sheet) sheet.classList.remove('active');
+    if (typeof window.syncBodyLock === 'function') window.syncBodyLock();
+    else document.body.style.overflow = document.querySelector('.app-page.active') ? 'hidden' : '';
+  }
+
+  function navigate(url) {
+    if (!url) { notify('رابط التطبيق غير صالح أو غير متوفر. راجع الرابط المحفوظ في بيانات التطبيق.'); return; }
+    if (pendingNavigation) return;
+    pendingNavigation = true;
+    closeSheet();
+    try { window.location.assign(url); }
+    catch (e) { pendingNavigation = false; notify('تعذر فتح الرابط. جرّب فتحه في المتصفح مباشرة.'); }
+  }
+
+  function resetButton(button, label) {
+    if (!button) return;
+    button.disabled = false;
+    button.dataset.installState = 'idle';
+    button.classList.remove('wave-loading', 'install-done');
+    button.style.setProperty('--wave-progress', '0%');
+    button.innerHTML = '<span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + (label || 'تثبيت') + '</span>';
+  }
+
+  function beginWave(button, id, onOpen) {
+    if (!button) return;
+    if (button.dataset.installState === 'loading') return;
+    if (button.dataset.installState === 'ready') { onOpen(); return; }
+
+    var app = lookupApp(id);
+    var url = normalizeUrl((app && app.url) || (window.selectedApp && String(window.selectedApp.id) === String(id) ? window.selectedApp.url : ''));
+    if (!url) {
+      notify('تعذر قراءة رابط هذا التطبيق. افتح بيانات التطبيق وتأكد أن الرابط يبدأ بـ https:// أو http://');
+      return;
     }
-    function closeSheet() {
-      var overlay=document.getElementById('sheetOverlay'),sheet=document.getElementById('bottomSheet');
-      if(overlay)overlay.classList.remove('active'); if(sheet)sheet.classList.remove('active');
-      if(typeof window.syncBodyLock==='function')window.syncBodyLock();else document.body.style.overflow='';
+
+    // Keep the URL captured at the start. The app list may refresh while
+    // the animation is running; opening must not depend on a second lookup.
+    button.dataset.targetUrl = url;
+    var timerKey = String(id) + ':' + (button.id || button.dataset.appId || 'button');
+    if (timers[timerKey]) { clearInterval(timers[timerKey]); delete timers[timerKey]; }
+    var duration = secondsFor(id) * 1000;
+    var started = Date.now();
+    button.dataset.installState = 'loading';
+    button.disabled = true;
+    button.classList.add('wave-loading');
+    button.classList.remove('install-done');
+    button.style.setProperty('--wave-progress', '0%');
+    var label = button.querySelector('.wave-label');
+    if (label) label.textContent = 'جارٍ تجهيز التطبيق…';
+
+    var timer = setInterval(function () {
+      if (!button.isConnected) {
+        clearInterval(timer); delete timers[timerKey]; return;
+      }
+      var progress = Math.min(100, ((Date.now() - started) / duration) * 100);
+      button.style.setProperty('--wave-progress', progress.toFixed(1) + '%');
+      if (progress >= 100) {
+        clearInterval(timer); delete timers[timerKey];
+        button.disabled = false;
+        button.dataset.installState = 'ready';
+        button.classList.remove('wave-loading');
+        button.classList.add('install-done');
+        if (label) label.textContent = 'فتح التطبيق';
+        button.setAttribute('aria-label', 'فتح التطبيق');
+      }
+    }, 50);
+    timers[timerKey] = timer;
+  }
+
+  function renderSheet(app) {
+    var name = typeof window.nm === 'function' ? window.nm(app) : (app.nameAr || app.name || 'App');
+    var icon = typeof window.iconSrc === 'function' ? window.iconSrc(app) : (app.icon || '');
+    window.selectedApp = { id: app.id, name: name, url: app.url || '', icon: icon };
+    var n = document.getElementById('sheetAppName');
+    var box = document.getElementById('sheetIconBox');
+    var btn = document.getElementById('sheetInstallBtn');
+    var open = document.getElementById('sheetOpenBtn');
+    if (n) n.textContent = name;
+    if (box) {
+      box.className = icon ? '' : 'sheet-icon-ph';
+      box.innerHTML = icon ? '<img src="' + String(icon).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;') + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
     }
-    function selectedApp() {
-      var s=window.selectedApp; if(!s)return null;
-      var app=findApp(s.id);
-      return {id:s.id,url:validUrl((app&&app.url)||s.url),name:s.name||((app&&(app.nameAr||app.name))||'App')};
-    }
-    function openSelected() {
-      var a=selectedApp();
-      if(!a||!a.url){notify('رابط التطبيق غير صالح أو غير موجود. تحقق من رابط التطبيق في بياناته.');return;}
-      if(pendingNavigation)return;
-      pendingNavigation=true; closeSheet();
-      try { window.location.assign(a.url); }
-      catch(e) { pendingNavigation=false; notify('تعذر فتح التطبيق. حاول مرة أخرى.'); }
-    }
-    function beginWave(button,id,onDone) {
-      if(!button || button.dataset.installState==='loading')return;
-      if(button.dataset.installState==='ready'){onDone();return;}
-      var app=findApp(id);
-      var url=app&&validUrl(app.url);
-      if(!url){notify('رابط التطبيق غير صالح أو غير موجود. افتح بيانات التطبيق وتأكد من كتابة الرابط كاملًا مع https://');return;}
-      var old=timers[id]; if(old){clearInterval(old);delete timers[id];}
-      var duration=secondsFor(id)*1000,start=Date.now();
-      button.dataset.installState='loading';button.disabled=true;button.classList.add('wave-loading');button.classList.remove('install-done');button.style.setProperty('--wave-progress','0%');
-      var label=button.querySelector('.wave-label');if(label)label.textContent='جارٍ تجهيز التطبيق…';
-      var timer=setInterval(function(){
-        if(!button.isConnected){clearInterval(timer);delete timers[id];return;}
-        var progress=Math.min(100,((Date.now()-start)/duration)*100);
-        button.style.setProperty('--wave-progress',progress.toFixed(1)+'%');
-        if(progress>=100){clearInterval(timer);delete timers[id];button.disabled=false;button.dataset.installState='ready';button.classList.remove('wave-loading');button.classList.add('install-done');if(label)label.textContent='فتح التطبيق';if(onDone===openSelected){var open=document.getElementById('sheetOpenBtn');if(open)open.style.display='none';}}
-      },60);timers[id]=timer;
-    }
-    function renderSheet(app) {
-      var name=(typeof window.nm==='function'?window.nm(app):(app.nameAr||app.name||'App'));
-      var icon=(typeof window.iconSrc==='function'?window.iconSrc(app):(app.icon||''));
-      window.selectedApp={id:app.id,name:name,url:app.url||'',icon:icon};
-      var n=document.getElementById('sheetAppName'),box=document.getElementById('sheetIconBox'),btn=document.getElementById('sheetInstallBtn'),other=document.getElementById('sheetOpenBtn');
-      if(n)n.textContent=name;
-      if(box){box.className=icon?'':'sheet-icon-ph';box.innerHTML=icon?'<img src="'+String(icon).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'" alt="">':'<i class="fa-solid fa-cube"></i>';}
-      if(btn){resetButton(btn);btn.classList.add('wave-btn');}
-      if(other)other.style.display='none';
-      var overlay=document.getElementById('sheetOverlay'),sheet=document.getElementById('bottomSheet');
-      if(overlay)overlay.classList.add('active');if(sheet)sheet.classList.add('active');document.body.style.overflow='hidden';
-    }
-    window.openAppSheet=function(id){var app=findApp(id);if(!app){notify('لم يتم العثور على التطبيق في القائمة. حدّث الصفحة وحاول مجددًا.');return;}renderSheet(app);};
-    window.closeSheet=closeSheet;
-    window.sheetInstallAction=function(){var a=window.selectedApp;if(!a){notify('اختر تطبيقًا أولًا.');return;}var b=document.getElementById('sheetInstallBtn');beginWave(b,a.id,openSelected);};
-    window.sheetOpenAction=openSelected;
-    window.installApp=function(id){var app=findApp(id);if(!app){notify('لم يتم العثور على التطبيق في القائمة.');return;}window.openAppSheet(id);};
-    window.startAppInstall=function(id,button){beginWave(button,id,function(){var app=findApp(id),url=app&&validUrl(app.url);if(url)window.location.assign(url);else notify('رابط التطبيق غير صالح أو غير موجود.');});};
-    document.addEventListener('click',function(e){
-      var b=e.target&&e.target.closest?e.target.closest('#sheetInstallBtn,#sheetOpenBtn'):null;if(!b)return;
-      e.preventDefault();e.stopImmediatePropagation();
-      if(b.id==='sheetOpenBtn'){openSelected();return;}
-      var a=window.selectedApp;if(!a)return;
-      if(b.dataset.installState==='ready'){openSelected();return;}
-      window.sheetInstallAction();
-    },true);
-    window.addEventListener('pageshow',function(){pendingNavigation=false;});
-    window.addEventListener('pagehide',function(){Object.keys(timers).forEach(function(k){clearInterval(timers[k]);});});
-  })();
-  </script>
+    resetButton(btn, 'تثبيت');
+    if (btn) btn.classList.add('wave-btn');
+    if (open) open.style.display = 'none';
+    var overlay = document.getElementById('sheetOverlay');
+    var sheet = document.getElementById('bottomSheet');
+    if (overlay) overlay.classList.add('active');
+    if (sheet) sheet.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  window.openAppSheet = function (id) {
+    var app = lookupApp(id);
+    if (!app) { notify('لم يتم العثور على التطبيق في قائمة المتجر. حدّث الصفحة وحاول مجددًا.'); return; }
+    if (!normalizeUrl(app.url)) { notify('رابط التطبيق في بياناته غير مكتمل. عدّله ليبدأ بـ https://'); return; }
+    renderSheet(app);
+  };
+  window.closeSheet = closeSheet;
+  window.sheetInstallAction = function () {
+    var selected = window.selectedApp;
+    if (!selected) { notify('اختر تطبيقًا أولًا.'); return; }
+    var button = document.getElementById('sheetInstallBtn');
+    beginWave(button, selected.id, function () {
+      navigate((button && button.dataset.targetUrl) || normalizeUrl(selected.url));
+    });
+  };
+  window.sheetOpenAction = function () {
+    var selected = getSelected();
+    if (!selected) { notify('رابط التطبيق غير صالح أو غير متوفر.'); return; }
+    navigate(selected.url);
+  };
+  window.installApp = function (id) { window.openAppSheet(id); };
+  window.startAppInstall = function (id, button) {
+    beginWave(button, id, function () {
+      navigate(button && button.dataset.targetUrl);
+    });
+  };
+
+  // Ensure every toast stays above the app details page, sheet and navigation.
+  var toastNode = document.getElementById('toast');
+  if (toastNode) toastNode.style.zIndex = '2147483647';
+  window.addEventListener('pageshow', function () { pendingNavigation = false; });
+  window.addEventListener('pagehide', function () {
+    Object.keys(timers).forEach(function (key) { clearInterval(timers[key]); delete timers[key]; });
+  });
+})();
+</script>
+
+
+
+
+
+<style id="v37-toast-and-wave-fix">
+  #toast { z-index:2147483647 !important; bottom:calc(92px + env(safe-area-inset-bottom, 0px)) !important; max-width:calc(100vw - 28px); }
+  #toast.show { z-index:2147483647 !important; }
+  #sheetInstallBtn .wave-liquid, .install-wave .wave-liquid { pointer-events:none !important; }
+  .wave-btn.wave-loading { cursor:progress !important; }
+  .wave-btn.install-done { background:linear-gradient(135deg,#059669,#047857) !important; }
+  .wave-btn:disabled { opacity:1 !important; }
+  @media(max-width:600px){ #toast { bottom:calc(92px + env(safe-area-inset-bottom, 0px)) !important; } }
+</style>
 
 </body>
 </html>
-
-<style id="v36-wave-sheet-style">
-#sheetInstallBtn.wave-btn{position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:54px;border:0;border-radius:999px;background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;font:800 1rem inherit;font-family:inherit;cursor:pointer}
-#sheetInstallBtn .wave-liquid{position:absolute;z-index:1;left:0;right:0;bottom:0;height:var(--wave-progress,0%);background:linear-gradient(110deg,#9b72ff,#6d28d9 58%,#4c1d95);transition:height .16s linear;pointer-events:none}
-#sheetInstallBtn .wave-liquid:before,#sheetInstallBtn .wave-liquid:after{content:"";position:absolute;left:-30%;top:-8px;width:160%;height:16px;border-radius:44%;background:rgba(255,255,255,.3);animation:v35Wave 3.2s linear infinite}
-#sheetInstallBtn .wave-liquid:after{top:-5px;left:-15%;opacity:.55;animation-duration:4.4s;animation-direction:reverse}
-#sheetInstallBtn .wave-label{position:relative;z-index:3;pointer-events:none}
-#sheetInstallBtn.install-done{background:linear-gradient(135deg,#059669,#047857)}
-#sheetInstallBtn:disabled{opacity:1;cursor:progress}
-</style>
