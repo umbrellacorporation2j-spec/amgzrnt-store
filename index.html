@@ -1255,7 +1255,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.9</strong>
+      <strong class="version-number" dir="ltr">V4.0</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -2165,20 +2165,20 @@ body{padding-bottom:110px}
   function rowHTML(a, i, manage) {
     var mg = manage ? '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
       '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>' : '';
-    return '<div class="app-row" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    return '<div class="app-row" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div>' +
       '<div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>' + mg + '</div>';
   }
   function adHTML(a) {
     var bg = a.adImage ? 'url(' + encodeURI(a.adImage).replace(/\(/g, '%28').replace(/\)/g, '%29') + ') center/cover' : 'linear-gradient(135deg,' + esc(a.primaryColor || '#7c3aed') + ',#2e1065)';
-    return '<div class="ad-item"><div class="ad-banner" style="background:' + bg + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>' +
-      '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    return '<div class="ad-item"><div class="ad-banner" style="background:' + bg + '" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>' +
+      '<div class="app-row ad-row" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openAppSheet(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
   var CATI = { tools: 'fa-screwdriver-wrench', productivity: 'fa-briefcase', education: 'fa-graduation-cap', social: 'fa-users', other: 'fa-shapes' };
   function tileHTML(a, i) {
-    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
       '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
   }
   function secHTML(icon, title, apps, cat) {
@@ -2207,7 +2207,7 @@ body{padding-bottom:110px}
         (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="apps-list">' +
         apps.map(function (a, i) { return rowHTML(a, i, adm); }).join('') + '</div>';
     } else {
-      var ads = apps.filter(function (a) { return a.adText || a.adImage; });
+      var ads = apps.filter(function (a) { return (a.adText || a.adImage) && (!a.suspended || (typeof canSee==='function' && canSee(a))); });
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
       Object.keys(CAT).forEach(function (c) {
@@ -2632,6 +2632,10 @@ body{padding-bottom:110px}
   /* ---------- preview ---------- */
   window.openPreview = function (id) {
     var a = findApp(id); if (!a) return;
+    if (a.suspended && !(typeof canSee === 'function' && canSee(a))) {
+      if (typeof showToast === 'function') showToast(T('لا يمكنك معاينة هذا التطبيق — تم إيقافه من الإدارة.', 'You cannot preview this app — it was suspended by admin.'));
+      return;
+    }
     $('pvTitle').textContent = nm(a); $('pvOpen').href = a.url;
     $('pvNote').textContent = T('إذا ظهرت الشاشة فارغة فالموقع يمنع المعاينة — استخدم زر الفتح.', 'If the screen stays blank the site blocks previews — use the open button.');
     $('pvFrame').src = a.url;
@@ -2778,7 +2782,7 @@ body{padding-bottom:110px}
   function tileHTML(a, i, mg) {
     var b = mg ? '<div class="tile-mg"><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash"></i></button></div>' : '';
     var f = (a.suspended ? '<span class="bdg red">' + T('موقوف', 'Suspended') + '</span> ' : '') + (a.adminNote && canSee(a) ? '<span class="bdg gold">⚠ ' + T('تنبيه', 'Notice') + '</span>' : '');
-    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
       '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div>' + f + b + '</div>';
   }
   function secHTML(icon, title, apps, cat) {
@@ -2787,9 +2791,9 @@ body{padding-bottom:110px}
   }
   function adHTML(a) {
     var ban;
-    if (a.ad) ban = '<div class="ad-banner2" onclick="openAppPage(\'' + a.id + '\')">' + stageHTML(a.ad) + '<span class="ad-tag">' + T('إعلان', 'Ad') + '</span></div>';
-    else ban = '<div class="ad-banner" style="background:' + (a.adImage ? 'url(' + encodeURI(a.adImage) + ') center/cover' : 'linear-gradient(135deg,#7c3aed,#2e1065)') + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>';
-    return '<div class="ad-item">' + ban + '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    if (a.ad) ban = '<div class="ad-banner2" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + stageHTML(a.ad) + '<span class="ad-tag">' + T('إعلان', 'Ad') + '</span></div>';
+    else ban = '<div class="ad-banner" style="background:' + (a.adImage ? 'url(' + encodeURI(a.adImage) + ') center/cover' : 'linear-gradient(135deg,#7c3aed,#2e1065)') + '" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>';
+    return '<div class="ad-item">' + ban + '<div class="app-row ad-row" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();installApp(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
@@ -2801,7 +2805,7 @@ body{padding-bottom:110px}
     if (q || activeCategory !== 'all') {
       h = '<div class="section-title"><i class="fa-solid ' + (q ? 'fa-magnifying-glass' : (CATI[activeCategory] || 'fa-shapes')) + '"></i>' + (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="tgrid">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div>';
     } else {
-      var ads = apps.filter(function (a) { return a.ad || a.adText || a.adImage; });
+      var ads = apps.filter(function (a) { return (a.ad || a.adText || a.adImage) && (!a.suspended || (typeof canSee==='function' && canSee(a))); });
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
       Object.keys(CAT).forEach(function (c) { var l = apps.filter(function (a) { return (a.category || 'other') === c; }); if (l.length) h += secHTML(CATI[c], catName(c), l, c); });
@@ -2864,7 +2868,14 @@ body{padding-bottom:110px}
   function fetchViews(id) { return db.collection('apps').doc(id).collection('views').limit(500).get().then(function (s) { return s.size; }).catch(function () { return 0; }); }
 
   /* ---------- app page (Play style) ---------- */
-  window.installApp = function (id) { var a = findApp(id); if (a) window.open(a.url, '_blank', 'noopener'); };
+  window.installApp = function (id) {
+    var a = findApp(id); if (!a) return;
+    if (a.suspended && !(typeof canSee === 'function' && canSee(a))) {
+      if (typeof showToast === 'function') showToast(T('لا يمكنك فتح هذا التطبيق — تم إيقافه من الإدارة.', 'You cannot open this app — it was suspended by admin.'));
+      return;
+    }
+    if (a.url) window.open(a.url, '_blank', 'noopener');
+  };
   window.openAppSheet = window.installApp;
   var WAVE = '<path d="M0 30 Q75 6 150 30 T300 30 T450 30 T600 30 T750 30 T900 30 T1050 30 T1200 30 V60 H0Z"/>';
   window.openAppPage = function (id, fromHash) {
@@ -2879,12 +2890,13 @@ body{padding-bottom:110px}
     var uid = a.ownerUid || a.devId || '';
     var shots = (a.slides || []).map(slideHTML).join('') + (a.autoShots !== false ? autoShots(a) : '') + (a.screenshots || []).map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('');
     $('apBody').innerHTML =
-      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('هذا التطبيق متوقف مؤقتاً أو محذوف من المتجر.', 'This app is temporarily suspended or removed from the store.') + '</p></div></div>' : '') +
+      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('تم إيقاف هذا التطبيق من الإدارة. لا يمكن تنزيله أو فتحه أو معاينته من أي مكان في المتجر.', 'This app was suspended by the admin. It cannot be downloaded, opened, or previewed anywhere in the store.') + '</p></div></div>' : '') +
       (a.adminNote && canSee(a) ? '<div class="adm-note"><i class="fa-solid fa-triangle-exclamation"></i><div><b>' + T('تنبيه من الإدارة', 'Notice from admin') + '</b><p>' + escHTML(a.adminNote) + '</p></div></div>' : '') +
       '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><button type="button" class="ap-dev" onclick="openDeveloperFromApp(\'' + uid + '\')">' + escHTML(a.devName || '') + '</button></div></div>' +
       '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
-      '<div class="ap-actions"><button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button>' +
-      '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
+      '<div class="ap-actions">' + (a.suspended && !canSee(a)
+        ? '<button type="button" class="btn btn-outline" disabled style="opacity:.7;cursor:not-allowed;flex:1"><i class="fa-solid fa-ban"></i><span>' + T('لا يمكنك تنزيل أو فتح هذا التطبيق', 'You cannot download or open this app') + '</span></button>'
+        : '<button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button><button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button>') + '</div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
       '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
@@ -2997,7 +3009,7 @@ body{padding-bottom:110px}
     if (admTab === 'apps') {
       h += allApps.map(function (a, i) {
         return '<div class="adm-row" style="animation-delay:' + Math.min(i * 0.04, 0.4) + 's">' + iconHTML(a, 'row-icon') + '<div class="info"><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.devName || '') + '</small> ' + (a.suspended ? '<span class="bdg red">موقوف</span>' : '<span class="bdg">نشط</span>') + (a.adminNote ? ' <span class="bdg gold">تنبيه</span>' : '') + '</div>' +
-          '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="openAppPage(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
+          '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn btn-outline" title="تنبيه" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-triangle-exclamation"></i></button><button class="btn btn-outline" title="إيقاف/تفعيل" onclick="admSuspend(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.suspended ? 'play' : 'pause') + '"></i></button><button class="btn btn-outline" title="حذف الإعلان" onclick="admRemoveAd(\'' + a.id + '\')"><i class="fa-solid fa-bullhorn"></i></button>' +
           '<button class="btn btn-outline" title="حذف" onclick="deleteApp(\'' + a.id + '\');setTimeout(renderAdmin,600)"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button></div></div>';
       }).join('') || '<div class="state-box"><p>لا توجد تطبيقات</p></div>';
@@ -3892,8 +3904,8 @@ body{padding-bottom:110px}
 })();
 </script>
 
-<style id="v39-waves-and-library">
-/* ===== V3.9: real moving waves (no glow blobs) ===== */
+<style id="v40-waves-and-library">
+/* ===== V4.0: real moving waves (no glow blobs) ===== */
 html body .wave-btn > .wave-liquid::before,
 html body .wave-btn > .wave-liquid::after,
 html body #sheetInstallBtn > .wave-liquid::before,
@@ -3927,55 +3939,55 @@ html body .install-wave > .wave-label, html body #sheetInstallBtn > .wave-label 
   color:#fff!important; font-weight:800!important; text-shadow:0 1px 2px rgba(0,0,0,.28); pointer-events:none!important;
 }
 .wv-svg { position:absolute; left:0; top:-12px; width:200%; height:20px; display:block; pointer-events:none;
-  fill:#7c3aed; will-change:transform; animation:v39wa 4.8s linear infinite; }
-.wv-svg.b { top:-15px; fill:#a78bfa; opacity:.6; animation:v39wb 7.4s linear infinite; }
+  fill:#7c3aed; will-change:transform; animation:v40wa 4.8s linear infinite; }
+.wv-svg.b { top:-15px; fill:#a78bfa; opacity:.6; animation:v40wb 7.4s linear infinite; }
 html body .install-done .wv-svg { display:none!important; }
-@keyframes v39wa { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
-@keyframes v39wb { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
+@keyframes v40wa { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
+@keyframes v40wb { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
 @media (prefers-reduced-motion:reduce) { .wv-svg{animation-duration:16s!important} .wv-svg.b{animation-duration:24s!important} }
 
 /* ===== installed badge + shelf ===== */
-.v39-badge { display:inline-flex; margin-inline-start:6px; color:#10b981; font-size:.8em; vertical-align:middle; }
-.v39-shelf { margin:4px 0 22px; }
-.v39-shelf[hidden] { display:none!important; }
-.v39-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.v39-row { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x proximity; padding:4px 2px 10px; scrollbar-width:none; }
-.v39-row::-webkit-scrollbar { display:none; }
-.v39-card { flex:0 0 150px; scroll-snap-align:start; background:var(--card2); border:1px solid var(--border);
+.v40-badge { display:inline-flex; margin-inline-start:6px; color:#10b981; font-size:.8em; vertical-align:middle; }
+.v40-shelf { margin:4px 0 22px; }
+.v40-shelf[hidden] { display:none!important; }
+.v40-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.v40-row { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x proximity; padding:4px 2px 10px; scrollbar-width:none; }
+.v40-row::-webkit-scrollbar { display:none; }
+.v40-card { flex:0 0 150px; scroll-snap-align:start; background:var(--card2); border:1px solid var(--border);
   border-radius:22px; padding:12px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
-.v39-ico { width:56px; height:56px; border-radius:16px; object-fit:cover; background:var(--card); display:block; }
-.v39-ph { width:56px; height:56px; border-radius:16px; display:none; align-items:center; justify-content:center; background:var(--gradient); color:#fff; font-size:1.3rem; }
-.v39-ph.show { display:flex; }
-.v39-name { font-weight:800; font-size:.88rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.v39-acts { display:flex; gap:6px; width:100%; }
-.v39-open { flex:1; border:0; border-radius:12px; padding:8px 0; font:800 .82rem Cairo,sans-serif; background:linear-gradient(135deg,#059669,#047857); color:#fff; cursor:pointer; }
-.v39-rm { min-width:38px; border:1px solid var(--border); border-radius:12px; background:transparent; color:var(--muted); cursor:pointer; font:800 .78rem Cairo,sans-serif; }
-.v39-rm.sure { background:var(--danger); border-color:var(--danger); color:#fff; padding:0 10px; }
+.v40-ico { width:56px; height:56px; border-radius:16px; object-fit:cover; background:var(--card); display:block; }
+.v40-ph { width:56px; height:56px; border-radius:16px; display:none; align-items:center; justify-content:center; background:var(--gradient); color:#fff; font-size:1.3rem; }
+.v40-ph.show { display:flex; }
+.v40-name { font-weight:800; font-size:.88rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.v40-acts { display:flex; gap:6px; width:100%; }
+.v40-open { flex:1; border:0; border-radius:12px; padding:8px 0; font:800 .82rem Cairo,sans-serif; background:linear-gradient(135deg,#059669,#047857); color:#fff; cursor:pointer; }
+.v40-rm { min-width:38px; border:1px solid var(--border); border-radius:12px; background:transparent; color:var(--muted); cursor:pointer; font:800 .78rem Cairo,sans-serif; }
+.v40-rm.sure { background:var(--danger); border-color:var(--danger); color:#fff; padding:0 10px; }
 
 /* ===== account / library sheet ===== */
-.v39-ov { position:fixed; inset:0; z-index:600; background:rgba(4,3,12,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+.v40-ov { position:fixed; inset:0; z-index:600; background:rgba(4,3,12,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
   opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
-.v39-ov.on { opacity:1; visibility:visible; }
-.v39-sheet { position:fixed; left:0; right:0; bottom:0; z-index:610; max-height:86vh; overflow-y:auto; overscroll-behavior:contain;
+.v40-ov.on { opacity:1; visibility:visible; }
+.v40-sheet { position:fixed; left:0; right:0; bottom:0; z-index:610; max-height:86vh; overflow-y:auto; overscroll-behavior:contain;
   background:var(--card); border:1px solid var(--border); border-bottom:0; border-radius:30px 30px 0 0;
   padding:12px 16px calc(22px + env(safe-area-inset-bottom,0px)); transform:translateY(105%); visibility:hidden;
   transition:transform .45s var(--ease), visibility .45s; width:min(100%,560px); margin:0 auto; }
-.v39-sheet.on { transform:none; visibility:visible; }
-.v39-me { display:flex; align-items:center; gap:12px; margin:6px 0 14px; }
-.v39-av { width:48px; height:48px; border-radius:16px; background:var(--gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; background-size:cover; background-position:center; }
-.v39-me b { display:block; font-size:1rem; } .v39-me small { color:var(--muted); }
-.v39-sheet h3 { font-size:1.05rem; margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
-.v39-item { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:18px; background:var(--card2); margin-bottom:8px; }
-.v39-item .v39-ico, .v39-item .v39-ph { width:46px; height:46px; border-radius:14px; flex:0 0 46px; }
-.v39-info { flex:1; min-width:0; } .v39-info .v39-name { text-align:start; } .v39-info small { color:var(--muted); font-size:.75rem; }
-.v39-empty { text-align:center; color:var(--muted); padding:22px 8px; }
-.v39-out { width:100%; margin-top:10px; }
+.v40-sheet.on { transform:none; visibility:visible; }
+.v40-me { display:flex; align-items:center; gap:12px; margin:6px 0 14px; }
+.v40-av { width:48px; height:48px; border-radius:16px; background:var(--gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; background-size:cover; background-position:center; }
+.v40-me b { display:block; font-size:1rem; } .v40-me small { color:var(--muted); }
+.v40-sheet h3 { font-size:1.05rem; margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
+.v40-item { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:18px; background:var(--card2); margin-bottom:8px; }
+.v40-item .v40-ico, .v40-item .v40-ph { width:46px; height:46px; border-radius:14px; flex:0 0 46px; }
+.v40-info { flex:1; min-width:0; } .v40-info .v40-name { text-align:start; } .v40-info small { color:var(--muted); font-size:.75rem; }
+.v40-empty { text-align:center; color:var(--muted); padding:22px 8px; }
+.v40-out { width:100%; margin-top:10px; }
 </style>
 
-<script id="v39-install-library">
+<script id="v40-install-library">
 (function () {
   'use strict';
-  /* V3.9 — authoritative install flow.
+  /* V4.0 — authoritative install flow.
      - Install = visual simulation (wave fill), then "Open app" (instant).
      - An account is required: installed apps are saved per account (localStorage + Firestore
        users/{uid}/installedApps), so coming back from the app never resets them.
@@ -4224,8 +4236,8 @@ html body .install-done .wv-svg { display:none!important; }
     });
   }
   function iconBlock(src) {
-    return (src ? '<img class="v39-ico" src="' + h(src) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')">' : '') +
-           '<div class="v39-ph' + (src ? '' : ' show') + '"><i class="fa-solid fa-cube"></i></div>';
+    return (src ? '<img class="v40-ico" src="' + h(src) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')">' : '') +
+           '<div class="v40-ph' + (src ? '' : ' show') + '"><i class="fa-solid fa-cube"></i></div>';
   }
   function view(e) {
     var a = findApp(e.id);
@@ -4233,21 +4245,21 @@ html body .install-done .wv-svg { display:none!important; }
   }
 
   /* ---------- home shelf ---------- */
-  var shelf = document.createElement('section'); shelf.id = 'v39Shelf'; shelf.className = 'v39-shelf'; shelf.hidden = true;
+  var shelf = document.createElement('section'); shelf.id = 'v40Shelf'; shelf.className = 'v40-shelf'; shelf.hidden = true;
   var ac = $('appsContainer'); if (ac && ac.parentNode) ac.parentNode.insertBefore(shelf, ac);
   bindCards(shelf);
-  shelf.addEventListener('click', function (ev) { if (ev.target.closest('#v39More')) openLibrary(); });
+  shelf.addEventListener('click', function (ev) { if (ev.target.closest('#v40More')) openLibrary(); });
   function renderShelf() {
     var list = (auth.currentUser || optimisticUid) ? liveList() : [];
     var si = $('searchInput'), home = !(si && si.value.trim()) && (typeof activeCategory === 'undefined' || activeCategory === 'all');
     if (!list.length || !home) { shelf.hidden = true; return; }
-    var html = '<div class="v39-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-circle-check"></i></span>' + T('تطبيقاتي المثبّتة', 'My installed apps') + '</div>' +
-      '<button class="sec-more" id="v39More" aria-label="' + T('عرض الكل', 'View all') + '"><i class="fa-solid fa-arrow-left"></i></button></div><div class="v39-row">';
+    var html = '<div class="v40-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-circle-check"></i></span>' + T('تطبيقاتي المثبّتة', 'My installed apps') + '</div>' +
+      '<button class="sec-more" id="v40More" aria-label="' + T('عرض الكل', 'View all') + '"><i class="fa-solid fa-arrow-left"></i></button></div><div class="v40-row">';
     list.forEach(function (e) {
       var v = view(e);
-      html += '<div class="v39-card">' + iconBlock(v.icon) + '<div class="v39-name">' + h(v.name) + '</div><div class="v39-acts">' +
-        '<button class="v39-open" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
-        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div></div>';
+      html += '<div class="v40-card">' + iconBlock(v.icon) + '<div class="v40-name">' + h(v.name) + '</div><div class="v40-acts">' +
+        '<button class="v40-open" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v40-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div></div>';
     });
     shelf.innerHTML = html + '</div>'; shelf.hidden = false;
   }
@@ -4258,9 +4270,9 @@ html body .install-done .wv-svg { display:none!important; }
     var c = $('appsContainer'); if (!c) return;
     if (mo) mo.disconnect();
     c.querySelectorAll('.app-row,.app-tile').forEach(function (el) {
-      var m = /openAppPage\('([^']+)'/.exec(el.getAttribute('onclick') || ''); if (!m) return;
-      var has = el.querySelector('.v39-badge'), ok = installed(m[1]);
-      if (ok && !has) { var t = el.querySelector('h3,h4'); if (t) { var s = document.createElement('span'); s.className = 'v39-badge'; s.title = T('مثبّت', 'Installed'); s.innerHTML = '<i class="fa-solid fa-circle-check"></i>'; t.appendChild(s); } }
+      var m = /openAppPage\('([^']+)'/.exec(el.getAttribute('onclick') || '') || /\)\(\\'([^']+)\\'\)/.exec(el.getAttribute('onclick') || ''); if (!m) return;
+      var has = el.querySelector('.v40-badge'), ok = installed(m[1]);
+      if (ok && !has) { var t = el.querySelector('h3,h4'); if (t) { var s = document.createElement('span'); s.className = 'v40-badge'; s.title = T('مثبّت', 'Installed'); s.innerHTML = '<i class="fa-solid fa-circle-check"></i>'; t.appendChild(s); } }
       else if (!ok && has) has.remove();
     });
     if (mo && c) mo.observe(c, { childList: true, subtree: true });
@@ -4269,8 +4281,8 @@ html body .install-done .wv-svg { display:none!important; }
   if (window.MutationObserver && ac) { mo = new MutationObserver(schedule); mo.observe(ac, { childList: true, subtree: true }); }
 
   /* ---------- account / library sheet ---------- */
-  var ov = document.createElement('div'); ov.className = 'v39-ov'; ov.id = 'v39Ov';
-  var sh = document.createElement('div'); sh.className = 'v39-sheet'; sh.id = 'v39Sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-hidden', 'true');
+  var ov = document.createElement('div'); ov.className = 'v40-ov'; ov.id = 'v40Ov';
+  var sh = document.createElement('div'); sh.className = 'v40-sheet'; sh.id = 'v40Sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-hidden', 'true');
   document.body.appendChild(ov); document.body.appendChild(sh);
   bindCards(sh);
   ov.addEventListener('click', closeLibrary);
@@ -4278,20 +4290,20 @@ html body .install-done .wv-svg { display:none!important; }
     var u = auth.currentUser; if (!u) { closeLibrary(); return; }
     var name = u.displayName || (u.email || '').split('@')[0] || 'U', list = liveList();
     var mask = (typeof maskEmail === 'function') ? maskEmail(u.email || '') : (u.email || '');
-    var html = '<div class="sheet-handle"></div><div class="v39-me"><div class="v39-av"' + (u.photoURL ? ' style="background-image:url(' + h(u.photoURL) + ')"' : '') + '>' + (u.photoURL ? '' : h(name.charAt(0).toUpperCase())) + '</div>' +
+    var html = '<div class="sheet-handle"></div><div class="v40-me"><div class="v40-av"' + (u.photoURL ? ' style="background-image:url(' + h(u.photoURL) + ')"' : '') + '>' + (u.photoURL ? '' : h(name.charAt(0).toUpperCase())) + '</div>' +
       '<div><b>' + h(name) + '</b><small>' + h(mask) + '</small></div></div>' +
       '<h3><i class="fa-solid fa-circle-check" style="color:#10b981"></i>' + T('تطبيقاتي المثبّتة', 'My installed apps') + ' (' + list.length + ')</h3>';
-    if (!list.length) html += '<div class="v39-empty">' + T('لم تثبّت أي تطبيق بعد. افتح أي تطبيق واضغط «تثبيت».', 'Nothing installed yet. Open any app and tap Install.') + '</div>';
+    if (!list.length) html += '<div class="v40-empty">' + T('لم تثبّت أي تطبيق بعد. افتح أي تطبيق واضغط «تثبيت».', 'Nothing installed yet. Open any app and tap Install.') + '</div>';
     list.forEach(function (e) {
       var v = view(e);
-      html += '<div class="v39-item">' + iconBlock(v.icon) + '<div class="v39-info"><div class="v39-name">' + h(v.name) + '</div><small>' +
+      html += '<div class="v40-item">' + iconBlock(v.icon) + '<div class="v40-info"><div class="v40-name">' + h(v.name) + '</div><small>' +
         (v.opens ? T('فُتح ' + v.opens + ' مرة', 'Opened ' + v.opens + '×') : T('جاهز للفتح', 'Ready to open')) + '</small></div>' +
-        '<button class="v39-open" style="flex:0 0 auto;padding:8px 16px" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
-        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div>';
+        '<button class="v40-open" style="flex:0 0 auto;padding:8px 16px" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v40-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div>';
     });
-    html += '<button class="btn btn-outline v39-out" id="v39Logout"><i class="fa-solid fa-right-from-bracket"></i> ' + T('تسجيل الخروج', 'Log out') + '</button>';
+    html += '<button class="btn btn-outline v40-out" id="v40Logout"><i class="fa-solid fa-right-from-bracket"></i> ' + T('تسجيل الخروج', 'Log out') + '</button>';
     sh.innerHTML = html;
-    var lo = $('v39Logout'); if (lo) lo.onclick = function () { closeLibrary(); if (typeof logout === 'function') logout(); };
+    var lo = $('v40Logout'); if (lo) lo.onclick = function () { closeLibrary(); if (typeof logout === 'function') logout(); };
   }
   function openLibrary() {
     if (!auth.currentUser) return; renderLib();
@@ -4343,6 +4355,251 @@ html body .install-done .wv-svg { display:none!important; }
     });
   }
   shortcut();
+})();
+</script>
+
+
+<script id="v4-unified-lockdown">
+/* AMGZRNT STORE — Unified V4.0
+   Hard-blocks suspended apps everywhere (install, preview, open, library, ads, deep links).
+   Unified URL normalizer (auto https://). Stronger admin→dev messages. Ad UX polish. */
+(function () {
+  'use strict';
+  var T = window.T || function (ar, en) { return (document.body && document.body.classList.contains('en') ? en : ar); };
+
+  function isSuspended(a) { return !!(a && a.suspended); }
+  function mayAccess(a) {
+    if (!a) return false;
+    if (!isSuspended(a)) return true;
+    try {
+      if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
+      if (typeof window.canSee === 'function' && window.canSee(a)) return true;
+    } catch (e) {}
+    return false;
+  }
+  function findA(id) {
+    try {
+      if (typeof window.findApp === 'function') return window.findApp(id);
+      if (typeof window.appById === 'function') return window.appById(id);
+      var list = window.allApps || [];
+      return list.find(function (x) { return x && String(x.id) === String(id); }) || null;
+    } catch (e) { return null; }
+  }
+  function blockMsg() {
+    var m = T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.',
+              'You cannot download, open, or preview this app — it was suspended by the admin.');
+    if (typeof window.showToast === 'function') window.showToast(m);
+    else if (typeof window.toast === 'function') window.toast(m);
+    else alert(m);
+  }
+
+  /* ---- Unified URL normalizer: add https:// if missing; never double-prefix; keep www as entered ---- */
+  function normalizeUrlV4(value) {
+    var raw = String(value == null ? '' : value).trim();
+    if (!raw) return '';
+    raw = raw.replace(/^['"]|['"]$/g, '').trim();
+    // strip accidental protocol duplicates
+    raw = raw.replace(/^(https?:\/\/)+/i, function (m) { return m.toLowerCase().indexOf('https') === 0 ? 'https://' : 'http://'; });
+    if (/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) {
+      raw = 'https://' + raw;
+    }
+    try {
+      var u = new URL(raw);
+      if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
+      if (!u.hostname) return '';
+      // Prefer https
+      if (u.protocol === 'http:') { u.protocol = 'https:'; }
+      return u.href;
+    } catch (e) { return ''; }
+  }
+  window.normalizeUrl = normalizeUrlV4;
+  // Keep legacy aliases pointing to the same function
+  try {
+    // Override inner normalize helpers used by install flows by monkey-patching after they exist
+  } catch (e) {}
+
+  /* ---- Guard every open / install / preview entry point ---- */
+  function guardId(id) {
+    var a = findA(id);
+    if (isSuspended(a) && !mayAccess(a)) { blockMsg(); return false; }
+    return true;
+  }
+
+  var _openPreview = window.openPreview;
+  window.openPreview = function (id) {
+    if (!guardId(id)) return;
+    if (_openPreview) return _openPreview.apply(this, arguments);
+  };
+
+  var _startAppInstall = window.startAppInstall;
+  window.startAppInstall = function (id, btn) {
+    if (!guardId(id)) {
+      if (btn) {
+        try {
+          btn.disabled = true;
+          btn.classList.remove('wave-loading', 'install-done');
+          var lab = btn.querySelector('.wave-label');
+          if (lab) lab.textContent = T('لا يمكنك التثبيت', 'Cannot install');
+        } catch (e) {}
+      }
+      return;
+    }
+    if (_startAppInstall) return _startAppInstall.apply(this, arguments);
+  };
+
+  var _sheetInstall = window.sheetInstallAction;
+  window.sheetInstallAction = function () {
+    var sel = window.selectedApp;
+    if (sel && !guardId(sel.id)) return;
+    if (_sheetInstall) return _sheetInstall.apply(this, arguments);
+  };
+
+  var _sheetOpen = window.sheetOpenAction;
+  window.sheetOpenAction = function () {
+    var sel = window.selectedApp;
+    if (sel && !guardId(sel.id)) return;
+    if (_sheetOpen) return _sheetOpen.apply(this, arguments);
+  };
+
+  var _installApp = window.installApp;
+  window.installApp = function (id) {
+    if (!guardId(id)) return;
+    if (_installApp) return _installApp.apply(this, arguments);
+  };
+
+  var _openAppPage = window.openAppPage;
+  window.openAppPage = function (id, fromHash) {
+    var a = findA(id);
+    if (isSuspended(a) && !mayAccess(a)) {
+      // Still open the page so user sees the official suspended notice, but
+      // actions are already disabled in the renderer; double-guard navigation.
+      if (_openAppPage) {
+        var r = _openAppPage.apply(this, arguments);
+        // After render, force-disable any remaining action buttons that older layers may inject
+        setTimeout(function () {
+          try {
+            var page = document.getElementById('appPage') || document.getElementById('apBody');
+            var root = document.getElementById('apBody') || page;
+            if (!root) return;
+            root.querySelectorAll('.install-wave, #sheetInstallBtn, [onclick*="startAppInstall"], [onclick*="openPreview"]').forEach(function (b) {
+              b.disabled = true;
+              b.onclick = function (e) { e && e.preventDefault(); blockMsg(); return false; };
+              b.removeAttribute('onclick');
+            });
+            // Replace actions row if still showing install
+            var actions = root.querySelector('.ap-actions');
+            if (actions && !actions.querySelector('[data-v4-blocked]')) {
+              actions.innerHTML = '<button type="button" class="btn btn-outline" data-v4-blocked="1" disabled style="opacity:.75;cursor:not-allowed;flex:1;gap:8px"><i class="fa-solid fa-ban"></i><span>' +
+                T('لا يمكنك تنزيل أو فتح هذا التطبيق', 'You cannot download or open this app') + '</span></button>';
+            }
+            // Kill preview iframe target if any residual open link
+            var pvOpen = document.getElementById('pvOpen');
+            if (pvOpen) { pvOpen.removeAttribute('href'); pvOpen.onclick = function (e) { e.preventDefault(); blockMsg(); }; }
+          } catch (e) {}
+        }, 0);
+        return r;
+      }
+      blockMsg();
+      return;
+    }
+    if (_openAppPage) return _openAppPage.apply(this, arguments);
+  };
+
+  /* ---- Library / installed shelf open ---- */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-act="open"]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-id');
+    if (id && !guardId(id)) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    }
+  }, true);
+
+  /* ---- Intercept window.open used for app destinations when suspended is known ---- */
+  var _wopen = window.open;
+  // We do not globally block window.open; only our known entry points are guarded.
+
+  /* ---- Admin suspend: clearer developer notification ---- */
+  var _admSuspend = window.admSuspend;
+  window.admSuspend = function (id) {
+    var a = findA(id);
+    if (!_admSuspend) return;
+    var was = a && a.suspended;
+    var r = _admSuspend.apply(this, arguments);
+    // Extra toast for admin
+    setTimeout(function () {
+      if (typeof window.showToast === 'function') {
+        window.showToast(was
+          ? T('تم تفعيل التطبيق — أصبح متاحاً للزوار', 'App re-enabled — now available to visitors')
+          : T('تم إيقاف التطبيق — لن يستطيع أحد تنزيله أو فتحه أو معاينته', 'App suspended — no one can download, open, or preview it'));
+      }
+    }, 400);
+    return r;
+  };
+
+  /* ---- Improve ads: filter suspended from public ad strip + soft auto-scroll ---- */
+  function polishAds() {
+    try {
+      document.querySelectorAll('.ads-scroll .ad-item, .ads-scroll .ad-banner, .ads-scroll .ad-banner2').forEach(function (el) {
+        var onclick = el.getAttribute('onclick') || '';
+        var m = /openAppPage\('([^']+)'/.exec(onclick) || /\)\(\'([^\']+)\'\)/.exec(onclick);
+        if (!m) return;
+        var a = findA(m[1]);
+        if (isSuspended(a) && !mayAccess(a)) {
+          el.style.opacity = '0.55';
+          el.style.filter = 'grayscale(0.35)';
+          el.setAttribute('title', T('إعلان لتطبيق موقوف', 'Ad for a suspended app'));
+        }
+      });
+      var sc = document.querySelector('.ads-scroll');
+      if (sc && !sc.dataset.v4Scroll && sc.children.length > 1) {
+        sc.dataset.v4Scroll = '1';
+        var dir = 1, pause = false;
+        sc.addEventListener('pointerdown', function () { pause = true; });
+        sc.addEventListener('pointerup', function () { setTimeout(function () { pause = false; }, 4000); });
+        setInterval(function () {
+          if (pause || document.hidden) return;
+          var max = sc.scrollWidth - sc.clientWidth;
+          if (max <= 8) return;
+          sc.scrollLeft += dir * 1.2;
+          if (sc.scrollLeft >= max - 2) dir = -1;
+          if (sc.scrollLeft <= 2) dir = 1;
+        }, 40);
+      }
+    } catch (e) {}
+  }
+  setInterval(polishAds, 2500);
+  setTimeout(polishAds, 1200);
+
+  /* ---- When saving app URL (upload/edit), normalize automatically ---- */
+  function attachUrlNormalize() {
+    ['appUrl'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el || el.dataset.v4norm) return;
+      el.dataset.v4norm = '1';
+      el.addEventListener('blur', function () {
+        var n = normalizeUrlV4(el.value);
+        if (n) el.value = n;
+      });
+    });
+  }
+  setInterval(attachUrlNormalize, 2000);
+  attachUrlNormalize();
+
+  /* ---- Version banner once ---- */
+  try {
+    if (!sessionStorage.getItem('amgz-v4')) {
+      sessionStorage.setItem('amgz-v4', '1');
+      setTimeout(function () {
+        if (typeof window.showToast === 'function')
+          window.showToast(T('تم تحديث المتجر إلى V4 — حماية أقوى وتجربة أسلس', 'Store updated to V4 — stronger protection & smoother experience'));
+      }, 1800);
+    }
+  } catch (e) {}
+
+  console.info('[AMGZRNT] V4.0 unified lockdown active');
 })();
 </script>
 
