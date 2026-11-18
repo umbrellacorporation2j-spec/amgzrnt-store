@@ -1257,7 +1257,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.4</strong>
+      <strong class="version-number" dir="ltr">V3.5</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -2386,7 +2386,7 @@ body{padding-bottom:110px}
     var data = {
       name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
       description: $('appDesc').value.trim(), category: $('appCategory').value,
-      pwaKitAvailable: true, pwaKitVersion: '3.4',
+      pwaKitAvailable: true, pwaKitVersion: '3.5',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
       devName: u.displayName || (u.email || '').split('@')[0], collective: isCol(u),
@@ -2432,6 +2432,22 @@ body{padding-bottom:110px}
     var sw = `const CACHE_NAME = 'amgzrnt-pwa-${Date.now()}';\nconst START_URL = ${JSON.stringify(base.href)};\nself.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.add(START_URL).catch(() => {})).then(() => self.skipWaiting())); });\nself.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });\nself.addEventListener('fetch', event => { const req = event.request; if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return; event.respondWith(fetch(req).then(res => { if (res && res.ok) { const copy = res.clone(); caches.open(CACHE_NAME).then(cache => cache.put(req, copy)); } return res; }).catch(() => caches.match(req).then(hit => hit || caches.match(START_URL)))); });\n`;
     var installJs = `(function(){\n let deferred=null;\n const btn=document.createElement('button'); btn.type='button'; btn.textContent='حمّل تطبيقنا'; btn.setAttribute('aria-label','حمّل تطبيقنا');\n Object.assign(btn.style,{position:'fixed',zIndex:'2147483000',bottom:'18px',left:'50%',transform:'translateX(-50%)',padding:'12px 22px',border:'0',borderRadius:'999px',background:'#6d28d9',color:'#fff',font:'bold 16px system-ui',boxShadow:'0 8px 28px #0005',display:'none'}); document.body.appendChild(btn);\n window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.style.display='block';});\n btn.addEventListener('click',async()=>{if(!deferred){btn.textContent='افتح قائمة المتصفح واختر إضافة إلى الشاشة';return;} deferred.prompt(); await deferred.userChoice; deferred=null; btn.style.display='none';});\n window.addEventListener('appinstalled',()=>{btn.style.display='none';});\n if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err));\n})();\n`;
     var snippet = `<!-- أضف هذا داخل <head> -->\n<link rel="manifest" href="./manifest.json">\n<meta name="theme-color" content="#6d28d9">\n\n<!-- أضف هذا قبل 
+  <style id="v35-wave-install-and-developer-link">
+    .ap-dev{display:inline-flex;align-items:center;padding:2px 0;margin-top:3px;border:0;background:transparent;color:var(--primary-light);font:700 .9rem inherit;font-family:inherit;cursor:pointer;text-align:start;text-decoration:none}
+    .ap-dev:focus-visible{outline:2px solid var(--primary-light);outline-offset:4px;border-radius:6px}
+    .wave-btn{position:relative;isolation:isolate;overflow:hidden;min-height:56px;border:0;border-radius:999px;background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;font:800 1rem inherit;font-family:inherit;cursor:pointer}
+    .wave-btn .wave-label{position:relative;z-index:3;pointer-events:none}
+    .wave-liquid{position:absolute;z-index:1;left:0;right:0;bottom:0;height:var(--wave-progress,0%);background:linear-gradient(110deg,#9b72ff,#6d28d9 58%,#4c1d95);transition:height .16s linear;pointer-events:none}
+    .wave-liquid:before,.wave-liquid:after{content:"";position:absolute;left:-30%;top:-8px;width:160%;height:16px;border-radius:44%;background:rgba(255,255,255,.30);animation:v35Wave 3.2s linear infinite}
+    .wave-liquid:after{top:-5px;left:-15%;opacity:.55;background:rgba(255,255,255,.22);animation-duration:4.4s;animation-direction:reverse}
+    .wave-btn.wave-loading{cursor:progress;filter:saturate(1.12)}
+    .wave-btn.install-done{background:linear-gradient(135deg,#059669,#047857)}
+    .wave-btn.install-done .wave-liquid{height:100%!important;background:linear-gradient(110deg,#10b981,#047857)}
+    .wave-btn:disabled{opacity:1;cursor:progress}
+    @keyframes v35Wave{from{transform:translateX(-8%) rotate(0deg)}to{transform:translateX(8%) rotate(360deg)}}
+    @media(prefers-reduced-motion:reduce){.wave-liquid,.wave-liquid:before,.wave-liquid:after{transition:none!important;animation:none!important}}
+  </style>
+
   <script id="v34-unified-app-navigation">
   (function () {
     'use strict';
@@ -2872,9 +2888,9 @@ body{padding-bottom:110px}
     $('apBody').innerHTML =
       (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('هذا التطبيق متوقف مؤقتاً أو محذوف من المتجر.', 'This app is temporarily suspended or removed from the store.') + '</p></div></div>' : '') +
       (a.adminNote && canSee(a) ? '<div class="adm-note"><i class="fa-solid fa-triangle-exclamation"></i><div><b>' + T('تنبيه من الإدارة', 'Notice from admin') + '</b><p>' + escHTML(a.adminNote) + '</p></div></div>' : '') +
-      '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><div class="ap-dev" onclick="openDevPage(\'' + uid + '\')">' + escHTML(a.devName || '') + '</div></div></div>' +
+      '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><button type="button" class="ap-dev" onclick="openDeveloperFromApp(\'' + uid + '\')">' + escHTML(a.devName || '') + '</button></div></div>' +
       '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
-      '<div class="ap-actions"><button class="wave-btn" onclick="installApp(\'' + a.id + '\')"><svg class="wv" viewBox="0 0 1200 60" preserveAspectRatio="none">' + WAVE + '</svg><svg class="wv wv2" viewBox="0 0 1200 60" preserveAspectRatio="none">' + WAVE + '</svg><span>' + T('تثبيت', 'Install') + '</span></button>' +
+      '<div class="ap-actions"><button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button>' +
       '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
@@ -3453,107 +3469,74 @@ body{padding-bottom:110px}
     }
   </style>
 
-  <script id="v34-unified-app-navigation">
+  <script id="v35-unified-install-flow">
   (function () {
     'use strict';
     var pendingNavigation = false;
+    var installTimers = Object.create(null);
+    var installDurations = [17,12,15,10,4,9,6,3];
     function getApp(id) {
       if (id == null) return null;
-      try {
-        if (typeof window.findApp === 'function') {
-          var found = window.findApp(String(id));
-          if (found) return found;
-        }
-      } catch (e) {}
-      try {
-        if (typeof allApps !== 'undefined' && Array.isArray(allApps)) {
-          return allApps.find(function (a) { return a && String(a.id) === String(id); }) || null;
-        }
-      } catch (e) {}
+      try { if (typeof window.findApp === 'function') { var found=window.findApp(String(id)); if(found)return found; } } catch(e){}
+      try { if (Array.isArray(window.allApps)) return window.allApps.find(function(a){return a&&String(a.id)===String(id);})||null; } catch(e){}
       return null;
     }
     function safeUrl(value) {
-      try {
-        var u = new URL(String(value || ''), location.href);
-        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
-      } catch (e) { return ''; }
+      try { var u=new URL(String(value||''),location.href); return (u.protocol==='https:'||u.protocol==='http:')?u.href:''; } catch(e){return '';}
     }
-    function toast(message) {
-      if (typeof window.showToast === 'function') window.showToast(message);
-    }
+    function toast(message) { if(typeof window.showToast==='function')window.showToast(message); }
     function closeSheetSafely() {
-      var overlay = document.getElementById('sheetOverlay');
-      var sheet = document.getElementById('bottomSheet');
-      if (overlay) overlay.classList.remove('active');
-      if (sheet) sheet.classList.remove('active');
-      if (typeof window.syncBodyLock === 'function') window.syncBodyLock();
-      else document.body.style.overflow = '';
+      var overlay=document.getElementById('sheetOverlay'),sheet=document.getElementById('bottomSheet');
+      if(overlay)overlay.classList.remove('active'); if(sheet)sheet.classList.remove('active');
+      if(typeof window.syncBodyLock==='function')window.syncBodyLock();else document.body.style.overflow='';
     }
     function renderSheet(app) {
-      window.selectedApp = {
-        id: app.id,
-        name: (typeof window.nm === 'function' ? window.nm(app) : (app.nameAr || app.name || 'App')),
-        url: app.url || '',
-        icon: (typeof window.iconSrc === 'function' ? window.iconSrc(app) : (app.icon || ''))
-      };
-      var name = document.getElementById('sheetAppName');
-      var box = document.getElementById('sheetIconBox');
-      var install = document.getElementById('sheetInstallBtn');
-      var open = document.getElementById('sheetOpenBtn');
-      if (name) name.textContent = window.selectedApp.name;
-      if (box) {
-        box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph';
-        box.innerHTML = window.selectedApp.icon ? '<img src="' + String(window.selectedApp.icon).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;') + '" alt="">' : '<i class="fa-solid fa-cube"></i>';
-      }
-      if (install) {
-        install.disabled = false;
-        install.classList.remove('wave-loading','install-done');
-        install.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i><span>فتح التطبيق</span>';
-      }
-      if (open) open.style.display = 'none';
-      var overlay = document.getElementById('sheetOverlay');
-      var sheet = document.getElementById('bottomSheet');
-      if (overlay) overlay.classList.add('active');
-      if (sheet) sheet.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      window.selectedApp={id:app.id,name:(typeof window.nm==='function'?window.nm(app):(app.nameAr||app.name||'App')),url:app.url||'',icon:(typeof window.iconSrc==='function'?window.iconSrc(app):(app.icon||''))};
+      var name=document.getElementById('sheetAppName'),box=document.getElementById('sheetIconBox'),install=document.getElementById('sheetInstallBtn'),open=document.getElementById('sheetOpenBtn');
+      if(name)name.textContent=window.selectedApp.name;
+      if(box){box.className=window.selectedApp.icon?'':'sheet-icon-ph';box.innerHTML=window.selectedApp.icon?'<img src="'+String(window.selectedApp.icon).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'" alt="">':'<i class="fa-solid fa-cube"></i>';}
+      if(install){install.disabled=false;install.classList.remove('wave-loading','install-done');install.innerHTML='<i class="fa-solid fa-download"></i><span>تثبيت</span>';}
+      if(open)open.style.display='none';
+      var overlay=document.getElementById('sheetOverlay'),sheet=document.getElementById('bottomSheet');
+      if(overlay)overlay.classList.add('active');if(sheet)sheet.classList.add('active');document.body.style.overflow='hidden';
     }
-    window.openAppSheet = function (id) {
-      var app = getApp(id);
-      if (!app || !app.url) { toast('تعذر العثور على رابط التطبيق. حدّث قائمة التطبيقات وحاول مجددًا.'); return; }
-      renderSheet(app);
-    };
-    window.closeSheet = closeSheetSafely;
-    function navigateToSelected() {
-      var selected = window.selectedApp;
-      var app = selected && selected.id != null ? getApp(selected.id) : null;
-      // If the list refreshed while the sheet was open, retain its already validated URL.
-      var url = safeUrl((app && app.url) || (selected && selected.url));
-      if (!url) { toast('رابط التطبيق غير صالح أو غير متوفر.'); return; }
-      if (pendingNavigation) return;
-      pendingNavigation = true;
-      closeSheetSafely();
-      // Same-tab navigation makes the device Back action return naturally to the store.
-      // It does not create a fake installed record or require a user account.
-      try { location.assign(url); }
-      catch (e) { pendingNavigation = false; toast('تعذر فتح التطبيق. حاول مرة أخرى.'); }
+    window.openAppSheet=function(id){var app=getApp(id);if(!app||!app.url){toast('تعذر العثور على رابط التطبيق. حدّث قائمة التطبيقات وحاول مجددًا.');return;}renderSheet(app);};
+    window.closeSheet=closeSheetSafely;
+    function openSelected() {
+      var selected=window.selectedApp,app=selected&&selected.id!=null?getApp(selected.id):null,url=safeUrl((app&&app.url)||(selected&&selected.url));
+      if(!url){toast('رابط التطبيق غير صالح أو غير متوفر.');return;}
+      if(pendingNavigation)return;pendingNavigation=true;closeSheetSafely();
+      try{location.assign(url);}catch(e){pendingNavigation=false;toast('تعذر فتح التطبيق. حاول مرة أخرى.');}
     }
-    window.sheetInstallAction = navigateToSelected;
-    window.sheetOpenAction = navigateToSelected;
-    window.installApp = function (id) {
-      var app = getApp(id);
-      if (!app || !app.url) { toast('تعذر العثور على التطبيق. حدّث الصفحة وحاول مجددًا.'); return; }
-      window.openAppSheet(app.id);
+    window.sheetInstallAction=openSelected;window.sheetOpenAction=openSelected;
+    window.installApp=function(id){var app=getApp(id);if(!app||!app.url){toast('تعذر العثور على التطبيق. حدّث الصفحة وحاول مجددًا.');return;}window.openAppPage(app.id);};
+    function durationFor(id){var str=String(id||'');var hash=0;for(var i=0;i<str.length;i++)hash=(hash*31+str.charCodeAt(i))>>>0;return installDurations[hash%installDurations.length];}
+    window.startAppInstall=function(id,button){
+      var app=getApp(id),url=app&&safeUrl(app.url);if(!app||!url){toast('رابط التطبيق غير متوفر أو غير صالح.');return;}
+      if(!button||!button.classList.contains('wave-btn'))return;
+      if(button.dataset.installState==='loading')return;
+      if(button.dataset.installState==='ready'){pendingNavigation=false;try{location.assign(url);}catch(e){toast('تعذر فتح التطبيق.');}return;}
+      var old=installTimers[id];if(old){clearInterval(old);delete installTimers[id];}
+      var duration=durationFor(id)*1000,start=Date.now();button.dataset.installState='loading';button.disabled=true;button.classList.add('wave-loading');button.classList.remove('install-done');button.style.setProperty('--wave-progress','0%');
+      var label=button.querySelector('.wave-label');if(label)label.textContent='جارٍ تجهيز التطبيق…';
+      var timer=setInterval(function(){
+        if(!button.isConnected){clearInterval(timer);delete installTimers[id];return;}
+        var progress=Math.min(100,((Date.now()-start)/duration)*100);button.style.setProperty('--wave-progress',progress.toFixed(1)+'%');
+        if(progress>=100){clearInterval(timer);delete installTimers[id];button.disabled=false;button.dataset.installState='ready';button.classList.remove('wave-loading');button.classList.add('install-done');if(label)label.textContent='فتح التطبيق';}
+      },70);installTimers[id]=timer;
     };
-    // Do not let old inline handlers and legacy listeners execute a second action.
-    document.addEventListener('click', function (event) {
-      var button = event.target && event.target.closest ? event.target.closest('#sheetInstallBtn,#sheetOpenBtn') : null;
-      if (!button) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (button.id === 'sheetInstallBtn' || button.id === 'sheetOpenBtn') navigateToSelected();
-    }, true);
-    window.addEventListener('pageshow', function () { pendingNavigation = false; });
-    window.addEventListener('pagehide', function () { pendingNavigation = false; });
+    window.openDeveloperFromApp=function(uid){
+      if(!uid){toast('صفحة المطور غير متاحة.');return;}
+      // Close the app detail layer first, then open the developer profile as its own page.
+      if(typeof window.closeAppPage==='function')window.closeAppPage();
+      window.setTimeout(function(){if(typeof window.openDevPage==='function')window.openDevPage(uid);},260);
+    };
+    document.addEventListener('click',function(event){
+      var button=event.target&&event.target.closest?event.target.closest('#sheetInstallBtn,#sheetOpenBtn'):null;if(!button)return;
+      event.preventDefault();event.stopImmediatePropagation();openSelected();
+    },true);
+    window.addEventListener('pageshow',function(){pendingNavigation=false;});
+    window.addEventListener('pagehide',function(){pendingNavigation=false;});
   })();
   </script>
 
