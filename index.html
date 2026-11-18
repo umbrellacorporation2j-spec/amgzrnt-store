@@ -1243,6 +1243,15 @@ body{padding-bottom:110px}
     <div class="sheet-handle" id="settingsHandle"></div>
     <h3 class="settings-title" id="settingsTitle"><span data-lang="ar">الإعدادات</span><span data-lang="en">Settings</span></h3>
 
+    <div class="setting-row version-row" aria-label="إصدار المتجر">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-code-branch"></i></span>
+        <span data-lang="ar">إصدار المتجر</span>
+        <span data-lang="en">Store version</span>
+      </span>
+      <strong class="version-number" dir="ltr">V3.1</strong>
+    </div>
+
     <label class="setting-row" for="optGlass">
       <span class="setting-label">
         <span class="setting-ico"><i class="fa-solid fa-droplet"></i></span>
@@ -2479,22 +2488,7 @@ body{padding-bottom:110px}
   };
   window.closePreview = function () { $('pvOverlay').classList.remove('on'); setTimeout(function () { $('pvFrame').src = 'about:blank'; }, 400); };
 
-  /* ---------- ripple on press ---------- */
-  document.addEventListener('pointerdown', function (e) {
-    var t = e.target.closest && e.target.closest('.btn,.chip,.sec-more,.tab-btn');
-    if (!t || t.disabled || e.button > 0) return;
-    var r = t.getBoundingClientRect();
-    var d = Math.min(Math.max(r.width, r.height) * 1.35, 120);
-    var sp = document.createElement('span');
-    sp.className = 'ripple';
-    sp.setAttribute('aria-hidden', 'true');
-    sp.style.width = d + 'px';
-    sp.style.height = d + 'px';
-    sp.style.left = Math.max(0, Math.min(r.width - d, e.clientX - r.left - d / 2)) + 'px';
-    sp.style.top = Math.max(0, Math.min(r.height - d, e.clientY - r.top - d / 2)) + 'px';
-    t.appendChild(sp);
-    window.setTimeout(function () { if (sp.isConnected) sp.remove(); }, 680);
-  }, { passive: true });
+  /* Ripple removed: keep touch feedback clean and prevent flash/oversized overlays. */
   /* ---------- never stay on endless skeleton ---------- */
   function stuckMsg() {
     var b = $('appsContainer'); if (!b || !$('skeletonGrid')) return;
@@ -3187,5 +3181,106 @@ body{padding-bottom:110px}
     }
   </style>
 
+
+  <style id="clean-touch-feedback-v2">
+    /* No flash, scaling, or shape changes while pressing controls. */
+    button, a, .btn, .chip, .tab-btn, .sec-more, .app-row, .app-tile, .bnav button {
+      -webkit-tap-highlight-color: transparent !important;
+      -webkit-touch-callout: none;
+    }
+    button:active, a:active, .btn:active, .chip:active, .tab-btn:active,
+    .sec-more:active, .app-row:active, .app-tile:active, .bnav button:active {
+      transform: none !important;
+      filter: none !important;
+      outline: none;
+    }
+    .ripple { display: none !important; }
+    /* Compact toast: never cover the fixed bottom navigation. */
+    .toast {
+      left: 50% !important;
+      bottom: calc(150px + env(safe-area-inset-bottom, 0px)) !important;
+      z-index: 80 !important;
+      width: max-content !important;
+      max-width: calc(100vw - 36px) !important;
+      box-sizing: border-box !important;
+      padding: 10px 15px !important;
+      border-radius: 14px !important;
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+      text-align: center;
+      justify-content: center;
+      gap: 8px !important;
+      white-space: normal !important;
+      overflow-wrap: anywhere;
+    }
+    .toast span { min-width: 0; line-height: 1.5 !important; }
+    .toast.show { transform: translateX(-50%) translateY(0) !important; }
+    @media (prefers-reduced-motion: reduce) {
+      .toast { transition: none !important; }
+    }
+  </style>
+
+
+  <style id="v3-1-motion-and-toast-fix">
+    /* Toast sits clearly above the bottom navigation, never on top of its buttons. */
+    .toast {
+      left: 50% !important;
+      bottom: calc(250px + env(safe-area-inset-bottom, 0px)) !important;
+      z-index: 140 !important;
+      width: max-content !important;
+      max-width: min(88vw, 390px) !important;
+      padding: 10px 15px !important;
+      border-radius: 15px !important;
+      font-size: 14px !important;
+      line-height: 1.55 !important;
+      text-align: center;
+      white-space: normal !important;
+      overflow-wrap: anywhere;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(-50%) translateY(12px) !important;
+      transition: opacity .24s ease, transform .24s ease, visibility .24s ease !important;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1; visibility: visible;
+      transform: translateX(-50%) translateY(0) !important;
+    }
+    /* All full-screen pages (admin, developer, app details) share one smooth entrance. */
+    .app-page {
+      opacity: 0;
+      transform: translate3d(0, 34px, 0) !important;
+      transition: opacity .32s cubic-bezier(.2,.75,.25,1),
+                  transform .48s cubic-bezier(.2,.85,.25,1),
+                  visibility .48s ease !important;
+      will-change: opacity, transform;
+    }
+    .app-page.active {
+      opacity: 1;
+      transform: translate3d(0,0,0) !important;
+    }
+    /* Fade the floating navigation away while a full page or drawer is open. */
+    .bnav {
+      opacity: 1;
+      transition: opacity .28s ease, transform .36s cubic-bezier(.2,.75,.25,1),
+                  visibility .28s ease !important;
+    }
+    body:has(.app-page.active) .bnav,
+    body:has(.drawer.active) .bnav,
+    body:has(.bottom-sheet.active) .bnav {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translate3d(-50%, 18px, 0) !important;
+    }
+    .version-row { cursor: default !important; }
+    .version-number { color: var(--primary-light); font-size: .9rem; letter-spacing: .04em; }
+    @media (max-width: 600px) {
+      .toast { bottom: calc(238px + env(safe-area-inset-bottom, 0px)) !important; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .toast, .app-page, .bnav { transition: none !important; }
+    }
+  </style>
 </body>
 </html>
