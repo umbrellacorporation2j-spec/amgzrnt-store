@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="AMGZRNT STORE">
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="manifest" href="./manifest.json">
-  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-180.png">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <title>AMGZRNT STORE | متجر تطبيقات PWA</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -910,7 +910,7 @@ body{padding-bottom:110px}
 
   <nav>
     <div class="nav-inner">
-      <a href="./store.html" class="logo">
+      <a href="./index.html" class="logo">
         <i class="fa-solid fa-store"></i>
         STORE
       </a>
@@ -1255,7 +1255,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.8</strong>
+      <strong class="version-number" dir="ltr">V3.9</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -3678,8 +3678,6 @@ body{padding-bottom:110px}
   @media(max-width:600px){ #toast { bottom:calc(92px + env(safe-area-inset-bottom, 0px)) !important; } }
 </style>
 
-</body>
-</html>
 
 
 <!-- V3.8: single authoritative install/open flow + developer profile navigation -->
@@ -3893,3 +3891,460 @@ body{padding-bottom:110px}
   window.addEventListener('pagehide',function(){Object.keys(timers).forEach(function(k){clearInterval(timers[k]);delete timers[k];});});
 })();
 </script>
+
+<style id="v39-waves-and-library">
+/* ===== V3.9: real moving waves (no glow blobs) ===== */
+html body .wave-btn > .wave-liquid::before,
+html body .wave-btn > .wave-liquid::after,
+html body #sheetInstallBtn > .wave-liquid::before,
+html body #sheetInstallBtn > .wave-liquid::after,
+html body .install-wave > .wave-liquid::before,
+html body .install-wave > .wave-liquid::after { content:none!important; display:none!important; animation:none!important; }
+
+html body .install-wave, html body #sheetInstallBtn {
+  position:relative!important; isolation:isolate!important; overflow:hidden!important;
+  background:linear-gradient(135deg,#6d28d9,#4c1d95)!important; color:#fff!important;
+  transition:background .35s ease, transform .2s ease!important; -webkit-tap-highlight-color:transparent;
+}
+html body .install-wave.wave-loading, html body #sheetInstallBtn.wave-loading {
+  background:linear-gradient(135deg,#34187a,#241050)!important; cursor:progress!important; filter:none!important;
+}
+html body .install-wave.install-done, html body #sheetInstallBtn.install-done {
+  background:linear-gradient(135deg,#059669,#047857)!important; box-shadow:0 10px 26px rgba(5,150,105,.25)!important;
+}
+html body .install-wave > .wave-liquid, html body #sheetInstallBtn > .wave-liquid {
+  position:absolute!important; left:0!important; right:0!important; bottom:0!important; top:auto!important;
+  width:100%!important; height:var(--wave-progress,0%)!important; display:block!important;
+  background:#7c3aed!important; border-radius:0!important; z-index:1!important; pointer-events:none!important;
+  opacity:0; transition:height .2s linear, opacity .25s ease!important;
+}
+html body .install-wave.wave-loading > .wave-liquid, html body #sheetInstallBtn.wave-loading > .wave-liquid { opacity:1; }
+html body .install-wave.install-done > .wave-liquid, html body #sheetInstallBtn.install-done > .wave-liquid {
+  opacity:1; height:100%!important; background:#059669!important; transition:none!important;
+}
+html body .install-wave > .wave-label, html body #sheetInstallBtn > .wave-label {
+  position:relative!important; z-index:3!important; display:inline-flex!important; align-items:center; justify-content:center; gap:8px;
+  color:#fff!important; font-weight:800!important; text-shadow:0 1px 2px rgba(0,0,0,.28); pointer-events:none!important;
+}
+.wv-svg { position:absolute; left:0; top:-12px; width:200%; height:20px; display:block; pointer-events:none;
+  fill:#7c3aed; will-change:transform; animation:v39wa 4.8s linear infinite; }
+.wv-svg.b { top:-15px; fill:#a78bfa; opacity:.6; animation:v39wb 7.4s linear infinite; }
+html body .install-done .wv-svg { display:none!important; }
+@keyframes v39wa { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
+@keyframes v39wb { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
+@media (prefers-reduced-motion:reduce) { .wv-svg{animation-duration:16s!important} .wv-svg.b{animation-duration:24s!important} }
+
+/* ===== installed badge + shelf ===== */
+.v39-badge { display:inline-flex; margin-inline-start:6px; color:#10b981; font-size:.8em; vertical-align:middle; }
+.v39-shelf { margin:4px 0 22px; }
+.v39-shelf[hidden] { display:none!important; }
+.v39-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.v39-row { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x proximity; padding:4px 2px 10px; scrollbar-width:none; }
+.v39-row::-webkit-scrollbar { display:none; }
+.v39-card { flex:0 0 150px; scroll-snap-align:start; background:var(--card2); border:1px solid var(--border);
+  border-radius:22px; padding:12px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+.v39-ico { width:56px; height:56px; border-radius:16px; object-fit:cover; background:var(--card); display:block; }
+.v39-ph { width:56px; height:56px; border-radius:16px; display:none; align-items:center; justify-content:center; background:var(--gradient); color:#fff; font-size:1.3rem; }
+.v39-ph.show { display:flex; }
+.v39-name { font-weight:800; font-size:.88rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.v39-acts { display:flex; gap:6px; width:100%; }
+.v39-open { flex:1; border:0; border-radius:12px; padding:8px 0; font:800 .82rem Cairo,sans-serif; background:linear-gradient(135deg,#059669,#047857); color:#fff; cursor:pointer; }
+.v39-rm { min-width:38px; border:1px solid var(--border); border-radius:12px; background:transparent; color:var(--muted); cursor:pointer; font:800 .78rem Cairo,sans-serif; }
+.v39-rm.sure { background:var(--danger); border-color:var(--danger); color:#fff; padding:0 10px; }
+
+/* ===== account / library sheet ===== */
+.v39-ov { position:fixed; inset:0; z-index:600; background:rgba(4,3,12,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+  opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
+.v39-ov.on { opacity:1; visibility:visible; }
+.v39-sheet { position:fixed; left:0; right:0; bottom:0; z-index:610; max-height:86vh; overflow-y:auto; overscroll-behavior:contain;
+  background:var(--card); border:1px solid var(--border); border-bottom:0; border-radius:30px 30px 0 0;
+  padding:12px 16px calc(22px + env(safe-area-inset-bottom,0px)); transform:translateY(105%); visibility:hidden;
+  transition:transform .45s var(--ease), visibility .45s; width:min(100%,560px); margin:0 auto; }
+.v39-sheet.on { transform:none; visibility:visible; }
+.v39-me { display:flex; align-items:center; gap:12px; margin:6px 0 14px; }
+.v39-av { width:48px; height:48px; border-radius:16px; background:var(--gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; background-size:cover; background-position:center; }
+.v39-me b { display:block; font-size:1rem; } .v39-me small { color:var(--muted); }
+.v39-sheet h3 { font-size:1.05rem; margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
+.v39-item { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:18px; background:var(--card2); margin-bottom:8px; }
+.v39-item .v39-ico, .v39-item .v39-ph { width:46px; height:46px; border-radius:14px; flex:0 0 46px; }
+.v39-info { flex:1; min-width:0; } .v39-info .v39-name { text-align:start; } .v39-info small { color:var(--muted); font-size:.75rem; }
+.v39-empty { text-align:center; color:var(--muted); padding:22px 8px; }
+.v39-out { width:100%; margin-top:10px; }
+</style>
+
+<script id="v39-install-library">
+(function () {
+  'use strict';
+  /* V3.9 — authoritative install flow.
+     - Install = visual simulation (wave fill), then "Open app" (instant).
+     - An account is required: installed apps are saved per account (localStorage + Firestore
+       users/{uid}/installedApps), so coming back from the app never resets them.
+     - A running simulation survives closing the sheet / leaving the page (wall-clock based). */
+  var DUR = [17, 12, 15, 10, 4, 9, 6, 3];
+  var ADMIN_EMAIL = 'admin@amgzrnt.app';
+  var K_LAST = 'amgzrnt-last-uid';
+  var uid = null, optimisticUid = null, inst = {}, jobs = {}, pending = null;
+  var navigating = false, myRole = null, ticker = null, authSeen = false;
+
+  function $(i) { return document.getElementById(i); }
+  function en() { try { return isEn(); } catch (e) { return false; } }
+  function T(a, e) { return en() ? e : a; }
+  function h(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function toast(m) { try { showToast(m); } catch (e) {} }
+  function apps() { try { return Array.isArray(allApps) ? allApps : []; } catch (e) { return []; } }
+  function findApp(id) { var k = String(id); return apps().find(function (a) { return a && String(a.id) === k; }) || null; }
+  function hostOf(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
+  function appName(a) { return a ? ((en() && a.nameEn) ? a.nameEn : (a.nameAr || a.name || '')) : ''; }
+  function appIcon(a) { if (!a) return ''; var ho = hostOf(a.url); return a.icon || (ho ? 'https://www.google.com/s2/favicons?sz=128&domain=' + ho : ''); }
+  function cap(s) { s = String(s || ''); return s.length > 600 ? '' : s; }
+  function normalize(v) {
+    var raw = String(v == null ? '' : v).trim().replace(/^['"]|['"]$/g, '').trim();
+    if (!raw) return '';
+    if (/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) raw = 'https://' + raw;
+    try { var u = new URL(raw); if ((u.protocol === 'https:' || u.protocol === 'http:') && u.hostname) return u.href; } catch (e) {}
+    return '';
+  }
+  function dur(id) { var s = String(id), x = 0; for (var i = 0; i < s.length; i++) x = (x * 31 + s.charCodeAt(i)) >>> 0; return DUR[x % DUR.length]; }
+
+  /* ---------- storage ---------- */
+  function key(u) { return 'amgzrnt-inst:' + u; }
+  function jkey(u) { return 'amgzrnt-jobs:' + u; }
+  function rd(k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } }
+  function wr(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function cur() { return uid || optimisticUid; }
+  function save() { var u = cur(); if (u) wr(key(u), inst); }
+  function saveJobs() { var u = cur(); if (u) wr(jkey(u), jobs); }
+  function installed(id) { var e = inst[id]; return !!(e && !e.del); }
+  function liveList() {
+    return Object.keys(inst).filter(installed).map(function (id) { var e = inst[id]; e.id = id; return e; })
+      .sort(function (a, b) { return (b.last || b.at || 0) - (a.last || a.at || 0); });
+  }
+  try { optimisticUid = localStorage.getItem(K_LAST) || null; } catch (e) {}
+  if (optimisticUid) { inst = rd(key(optimisticUid)); jobs = rd(jkey(optimisticUid)); }
+
+  /* ---------- cloud ---------- */
+  function col(u) { return db.collection('users').doc(u).collection('installedApps'); }
+  function push(id) {
+    var u = auth.currentUser; if (!u || u.uid !== uid) return Promise.resolve();
+    var e = inst[id]; if (!e || e.del) return Promise.resolve();
+    var data = { at: e.at || Date.now(), last: e.last || 0, opens: e.opens || 0, name: e.name || '', url: e.url || '', icon: cap(e.icon),
+      installedAt: firebase.firestore.Timestamp.fromMillis(e.at || Date.now()) };
+    return col(uid).doc(id).set(data, { merge: true }).then(function () { if (inst[id]) { inst[id].sync = true; save(); } }).catch(function () {});
+  }
+  function migrateLegacy() {
+    var flag = 'amgzrnt-legacy-done:' + uid;
+    try { if (localStorage.getItem(flag)) return; localStorage.setItem(flag, '1'); } catch (e) { return; }
+    var old = rd('amgzrnt-installed-apps');
+    Object.keys(old).forEach(function (id) {
+      if (inst[id]) return; var o = old[id] || {};
+      inst[id] = { at: o.at || Date.now(), last: 0, opens: 0, name: o.name || '', url: o.url || '', icon: '', sync: false };
+    });
+  }
+  function syncFromCloud(u) {
+    return col(u.uid).get().then(function (s) {
+      if (uid !== u.uid) return;
+      var cloud = {};
+      s.forEach(function (d) {
+        var x = d.data() || {};
+        cloud[d.id] = { at: x.at || (x.installedAt && x.installedAt.toMillis ? x.installedAt.toMillis() : Date.now()), last: x.last || 0, opens: x.opens || 0,
+          name: x.name || '', url: x.url || '', icon: x.icon || '', sync: true };
+      });
+      migrateLegacy();
+      Object.keys(inst).forEach(function (id) {
+        var l = inst[id];
+        if (l.del) { col(uid).doc(id).delete().then(function () { delete inst[id]; save(); }).catch(function () {}); delete cloud[id]; return; }
+        var c = cloud[id];
+        if (!c) { if (l.sync === false) push(id); else delete inst[id]; return; }   // removed on another device
+        l.at = Math.min(l.at || c.at, c.at || l.at); l.last = Math.max(l.last || 0, c.last || 0); l.opens = Math.max(l.opens || 0, c.opens || 0);
+        l.name = l.name || c.name; l.url = l.url || c.url; l.icon = l.icon || c.icon;
+        if (l.sync === false) push(id);
+        delete cloud[id];
+      });
+      Object.keys(cloud).forEach(function (id) { inst[id] = cloud[id]; });
+      save();
+    }).catch(function () {});
+  }
+  function fetchRole(u) {
+    myRole = null;
+    db.collection('users').doc(u.uid).get().then(function (d) {
+      myRole = u.email === ADMIN_EMAIL ? 'admin' : (d.exists ? (d.data().role || null) : null);
+    }).catch(function () {});
+  }
+
+  /* ---------- waves + button painting ---------- */
+  var WP = 'M0 24q50 -30 100 0' + new Array(16).join('t100 0') + 'V40H0Z';
+  var WAVES = '<svg class="wv-svg b" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="' + WP + '"/></svg>' +
+              '<svg class="wv-svg a" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="' + WP + '"/></svg>';
+  function ensureMarkup(btn) {
+    Array.prototype.slice.call(btn.children).forEach(function (c) {      /* drop leftovers of older layers */
+      if (!c.classList.contains('wave-liquid') && !c.classList.contains('wave-label')) c.remove();
+    });
+    var liq = btn.querySelector('.wave-liquid');
+    if (!liq) { liq = document.createElement('span'); liq.className = 'wave-liquid'; liq.setAttribute('aria-hidden', 'true'); btn.insertBefore(liq, btn.firstChild); }
+    if (!liq.querySelector('svg')) liq.innerHTML = WAVES;
+    var lab = btn.querySelector('.wave-label');
+    if (!lab) { lab = document.createElement('span'); lab.className = 'wave-label'; btn.appendChild(lab); }
+    return lab;
+  }
+  function paint(btn) {
+    var id = btn.getAttribute('data-app-id'); if (!id) return;
+    var lab = ensureMarkup(btn), st, pct = 0;
+    if (installed(id)) st = 'done';
+    else if (jobs[id]) { st = 'loading'; pct = Math.max(0, Math.min(99, Math.floor((Date.now() - jobs[id].start) / jobs[id].total * 100))); }
+    else st = 'idle';
+    var sig = st + ':' + pct + ':' + (en() ? 'e' : 'a');
+    if (btn.dataset.sig === sig) return;
+    btn.dataset.sig = sig;
+    btn.classList.toggle('wave-loading', st === 'loading');
+    btn.classList.toggle('install-done', st === 'done');
+    btn.disabled = st === 'loading';
+    btn.style.setProperty('--wave-progress', (st === 'loading' ? pct : 0) + '%');
+    var txt = st === 'done' ? T('فتح التطبيق', 'Open app') : st === 'loading' ? T('جارٍ التثبيت ', 'Installing ') + pct + '%' : T('تثبيت', 'Install');
+    var ico = st === 'done' ? 'fa-arrow-up-right-from-square' : st === 'loading' ? 'fa-circle-notch fa-spin' : 'fa-download';
+    lab.innerHTML = '<i class="fa-solid ' + ico + '"></i><span>' + txt + '</span>';
+    btn.setAttribute('aria-label', txt);
+    if (btn.id === 'sheetInstallBtn') { var o = $('sheetOpenBtn'); if (o) o.style.display = st === 'done' ? 'none' : ''; }
+  }
+  function paintAll() { document.querySelectorAll('.install-wave[data-app-id], #sheetInstallBtn[data-app-id]').forEach(paint); }
+
+  /* ---------- simulation jobs ---------- */
+  function ensureTicker() { if (!ticker && Object.keys(jobs).length) ticker = setInterval(tick, 150); }
+  function stopTicker() { if (ticker) { clearInterval(ticker); ticker = null; } }
+  function startJob(id, meta) {
+    if (jobs[id] || installed(id)) return;
+    jobs[id] = { start: Date.now(), total: dur(id) * 1000, name: meta.name, url: meta.url, icon: meta.icon };
+    saveJobs(); ensureTicker(); paintAll();
+  }
+  function finish(id, j) {
+    var a = findApp(id);
+    inst[id] = { at: Date.now(), last: 0, opens: 0, name: appName(a) || j.name || '', url: normalize(a && a.url) || j.url || '', icon: cap(appIcon(a)) || j.icon || '', sync: false };
+    save(); push(id);
+    toast(T('تم تثبيت «' + (inst[id].name || '') + '» — اضغط فتح التطبيق', '“' + (inst[id].name || '') + '” installed — tap Open app'));
+  }
+  function tick() {
+    var now = Date.now(), changed = false;
+    Object.keys(jobs).forEach(function (id) {
+      var j = jobs[id];
+      if (now - j.start >= j.total) { delete jobs[id]; changed = true; finish(id, j); }
+    });
+    if (changed) { saveJobs(); renderShelf(); decorate(); }
+    paintAll();
+    if (!Object.keys(jobs).length) stopTicker();
+  }
+
+  /* ---------- open / navigate ---------- */
+  function go(url) {
+    if (navigating) return; navigating = true;
+    try { window.closeSheet && window.closeSheet(); } catch (e) {}
+    setTimeout(function () { navigating = false; }, 4000);
+    location.href = url;
+  }
+  function openApp(id) {
+    var e = inst[id], a = findApp(id), url = normalize((a && a.url) || (e && e.url) || '');
+    if (!url) { toast(T('رابط التطبيق غير صالح.', 'Invalid app link.')); return; }
+    if (e && !e.del) { e.last = Date.now(); e.opens = (e.opens || 0) + 1; e.sync = false; e.url = url; if (a) e.name = appName(a) || e.name; save(); push(id); }
+    go(url);
+  }
+  function onInstall(id) {
+    Promise.race([typeof authReady !== 'undefined' ? authReady : Promise.resolve(), new Promise(function (r) { setTimeout(r, 4000); })]).then(function () {
+      if (installed(id)) { openApp(id); return; }
+      if (jobs[id]) return;
+      if (!auth.currentUser) { requireAccount(id); return; }
+      var a = findApp(id), url = normalize(a && a.url);
+      if (!a || !url) { toast(T('لم أجد رابطًا صالحًا لهذا التطبيق.', 'No valid link for this app.')); return; }
+      startJob(id, { name: appName(a), url: url, icon: cap(appIcon(a)) });
+    });
+  }
+  function requireAccount(id) {
+    pending = { id: id, ts: Date.now() };
+    try { window.closeSheet(); } catch (e) {}
+    openDrawer('auth');
+    try { switchTab('user'); } catch (e) {}
+    var hint = $('authHint');
+    if (hint) hint.textContent = T('أنشئ حسابًا مجانيًا لتُحفظ تطبيقاتك المثبّتة ولا تحتاج لتثبيتها مرة أخرى. لديك حساب؟ اختر «دخول».',
+                                   'Create a free account to keep your installed apps. Already have one? Choose “Login”.');
+    toast(T('أنشئ حسابًا لحفظ التطبيقات المثبّتة', 'Create an account to save installed apps'));
+  }
+  function resumePending() {
+    if (!pending) return;
+    var p = pending; pending = null;
+    if (Date.now() - p.ts > 10 * 60 * 1000 || installed(p.id) || jobs[p.id]) return;
+    setTimeout(function () {
+      var pg = $('appPage'), has = pg && pg.classList.contains('active') && document.querySelector('.install-wave[data-app-id="' + String(p.id).replace(/"/g, '') + '"]');
+      if (!has) window.openAppSheet(p.id);
+      onInstall(p.id);
+    }, 700);
+  }
+
+  /* ---------- public overrides (the one authoritative flow) ---------- */
+  window.startAppInstall = function (id) { onInstall(String(id)); };
+  window.sheetInstallAction = function () {
+    var s = window.selectedApp; if (!s) { toast(T('اختر تطبيقًا أولًا.', 'Pick an app first.')); return; }
+    onInstall(String(s.id));
+  };
+  window.sheetOpenAction = function () {
+    var s = window.selectedApp; if (!s) { toast(T('اختر تطبيقًا أولًا.', 'Pick an app first.')); return; }
+    var url = normalize(s.url); if (!url) { toast(T('رابط التطبيق غير صالح.', 'Invalid app link.')); return; }
+    if (installed(s.id)) openApp(s.id); else go(url);
+  };
+  window.installApp = function (id) { window.openAppSheet(id); };
+  window.openAppSheet = function (id) {
+    var a = findApp(id); if (!a) { toast(T('لم يتم العثور على التطبيق.', 'App not found.')); return; }
+    window.selectedApp = { id: a.id, name: appName(a), url: a.url || '', icon: appIcon(a) };
+    var nm = $('sheetAppName'); if (nm) nm.textContent = window.selectedApp.name;
+    var box = $('sheetIconBox');
+    if (box) { box.className = window.selectedApp.icon ? '' : 'sheet-icon-ph'; box.innerHTML = window.selectedApp.icon ? '<img src="' + h(window.selectedApp.icon) + '" alt="" referrerpolicy="no-referrer">' : '<i class="fa-solid fa-cube"></i>'; }
+    var b = $('sheetInstallBtn'); if (b) { b.setAttribute('data-app-id', String(a.id)); b.dataset.sig = ''; paint(b); }
+    $('sheetOverlay').classList.add('active'); $('bottomSheet').classList.add('active'); document.body.style.overflow = 'hidden';
+  };
+  var _oap = window.openAppPage;
+  window.openAppPage = function () { var r = _oap && _oap.apply(this, arguments); paintAll(); return r; };
+  var _sl = window.setLang;
+  window.setLang = function () { var r = _sl && _sl.apply(this, arguments); paintAll(); renderShelf(); decorate(); return r; };
+
+  /* ---------- remove ---------- */
+  function removeApp(id) {
+    var e = inst[id]; if (!e) return;
+    e.del = true; save();
+    if (auth.currentUser && uid === auth.currentUser.uid) col(uid).doc(id).delete().then(function () { delete inst[id]; save(); }).catch(function () {});
+    else delete inst[id], save();
+    renderShelf(); renderLib(); decorate(); paintAll();
+    toast(T('أُزيل التطبيق من مكتبتك', 'App removed from your library'));
+  }
+  function bindCards(root) {
+    root.addEventListener('click', function (ev) {
+      var b = ev.target.closest('[data-act]'); if (!b) return;
+      var id = b.getAttribute('data-id'), act = b.getAttribute('data-act');
+      if (act === 'open') { openApp(id); }
+      else if (act === 'rm') {
+        if (b.classList.contains('sure')) { removeApp(id); return; }
+        b.classList.add('sure'); b.textContent = T('تأكيد؟', 'Sure?');
+        setTimeout(function () { if (b.isConnected) { b.classList.remove('sure'); b.innerHTML = '<i class="fa-solid fa-trash"></i>'; } }, 3000);
+      }
+    });
+  }
+  function iconBlock(src) {
+    return (src ? '<img class="v39-ico" src="' + h(src) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')">' : '') +
+           '<div class="v39-ph' + (src ? '' : ' show') + '"><i class="fa-solid fa-cube"></i></div>';
+  }
+  function view(e) {
+    var a = findApp(e.id);
+    return { id: e.id, name: appName(a) || e.name || '', icon: (a && appIcon(a)) || e.icon || '', opens: e.opens || 0 };
+  }
+
+  /* ---------- home shelf ---------- */
+  var shelf = document.createElement('section'); shelf.id = 'v39Shelf'; shelf.className = 'v39-shelf'; shelf.hidden = true;
+  var ac = $('appsContainer'); if (ac && ac.parentNode) ac.parentNode.insertBefore(shelf, ac);
+  bindCards(shelf);
+  shelf.addEventListener('click', function (ev) { if (ev.target.closest('#v39More')) openLibrary(); });
+  function renderShelf() {
+    var list = (auth.currentUser || optimisticUid) ? liveList() : [];
+    var si = $('searchInput'), home = !(si && si.value.trim()) && (typeof activeCategory === 'undefined' || activeCategory === 'all');
+    if (!list.length || !home) { shelf.hidden = true; return; }
+    var html = '<div class="v39-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-circle-check"></i></span>' + T('تطبيقاتي المثبّتة', 'My installed apps') + '</div>' +
+      '<button class="sec-more" id="v39More" aria-label="' + T('عرض الكل', 'View all') + '"><i class="fa-solid fa-arrow-left"></i></button></div><div class="v39-row">';
+    list.forEach(function (e) {
+      var v = view(e);
+      html += '<div class="v39-card">' + iconBlock(v.icon) + '<div class="v39-name">' + h(v.name) + '</div><div class="v39-acts">' +
+        '<button class="v39-open" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div></div>';
+    });
+    shelf.innerHTML = html + '</div>'; shelf.hidden = false;
+  }
+
+  /* ---------- badges on cards ---------- */
+  var mo = null, deb = null;
+  function decorate() {
+    var c = $('appsContainer'); if (!c) return;
+    if (mo) mo.disconnect();
+    c.querySelectorAll('.app-row,.app-tile').forEach(function (el) {
+      var m = /openAppPage\('([^']+)'/.exec(el.getAttribute('onclick') || ''); if (!m) return;
+      var has = el.querySelector('.v39-badge'), ok = installed(m[1]);
+      if (ok && !has) { var t = el.querySelector('h3,h4'); if (t) { var s = document.createElement('span'); s.className = 'v39-badge'; s.title = T('مثبّت', 'Installed'); s.innerHTML = '<i class="fa-solid fa-circle-check"></i>'; t.appendChild(s); } }
+      else if (!ok && has) has.remove();
+    });
+    if (mo && c) mo.observe(c, { childList: true, subtree: true });
+  }
+  function schedule() { clearTimeout(deb); deb = setTimeout(function () { decorate(); renderShelf(); }, 120); }
+  if (window.MutationObserver && ac) { mo = new MutationObserver(schedule); mo.observe(ac, { childList: true, subtree: true }); }
+
+  /* ---------- account / library sheet ---------- */
+  var ov = document.createElement('div'); ov.className = 'v39-ov'; ov.id = 'v39Ov';
+  var sh = document.createElement('div'); sh.className = 'v39-sheet'; sh.id = 'v39Sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(ov); document.body.appendChild(sh);
+  bindCards(sh);
+  ov.addEventListener('click', closeLibrary);
+  function renderLib() {
+    var u = auth.currentUser; if (!u) { closeLibrary(); return; }
+    var name = u.displayName || (u.email || '').split('@')[0] || 'U', list = liveList();
+    var mask = (typeof maskEmail === 'function') ? maskEmail(u.email || '') : (u.email || '');
+    var html = '<div class="sheet-handle"></div><div class="v39-me"><div class="v39-av"' + (u.photoURL ? ' style="background-image:url(' + h(u.photoURL) + ')"' : '') + '>' + (u.photoURL ? '' : h(name.charAt(0).toUpperCase())) + '</div>' +
+      '<div><b>' + h(name) + '</b><small>' + h(mask) + '</small></div></div>' +
+      '<h3><i class="fa-solid fa-circle-check" style="color:#10b981"></i>' + T('تطبيقاتي المثبّتة', 'My installed apps') + ' (' + list.length + ')</h3>';
+    if (!list.length) html += '<div class="v39-empty">' + T('لم تثبّت أي تطبيق بعد. افتح أي تطبيق واضغط «تثبيت».', 'Nothing installed yet. Open any app and tap Install.') + '</div>';
+    list.forEach(function (e) {
+      var v = view(e);
+      html += '<div class="v39-item">' + iconBlock(v.icon) + '<div class="v39-info"><div class="v39-name">' + h(v.name) + '</div><small>' +
+        (v.opens ? T('فُتح ' + v.opens + ' مرة', 'Opened ' + v.opens + '×') : T('جاهز للفتح', 'Ready to open')) + '</small></div>' +
+        '<button class="v39-open" style="flex:0 0 auto;padding:8px 16px" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div>';
+    });
+    html += '<button class="btn btn-outline v39-out" id="v39Logout"><i class="fa-solid fa-right-from-bracket"></i> ' + T('تسجيل الخروج', 'Log out') + '</button>';
+    sh.innerHTML = html;
+    var lo = $('v39Logout'); if (lo) lo.onclick = function () { closeLibrary(); if (typeof logout === 'function') logout(); };
+  }
+  function openLibrary() {
+    if (!auth.currentUser) return; renderLib();
+    ov.classList.add('on'); sh.classList.add('on'); sh.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
+  }
+  function closeLibrary() {
+    ov.classList.remove('on'); sh.classList.remove('on'); sh.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = document.querySelector('.app-page.active') ? 'hidden' : '';
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sh.classList.contains('on')) closeLibrary(); });
+  var bn = $('bnav');
+  if (bn) bn.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('button'); if (!b || b.dataset.k !== 'me') return;
+    var u = auth.currentUser; if (!u || u.email === ADMIN_EMAIL || myRole !== 'user') return;
+    e.stopImmediatePropagation(); e.preventDefault(); openLibrary();
+  }, true);
+
+  /* ---------- auth + lifecycle ---------- */
+  auth.onAuthStateChanged(function (u) {
+    authSeen = true;
+    if (u) {
+      uid = u.uid; optimisticUid = u.uid; try { localStorage.setItem(K_LAST, u.uid); } catch (e) {}
+      inst = rd(key(uid)); jobs = rd(jkey(uid)); ensureTicker(); tick();
+      renderShelf(); decorate(); paintAll(); fetchRole(u);
+      syncFromCloud(u).then(function () { renderShelf(); decorate(); paintAll(); if (sh.classList.contains('on')) renderLib(); resumePending(); });
+    } else {
+      var old = cur(); uid = null; optimisticUid = null; myRole = null; stopTicker();
+      try { localStorage.removeItem(K_LAST); if (old) { localStorage.removeItem(key(old)); localStorage.removeItem(jkey(old)); } } catch (e) {}
+      inst = {}; jobs = {}; closeLibrary(); renderShelf(); decorate(); paintAll();
+    }
+  });
+  window.addEventListener('pageshow', function () { navigating = false; tick(); paintAll(); renderShelf(); decorate(); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) { tick(); paintAll(); } });
+  window.addEventListener('pagehide', function () { saveJobs(); save(); });
+  ensureTicker(); renderShelf();
+
+  /* PWA update + manifest shortcuts (#library, #search) */
+  if ('serviceWorker' in navigator) {
+    var had = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () { if (!had) { had = true; return; } toast(T('تم تحديث المتجر لأحدث نسخة', 'Store updated to the latest version')); });
+  }
+  function shortcut() {
+    var hs = location.hash;
+    if (hs !== '#library' && hs !== '#search') return;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    Promise.race([typeof authReady !== 'undefined' ? authReady : Promise.resolve(), new Promise(function (r) { setTimeout(r, 4000); })]).then(function () {
+      if (hs === '#search') { var si = $('searchInput'); if (si) si.focus(); }
+      else if (auth.currentUser) openLibrary(); else openDrawer('auth');
+    });
+  }
+  shortcut();
+})();
+</script>
+
+</body>
+</html>
