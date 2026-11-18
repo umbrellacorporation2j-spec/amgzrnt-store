@@ -1066,6 +1066,14 @@ body{padding-bottom:110px}
     <div class="drawer-body">
       <div class="form-error" id="uploadError"></div>
       <div class="form-success" id="uploadSuccess"></div>
+      <div id="pwaKitAction" class="form-hint" style="display:none;margin:10px 0;padding:14px;border:1px solid rgba(124,58,237,.35);border-radius:16px;background:rgba(124,58,237,.08)">
+        <b data-lang="ar">تجهيز تطبيق PWA للموقع</b><b data-lang="en">Prepare PWA files for this site</b>
+        <p data-lang="ar" style="margin:6px 0 10px">أنشئ حزمة تحتوي manifest وملف Service Worker وزر «حمّل تطبيقنا» جاهزة للرفع إلى استضافة الموقع.</p>
+        <p data-lang="en" style="margin:6px 0 10px">Create a bundle with a manifest, service worker and “Install our app” prompt, ready to upload to the site's hosting.</p>
+        <button type="button" class="btn btn-primary btn-block" onclick="downloadPwaKit()"><i class="fa-solid fa-file-zipper"></i><span data-lang="ar">تنزيل حزمة تجهيز PWA</span><span data-lang="en">Download PWA setup kit</span></button>
+        <small data-lang="ar" style="display:block;margin-top:8px">ملاحظة: الحزمة لا تُحقن في الموقع عن بُعد؛ يجب رفع ملفاتها إلى جذر استضافة الموقع وإضافة سطر الربط الموضح داخل README.</small>
+        <small data-lang="en" style="display:block;margin-top:8px">Note: files cannot be injected remotely. Upload them to the site's hosting root and add the snippet shown in README.</small>
+      </div>
       <form id="uploadForm" onsubmit="handleUpload(event)">
         <div class="form-group">
           <label data-lang="ar">اسم التطبيق</label>
@@ -1249,7 +1257,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.1</strong>
+      <strong class="version-number" dir="ltr">V3.3</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -2340,7 +2348,7 @@ body{padding-bottom:110px}
     $('authError').classList.remove('show');
   };
   var _od = window.openDrawer;
-  window.openDrawer = function (t) { _od(t); if (t === 'auth') switchTab('collective'); };
+  window.openDrawer = function (t) { _od(t); if (t === 'auth') switchTab('collective'); if (t === 'upload') { var k=document.getElementById('pwaKitAction'); if(k) k.style.display='none'; window.lastPwaKitData=null; } };
   var _auth = window.handleAuth;
   window.handleAuth = function (e) {
     if (authMode === 'admin') return adminLogin(e);
@@ -2378,6 +2386,7 @@ body{padding-bottom:110px}
     var data = {
       name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
       description: $('appDesc').value.trim(), category: $('appCategory').value,
+      pwaKitAvailable: true, pwaKitVersion: '3.3',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
       devName: u.displayName || (u.email || '').split('@')[0], collective: isCol(u),
@@ -2386,7 +2395,9 @@ body{padding-bottom:110px}
     };
     db.collection('apps').add(data).then(async function () {
       setBtnLoading(btn, false);
-      okBox.textContent = T('تم النشر بنجاح', 'Published successfully'); okBox.classList.add('show');
+      okBox.textContent = T('تم النشر بنجاح. يمكنك الآن تجهيز ملفات PWA للموقع.', 'Published successfully. You can now prepare PWA files for this site.'); okBox.classList.add('show');
+      window.lastPwaKitData = { name:data.name, url:data.url, icon:data.icon, description:data.description };
+      var kitAction = $('pwaKitAction'); if (kitAction) kitAction.style.display = 'block';
       $('uploadForm').reset(); $('iconPreview').innerHTML = ''; cmps.up.set(null); sls.up.set(null);
       await loadApps();
       setTimeout(function () { closeDrawer('upload'); }, 900);
@@ -2404,6 +2415,32 @@ body{padding-bottom:110px}
     var sv = sls.ed.get(); var extra = { ad: cmps.ed.get(), slides: sv.slides, autoShots: sv.auto };
     await _sv(e);
     try { await db.collection('apps').doc(id).update(extra); if (a) Object.assign(a, extra); filterApps(); } catch (x) {}
+  };
+
+  /* ---------- V3.3: per-site PWA setup kit generator ---------- */
+  window.downloadPwaKit = function () {
+    var a = window.lastPwaKitData;
+    if (!a || !a.url) { if (typeof showToast === 'function') showToast(T('انشر الموقع أولاً ثم أنشئ الحزمة', 'Publish the site first')); return; }
+    var base = new URL(a.url);
+    var appName = a.name || 'My App';
+    var iconUrl = a.icon || (base.origin + '/favicon.ico');
+    var manifest = {
+      id: base.href, name: appName, short_name: appName.slice(0, 18), description: a.description || appName,
+      start_url: base.href, scope: new URL('.', base).href, display: 'standalone', background_color: '#08070d', theme_color: '#6d28d9',
+      icons: [{ src: iconUrl, sizes: '192x192', type: iconUrl.toLowerCase().endsWith('.svg') ? 'image/svg+xml' : 'image/png', purpose: 'any' }]
+    };
+    var sw = `const CACHE_NAME = 'amgzrnt-pwa-${Date.now()}';\nconst START_URL = ${JSON.stringify(base.href)};\nself.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.add(START_URL).catch(() => {})).then(() => self.skipWaiting())); });\nself.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())); });\nself.addEventListener('fetch', event => { const req = event.request; if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return; event.respondWith(fetch(req).then(res => { if (res && res.ok) { const copy = res.clone(); caches.open(CACHE_NAME).then(cache => cache.put(req, copy)); } return res; }).catch(() => caches.match(req).then(hit => hit || caches.match(START_URL)))); });\n`;
+    var installJs = `(function(){\n let deferred=null;\n const btn=document.createElement('button'); btn.type='button'; btn.textContent='حمّل تطبيقنا'; btn.setAttribute('aria-label','حمّل تطبيقنا');\n Object.assign(btn.style,{position:'fixed',zIndex:'2147483000',bottom:'18px',left:'50%',transform:'translateX(-50%)',padding:'12px 22px',border:'0',borderRadius:'999px',background:'#6d28d9',color:'#fff',font:'bold 16px system-ui',boxShadow:'0 8px 28px #0005',display:'none'}); document.body.appendChild(btn);\n window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;btn.style.display='block';});\n btn.addEventListener('click',async()=>{if(!deferred){btn.textContent='افتح قائمة المتصفح واختر إضافة إلى الشاشة';return;} deferred.prompt(); await deferred.userChoice; deferred=null; btn.style.display='none';});\n window.addEventListener('appinstalled',()=>{btn.style.display='none';});\n if('serviceWorker' in navigator && location.protocol==='https:') navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA service worker:',err));\n})();\n`;
+    var snippet = `<!-- أضف هذا داخل <head> -->\n<link rel="manifest" href="./manifest.json">\n<meta name="theme-color" content="#6d28d9">\n\n<!-- أضف هذا قبل </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
+    var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
+    var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
+    function crc32(bytes){var c=~0;for(var i=0;i<bytes.length;i++){c^=bytes[i];for(var j=0;j<8;j++)c=(c>>>1)^((c&1)?0xEDB88320:0);}return (~c)>>>0;}
+    function u16(n){return [n&255,(n>>>8)&255];} function u32(n){return [n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255];}
+    var enc=new TextEncoder(), local=[], central=[], offset=0;
+    Object.keys(files).forEach(function(name){var nb=enc.encode(name), data=enc.encode(files[name]), crc=crc32(data);var lh=new Uint8Array([0x50,0x4b,0x03,0x04,20,0,0,0,0,0,0,0,...u32(crc),...u32(data.length),...u32(data.length),...u16(nb.length),0,0]);local.push(lh,nb,data);var ch=new Uint8Array([0x50,0x4b,0x01,0x02,20,0,20,0,0,0,0,0,0,0,...u32(crc),...u32(data.length),...u32(data.length),...u16(nb.length),0,0,0,0,0,0,0,0,...u32(0),...u32(offset)]);central.push(ch,nb);offset+=lh.length+nb.length+data.length;});
+    var centralSize=central.reduce((n,x)=>n+x.length,0), end=new Uint8Array([0x50,0x4b,0x05,0x06,0,0,0,0,...u16(Object.keys(files).length),...u16(Object.keys(files).length),...u32(centralSize),...u32(offset),0,0]);
+    var blob=new Blob([...local,...central,end],{type:'application/zip'}), link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='PWA-Kit-'+appName.replace(/[^\w\u0600-\u06FF-]+/g,'-')+'.zip';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),30000);
+    if (typeof showToast === 'function') showToast(T('تم إنشاء حزمة PWA. ارفع ملفاتها إلى استضافة الموقع.', 'PWA kit created. Upload its files to the site hosting.'));
   };
 
   /* ---------- admin ---------- */
@@ -2833,7 +2870,7 @@ body{padding-bottom:110px}
   window.openAdmin = async function () {
     if (!isAdmin()) return;
     $('admPage').classList.add('active'); lock(); renderAdmin();
-    try { var sn = await db.collection('users').get(); admUsers = []; sn.forEach(function (d) { var x = d.data(); x.id = d.id; admUsers.push(x); }); } catch (e) { admUsers = []; }
+    try { var sn = await db.collection('users').get(); admUsers = []; sn.forEach(function (d) { var x = d.data(); x.id = d.id; admUsers.push(x); }); } catch (e) { admUsers = []; showToast('تعذر تحميل الحسابات: تحقق من قواعد Firestore وصلاحية المدير'); console.error('Admin users read failed:', e); }
     renderAdmin();
   };
   window.closeAdmin = function () { $('admPage').classList.remove('active'); lock(); };
@@ -2864,7 +2901,7 @@ body{padding-bottom:110px}
     $('admBody').innerHTML = h;
   }
   function admUpdate(id, data, msg) {
-    return db.collection('apps').doc(id).update(data).then(function () { var a = findApp(id); if (a) Object.assign(a, data); renderAdmin(); filterApps(); showToast(msg); }).catch(function (er) { alert(er.message); });
+    return db.collection('apps').doc(id).update(data).then(function () { var a = findApp(id); if (a) Object.assign(a, data); renderAdmin(); filterApps(); showToast(msg); }).catch(function (er) { console.error('Admin update failed:', er); showToast(er.code === 'permission-denied' ? 'رفض Firebase العملية. انشر قواعد firestore.rules المرفقة.' : ('تعذر تنفيذ العملية: ' + (er.message || 'خطأ غير معروف'))); });
   }
   window.admSuspend = function (id) { var a = findApp(id); admUpdate(id, { suspended: !a.suspended }, a.suspended ? 'تم التفعيل' : 'تم إيقاف التطبيق'); };
   window.admNote = function (id) { var a = findApp(id); askText('وصف المشكلة (يظهر للمطور)', a.adminNote, function (v) { admUpdate(id, { adminNote: v, adminNoteAt: Date.now() }, 'تم إرسال التنبيه'); }); };
@@ -3095,42 +3132,70 @@ body{padding-bottom:110px}
     syncBodyLock();
   })();
   </script>
-  <script id="timed-wave-installer">
+  <script id="v32-safe-app-open">
   (function () {
-    var DURATION_SET = [10, 12, 17, 9, 17];
-    var STORE_KEY = 'amgzrnt-installed-apps';
-    function readInstalled(){ try{return JSON.parse(localStorage.getItem(STORE_KEY)||'{}')||{};}catch(e){return {}; } }
-    function writeInstalled(x){ try{localStorage.setItem(STORE_KEY,JSON.stringify(x));}catch(e){} }
-    function durationFor(id){ var text=String(id||''), n=0; for(var i=0;i<text.length;i++) n=(n+text.charCodeAt(i)*(i+1))%997; return DURATION_SET[n%DURATION_SET.length]; }
-    function waveMarkup(label){ return '<svg class="wv" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 72 Q75 18 150 72 T300 72 T450 72 T600 72 V120 H0Z"></path></svg><svg class="wv2" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 82 Q75 32 150 82 T300 82 T450 82 T600 82 V120 H0Z"></path></svg><span>' + label + '</span>'; }
-    function appFor(id){ var list=window.allApps||[]; return list.find(function(a){return a.id===id;}); }
-    function userRequired(){ if(typeof auth!=='undefined'&&auth.currentUser)return true; if(typeof openDrawer==='function'){openDrawer('auth');if(typeof switchTab==='function')switchTab('user');} if(typeof showToast==='function')showToast('سجّل حساباً عادياً أولاً لحفظ التطبيق'); return false; }
-    function decorateSheet(){
-      var a=window.selectedApp, b=document.getElementById('sheetInstallBtn'); if(!a||!b)return;
-      var installed=readInstalled();
-      b.classList.add('wave-btn','install-wave'); b.style.setProperty('--install-duration',durationFor(a.id)+'s');
-      if(installed[a.id]){b.classList.add('install-done');b.innerHTML=waveMarkup('مثبت — فتح');} else {b.classList.remove('install-done');b.innerHTML=waveMarkup('تثبيت');}
+    function getApp(id) {
+      var list = window.allApps || [];
+      var found = list.find(function (item) { return item && item.id === id; });
+      if (!found && typeof window.findApp === 'function') found = window.findApp(id);
+      return found || null;
     }
-    var originalOpen=window.openAppSheet;
-    window.openAppSheet=function(id,url,icon){ var result=originalOpen&&originalOpen.apply(this,arguments); setTimeout(decorateSheet,0); return result; };
-    window.sheetInstallAction=async function(){
-      var a=window.selectedApp,b=document.getElementById('sheetInstallBtn'); if(!a||!a.url)return;
-      var existing=readInstalled();
-      if(existing[a.id]){window.open(a.url,'_blank','noopener,noreferrer');if(typeof closeSheet==='function')closeSheet();return;}
-      if(!userRequired())return;
-      var seconds=durationFor(a.id), end=Date.now()+seconds*1000, timer;
-      b.disabled=true;b.classList.add('wave-btn','install-wave','wave-loading');b.classList.remove('install-done');b.style.setProperty('--install-duration',seconds+'s');
-      function tick(){var left=Math.max(0,Math.ceil((end-Date.now())/1000));b.innerHTML=waveMarkup('جارٍ التثبيت… '+left+' ث');if(left<=0)clearInterval(timer);}
-      tick();timer=setInterval(tick,250);
-      await new Promise(function(resolve){setTimeout(resolve,seconds*1000);});
-      var installed=readInstalled();installed[a.id]={at:Date.now(),url:a.url,name:a.name};writeInstalled(installed);
-      if(typeof auth!=='undefined'&&auth.currentUser&&typeof db!=='undefined'){await db.collection('users').doc(auth.currentUser.uid).collection('installedApps').doc(a.id).set({url:a.url,name:a.name,installedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(){});}
-      b.disabled=false;b.classList.remove('wave-loading');b.classList.add('install-done');b.innerHTML=waveMarkup('مثبت — فتح');
-      var open=document.getElementById('sheetOpenBtn');if(open)open.style.display='inline-flex';
-      if(typeof showToast==='function')showToast('تم تثبيت التطبيق، اضغط فتح للمتابعة');
+    function safeHttpUrl(value) {
+      try {
+        var u = new URL(value, window.location.href);
+        return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+      } catch (e) { return ''; }
+    }
+    function toast(message) {
+      if (typeof window.showToast === 'function') window.showToast(message);
+      else {
+        var t = document.getElementById('toast');
+        if (t) { t.querySelector('span').textContent = message; t.classList.add('show'); }
+      }
+    }
+    function updateSheetLabel() {
+      var b = document.getElementById('sheetInstallBtn');
+      if (!b) return;
+      b.classList.remove('wave-loading', 'install-done');
+      b.disabled = false;
+      b.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i><span>فتح صفحة التطبيق</span>';
+    }
+    var previousOpenSheet = window.openAppSheet;
+    window.openAppSheet = function () {
+      var result = previousOpenSheet && previousOpenSheet.apply(this, arguments);
+      setTimeout(updateSheetLabel, 0);
+      return result;
     };
-    window.installApp=function(id){var a=appFor(id),installed=readInstalled();if(!a)return;if(installed[id]){window.open(a.url,'_blank','noopener,noreferrer');return;}if(!userRequired())return;window.openAppSheet(id);};
-    document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#sheetInstallBtn');if(b&&!b.disabled){e.preventDefault();e.stopImmediatePropagation();window.sheetInstallAction();}},true);
+    window.sheetInstallAction = function () {
+      var a = window.selectedApp;
+      if (!a || !a.url) { toast('رابط التطبيق غير متوفر'); return; }
+      var url = safeHttpUrl(a.url);
+      if (!url) { toast('رابط التطبيق غير صالح؛ يجب أن يبدأ بـ https:// أو http://'); return; }
+      // Open synchronously from the user's tap to avoid popup blocking.
+      var opened = window.open(url, '_blank');
+      if (opened) { try { opened.opener = null; } catch (e) {} }
+      if (typeof window.closeSheet === 'function') window.closeSheet();
+      if (!opened) toast('منع المتصفح فتح الصفحة. اسمح بالنوافذ المنبثقة ثم حاول مجدداً.');
+      else toast('فُتحت صفحة التطبيق. إذا كان يدعم التثبيت، اختر تثبيت من قائمة المتصفح.');
+    };
+    window.installApp = function (id) {
+      var a = getApp(id);
+      if (!a) { toast('لم يتم العثور على التطبيق'); return; }
+      if (typeof window.openAppSheet === 'function') window.openAppSheet(id);
+      else {
+        var url = safeHttpUrl(a.url);
+        if (url) { var opened = window.open(url, '_blank'); if (opened) { try { opened.opener = null; } catch (e) {} } }
+        else toast('رابط التطبيق غير صالح');
+      }
+    };
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest && event.target.closest('#sheetInstallBtn');
+      if (!button) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.sheetInstallAction();
+    }, true);
+    document.addEventListener('DOMContentLoaded', updateSheetLabel);
   })();
   </script>
 

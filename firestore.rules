@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn() && request.auth.token.email == 'admin@amgzrnt.app';
+    }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function ownsApp() {
+      return signedIn() && (
+        resource.data.ownerUid == request.auth.uid ||
+        resource.data.devId == request.auth.uid
+      );
+    }
+
+    match /apps/{appId} {
+      allow read: if true;
+      allow create: if isAdmin() || (signedIn() &&
+        (request.resource.data.ownerUid == request.auth.uid || request.resource.data.devId == request.auth.uid));
+      allow update, delete: if isAdmin() || ownsApp();
+
+      match /ratings/{ratingId} {
+        allow read: if true;
+        allow create: if request.resource.data.keys().hasOnly(['stars','name','text','at','kind'])
+          && (!('stars' in request.resource.data) || request.resource.data.stars is number)
+          && (!('stars' in request.resource.data) || request.resource.data.stars >= 0 && request.resource.data.stars <= 5);
+        allow update: if signedIn() && request.auth.uid == ratingId;
+        allow delete: if isAdmin() || (signedIn() && request.auth.uid == ratingId);
+      }
+      match /views/{viewId} {
+        allow read: if true;
+        allow create: if true;
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    match /users/{uid} {
+      allow get: if isOwner(uid) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() || (isOwner(uid) &&
+        (!('role' in request.resource.data) || request.resource.data.role == 'user'));
+      allow update: if isAdmin() || (isOwner(uid) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role','deleted']));
+      allow delete: if isAdmin();
+
+      match /installedApps/{appId} {
+        allow read, write: if isOwner(uid) || isAdmin();
+      }
+      match /notifications/{noticeId} {
+        allow read: if isOwner(uid) || isAdmin();
+        allow create: if isAdmin();
+        allow update, delete: if isOwner(uid) || isAdmin();
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 'use strict';
-const CACHE_NAME = 'amgzrnt-store-v3-1';
+const CACHE_NAME = 'amgzrnt-store-v3-2';
 const APP_SHELL = [
   './',
   './index.html',
