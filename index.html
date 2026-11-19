@@ -1202,6 +1202,13 @@ body{padding-bottom:110px}
           </select>
         </div>
         <div class="form-group">
+          <label class="chk" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="appFeaturedRibbon">
+            <span data-lang="ar">🥇 شريط «تطبيق مميز» على البطاقة</span>
+            <span data-lang="en">🥇 “Featured” ribbon on card</span>
+          </label>
+        </div>
+        <div class="form-group">
           <label data-lang="ar">التصنيف</label>
           <label data-lang="en">Category</label>
           <select id="appCategory">
@@ -1918,6 +1925,7 @@ body{padding-bottom:110px}
         descriptionEn: (document.getElementById('appDescEn') && document.getElementById('appDescEn').value.trim()) || document.getElementById('appDesc').value.trim(),
         category: document.getElementById('appCategory').value,
         devStatus: (document.getElementById('appDevStatus') && document.getElementById('appDevStatus').value) || 'live',
+        featured: !!(document.getElementById('appFeaturedRibbon') && document.getElementById('appFeaturedRibbon').checked),
         ownerUid: auth.currentUser.uid,
         ownerEmail: auth.currentUser.email || '',
         ownerName: auth.currentUser.displayName || '',
@@ -2782,6 +2790,540 @@ body.hide-ads .ads-scroll, body.hide-ads .ad-banner, body.hide-ads .ad-banner2, 
 })();
 </script>
 
+
+<style id="v4-preview-fix">
+.ap-actions{display:flex!important;gap:10px;align-items:stretch}
+.ap-actions .btn-outline{display:inline-flex!important;align-items:center;justify-content:center;gap:6px;min-width:52px;padding:12px 14px!important;flex-shrink:0}
+.ap-actions .wave-btn,.ap-actions .btn-primary{flex:1}
+.ap-shots{display:flex!important;gap:12px;overflow-x:auto;padding:6px 0 14px;min-height:120px}
+.ap-shots .shot-img,.ap-shots img{flex:0 0 min(78%,320px);width:min(78%,320px);height:auto;min-height:160px;border-radius:18px;object-fit:cover;background:#12101c;display:block}
+.shot-slide{flex:0 0 min(78%,320px);min-height:160px;border-radius:18px;display:flex;align-items:center;justify-content:center;padding:16px}
+#pvOverlay.on{opacity:1!important;visibility:visible!important;pointer-events:auto!important;z-index:500!important}
+</style>
+
+
+<style id="v4-ribbons">
+.app-tile,.app-row,.app-card,.ap-head{position:relative}
+.ribbon{
+  position:absolute;z-index:5;top:0;inset-inline-start:0;
+  width:96px;height:96px;overflow:hidden;pointer-events:none;
+  border-radius:inherit;
+}
+.ribbon span{
+  position:absolute;display:block;width:150px;padding:6px 0;
+  text-align:center;font-size:.68rem;font-weight:900;letter-spacing:.02em;
+  color:#111;box-shadow:0 4px 14px rgba(0,0,0,.35);
+  transform:rotate(-45deg);transform-origin:center;
+  top:18px;inset-inline-start:-40px;
+  line-height:1.15;
+}
+/* gold featured */
+.ribbon.gold span{
+  background:linear-gradient(180deg,#fde68a,#f59e0b 45%,#d97706);
+  color:#1c1000;text-shadow:0 1px 0 rgba(255,255,255,.35);
+}
+/* editors choice */
+.ribbon.editors span{
+  background:linear-gradient(180deg,#fef3c7,#fbbf24 40%,#b45309);
+  color:#1c1000;
+}
+/* admin pick */
+.ribbon.admin span{
+  background:linear-gradient(180deg,#e9d5ff,#a855f7 45%,#6b21a8);
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);
+}
+/* under development — street caution tape */
+.ribbon.dev span{
+  background:repeating-linear-gradient(-45deg,#facc15 0 10px,#111 10px 20px);
+  color:#111;font-weight:900;padding:7px 0;font-size:.72rem;
+  text-shadow:0 0 0 transparent;
+}
+/* suspended */
+.ribbon.suspended span{
+  background:linear-gradient(180deg,#fca5a5,#ef4444 50%,#991b1b);
+  color:#fff;
+}
+/* larger on app page */
+.ap-ribbon{
+  position:absolute;z-index:6;top:0;inset-inline-start:0;
+  width:120px;height:120px;overflow:hidden;pointer-events:none;
+}
+.ap-ribbon span{
+  position:absolute;display:block;width:180px;padding:8px 0;
+  text-align:center;font-size:.78rem;font-weight:900;
+  transform:rotate(-45deg);top:24px;inset-inline-start:-48px;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);line-height:1.2;
+}
+.ap-ribbon.gold span{background:linear-gradient(180deg,#fde68a,#f59e0b 45%,#d97706);color:#1c1000}
+.ap-ribbon.editors span{background:linear-gradient(180deg,#fef3c7,#fbbf24 40%,#b45309);color:#1c1000}
+.ap-ribbon.admin span{background:linear-gradient(180deg,#e9d5ff,#a855f7 45%,#6b21a8);color:#fff}
+.ap-ribbon.dev span{background:repeating-linear-gradient(-45deg,#facc15 0 11px,#111 11px 22px);color:#111;font-size:.8rem;padding:9px 0}
+.ap-ribbon.suspended span{background:linear-gradient(180deg,#fca5a5,#ef4444 50%,#991b1b);color:#fff}
+.medal-ico{display:inline-flex;align-items:center;gap:4px}
+.bdg.editors{background:rgba(251,191,36,.2);color:#fbbf24}
+.bdg.adminpick{background:rgba(168,85,247,.2);color:#c4b5fd}
+.bdg.featured{background:rgba(245,158,11,.2);color:#fcd34d}
+</style>
+<script id="v4-ribbons-js">
+(function(){
+  'use strict';
+  function T(a,e){ try{ return (typeof isEn==='function'?isEn():document.body.classList.contains('en'))?e:a; }catch(x){ return a; } }
+  function $(id){ return document.getElementById(id); }
+  function findA(id){
+    try{ if(typeof findApp==='function'){ var a=findApp(id); if(a) return a; } }catch(e){}
+    return (window.allApps||[]).find(function(x){ return x && String(x.id)===String(id); });
+  }
+  /* Priority: suspended > under-dev > editors > admin > featured */
+  function ribbonKind(a){
+    if(!a) return null;
+    if(a.suspended) return { cls:'suspended', text:T('موقوف','Suspended') };
+    if(a.devStatus==='dev' || a.devStatus==='development') return { cls:'dev', text:T('تحت التطوير','In development') };
+    if(a.editorsChoice) return { cls:'editors', text:T('🥇 اختيار المحررين',"🥇 Editors' choice") };
+    if(a.adminPick) return { cls:'admin', text:T('اختيار الإدارة','Admin pick') };
+    if(a.featured) return { cls:'gold', text:T('تطبيق مميز','Featured') };
+    return null;
+  }
+  function ribbonHTML(a, big){
+    var k=ribbonKind(a); if(!k) return '';
+    var tag = big ? 'ap-ribbon' : 'ribbon';
+    return '<div class="'+tag+' '+k.cls+'" aria-hidden="true"><span>'+k.text+'</span></div>';
+  }
+  function badgeHTML(a){
+    var h='';
+    if(a.suspended) h+='<span class="bdg red">'+T('موقوف','Suspended')+'</span> ';
+    else if(a.devStatus==='dev'||a.devStatus==='development') h+='<span class="bdg" style="background:rgba(250,204,21,.2);color:#facc15">'+T('تحت التطوير','In development')+'</span> ';
+    if(a.editorsChoice) h+='<span class="bdg editors medal-ico">🥇 '+T('اختيار المحررين',"Editors' choice")+'</span> ';
+    if(a.adminPick) h+='<span class="bdg adminpick">'+T('اختيار الإدارة','Admin pick')+'</span> ';
+    if(a.featured && !a.editorsChoice && !a.adminPick) h+='<span class="bdg featured">'+T('مميز','Featured')+'</span> ';
+    return h;
+  }
+  function decorateCard(el, a){
+    if(!el || !a) return;
+    if(getComputedStyle(el).position==='static') el.style.position='relative';
+    el.querySelectorAll('.ribbon').forEach(function(n){ n.remove(); });
+    var rh=ribbonHTML(a,false);
+    if(rh) el.insertAdjacentHTML('afterbegin', rh);
+  }
+  function decorateAll(){
+    var list=window.allApps||[];
+    document.querySelectorAll('.app-tile,.app-row,.app-card').forEach(function(el){
+      var id=el.getAttribute('data-app-id');
+      if(!id){
+        var oc=el.getAttribute('onclick')||'';
+        var m=/openAppPage\('([^']+)'/.exec(oc);
+        if(m) id=m[1];
+      }
+      if(!id) return;
+      var a=findA(id);
+      if(a) decorateCard(el,a);
+    });
+  }
+  // Observe list re-renders
+  var box=$('appsContainer');
+  if(box && window.MutationObserver){
+    var t=null;
+    new MutationObserver(function(){ clearTimeout(t); t=setTimeout(decorateAll,80); }).observe(box,{childList:true,subtree:true});
+  }
+  setInterval(decorateAll,2500);
+
+  // App page corner ribbon
+  var _oap=window.openAppPage;
+  if(typeof _oap==='function'){
+    window.openAppPage=function(id,fromHash){
+      var r=_oap.apply(this,arguments);
+      setTimeout(function(){
+        var a=findA(id);
+        var body=$('apBody'); if(!body||!a) return;
+        body.querySelectorAll('.ap-ribbon').forEach(function(n){ n.remove(); });
+        body.style.position='relative';
+        var rh=ribbonHTML(a,true);
+        if(rh) body.insertAdjacentHTML('afterbegin', rh);
+        // badges near title
+        var h1=body.querySelector('.ap-head h1');
+        if(h1){
+          var wrap=h1.parentNode;
+          var old=wrap.querySelector('.v4-badges'); if(old) old.remove();
+          var b=badgeHTML(a);
+          if(b){
+            var d=document.createElement('div'); d.className='v4-badges'; d.style.marginTop='6px'; d.innerHTML=b;
+            wrap.appendChild(d);
+          }
+        }
+      },30);
+      return r;
+    };
+  }
+
+  /* Admin toggles for editors/admin pick */
+  window.admToggleEditors=function(id){
+    var a=findA(id); if(!a) return;
+    var next=!a.editorsChoice;
+    if(typeof admUpdate==='function') admUpdate(id,{editorsChoice:next}, next?T('تم: اختيار المحررين',"Editors' choice on"):T('أُزيل اختيار المحررين','Removed'));
+    else if(window.db) db.collection('apps').doc(id).update({editorsChoice:next}).then(function(){ a.editorsChoice=next; if(typeof filterApps==='function') filterApps(); });
+  };
+  window.admToggleAdminPick=function(id){
+    var a=findA(id); if(!a) return;
+    var next=!a.adminPick;
+    if(typeof admUpdate==='function') admUpdate(id,{adminPick:next}, next?T('تم: اختيار الإدارة','Admin pick on'):T('أُزيل اختيار الإدارة','Removed'));
+    else if(window.db) db.collection('apps').doc(id).update({adminPick:next}).then(function(){ a.adminPick=next; if(typeof filterApps==='function') filterApps(); });
+  };
+  window.devToggleFeatured=function(id){
+    var a=findA(id); if(!a) return;
+    var u=auth.currentUser; if(!u) return;
+    if(a.ownerUid!==u.uid && a.devId!==u.uid && !(typeof isAdmin==='function'&&isAdmin())) return;
+    var next=!a.featured;
+    db.collection('apps').doc(id).update({featured:next}).then(function(){
+      a.featured=next;
+      if(typeof filterApps==='function') filterApps();
+      if(typeof loadDeveloperApps==='function'&&auth.currentUser) loadDeveloperApps(auth.currentUser);
+      if(typeof showToast==='function') showToast(next?T('شريط مميز مفعّل','Featured ribbon on'):T('أُزيل الشريط','Ribbon removed'));
+    }).catch(function(e){ if(typeof showToast==='function') showToast(e.message||'error'); });
+  };
+
+  // Inject admin action buttons when admin list renders
+  function injectAdminBtns(){
+    document.querySelectorAll('.adm-act').forEach(function(act){
+      if(act.dataset.rib) return;
+      var row=act.closest('.adm-row'); if(!row) return;
+      var btn=row.querySelector('[onclick*="admSuspend"]');
+      if(!btn) return;
+      var m=/admSuspend\('([^']+)'/.exec(btn.getAttribute('onclick')||'');
+      if(!m) return;
+      act.dataset.rib='1';
+      var id=m[1];
+      var a=findA(id);
+      var b1=document.createElement('button');
+      b1.className='btn btn-outline'; b1.title=T('اختيار المحررين',"Editors' choice");
+      b1.innerHTML='🥇';
+      b1.onclick=function(){ admToggleEditors(id); };
+      var b2=document.createElement('button');
+      b2.className='btn btn-outline'; b2.title=T('اختيار الإدارة','Admin pick');
+      b2.innerHTML='<i class="fa-solid fa-crown" style="color:#c4b5fd"></i>';
+      b2.onclick=function(){ admToggleAdminPick(id); };
+      act.insertBefore(b2, act.firstChild);
+      act.insertBefore(b1, act.firstChild);
+    });
+  }
+  setInterval(injectAdminBtns, 1500);
+
+  // Developer manage: featured toggle on manage rows
+  function injectDevFeatured(){
+    document.querySelectorAll('.tile-mg,.row-mg').forEach(function(mg){
+      if(mg.dataset.feat) return;
+      var btn=mg.querySelector('[onclick*="editApp"]');
+      if(!btn) return;
+      var m=/editApp\('([^']+)'/.exec(btn.getAttribute('onclick')||'');
+      if(!m) return;
+      mg.dataset.feat='1';
+      var id=m[1];
+      var b=document.createElement('button');
+      b.className='btn btn-outline btn-icon btn-sm';
+      b.title=T('شريط مميز','Featured ribbon');
+      b.innerHTML='<i class="fa-solid fa-award" style="color:#fbbf24"></i>';
+      b.onclick=function(ev){ ev.stopPropagation(); devToggleFeatured(id); };
+      mg.appendChild(b);
+    });
+  }
+  setInterval(injectDevFeatured, 1500);
+
+  console.info('[AMGZRNT] V4 ribbons ready');
+})();
+</script>
+
+
+<style id="v4-search-ui">
+#searchUI,#searchResultsUI{
+  position:fixed;inset:0;z-index:360;display:flex;flex-direction:column;
+  background:#05050a;color:#e5e7eb;
+  transform:translateY(105%);
+  transition:transform .42s cubic-bezier(.22,1,.36,1);
+  pointer-events:none;
+}
+body.light #searchUI, body.light #searchResultsUI{
+  background:#f5f4fb;color:#1e1b2e;
+}
+#searchUI.on,#searchResultsUI.on{transform:translateY(0);pointer-events:auto}
+#searchResultsUI{z-index:370}
+.su-top{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px calc(10px + env(safe-area-inset-top,0px));
+  padding-top:calc(12px + env(safe-area-inset-top,0px));
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(12,10,22,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+body.light .su-top{background:rgba(255,255,255,.92);border-bottom-color:rgba(30,27,46,.08)}
+.su-back{
+  width:44px;height:44px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.06);color:inherit;display:flex;align-items:center;justify-content:center;
+  font-size:1.05rem;cursor:pointer;flex-shrink:0;
+}
+body.light .su-back{border-color:rgba(30,27,46,.1);background:rgba(30,27,46,.05)}
+.su-bar-wrap{flex:1;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:4px 4px 4px 12px}
+body.light .su-bar-wrap{background:rgba(30,27,46,.05);border-color:rgba(30,27,46,.1)}
+.su-bar-wrap input{
+  flex:1;border:0;background:transparent;color:inherit;font:600 .95rem inherit;outline:none;min-width:0;
+  padding:10px 4px;
+}
+.su-bar-wrap input::placeholder{color:#9ca3af;font-weight:500}
+body.light .su-bar-wrap input::placeholder{color:#6b6880}
+.su-go{
+  width:42px;height:42px;border-radius:13px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,#7c3aed,#4c1d95);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.su-body{flex:1;overflow-y:auto;padding:14px 14px 100px;-webkit-overflow-scrolling:touch}
+.su-sec{font-size:.78rem;font-weight:800;color:#9ca3af;margin:6px 2px 10px;letter-spacing:.02em}
+body.light .su-sec{color:#6b6880}
+.su-history{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.su-chip{
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);
+  color:inherit;border-radius:999px;padding:8px 12px;font:600 .82rem inherit;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+}
+body.light .su-chip{border-color:rgba(30,27,46,.1);background:rgba(30,27,46,.04)}
+.su-chip i{opacity:.7;font-size:.75rem}
+.su-list{display:flex;flex-direction:column;gap:10px}
+.su-item{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:12px;border-radius:18px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);cursor:pointer;text-align:start;
+  transition:background .2s,transform .15s;
+}
+body.light .su-item{background:#fff;border-color:rgba(30,27,46,.08);box-shadow:0 4px 14px rgba(30,27,46,.06)}
+.su-item:active{transform:scale(.985)}
+.su-ico{
+  width:52px;height:52px;border-radius:15px;flex-shrink:0;object-fit:cover;
+  background:rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.su-ico img{width:100%;height:100%;object-fit:cover;display:block}
+.su-meta{flex:1;min-width:0}
+.su-meta b{display:block;font-size:.98rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:inherit}
+.su-meta small{display:block;color:#9ca3af;font-size:.8rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body.light .su-meta small{color:#6b6880}
+.su-empty{text-align:center;padding:40px 16px;color:#9ca3af}
+.su-empty i{font-size:2rem;margin-bottom:10px;opacity:.7}
+.su-title{font-size:1.05rem;font-weight:900;margin:0 0 12px}
+</style>
+<div id="searchUI" aria-hidden="true">
+  <div class="su-top">
+    <button type="button" class="su-back" id="suClose" aria-label="back"><i class="fa-solid fa-arrow-right"></i></button>
+    <div class="su-bar-wrap">
+      <input type="search" id="suInput" placeholder="ابحث عن التطبيقات..." autocomplete="off" enterkeyhint="search">
+      <button type="button" class="su-go" id="suGo" aria-label="search"><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+  </div>
+  <div class="su-body" id="suBody"></div>
+</div>
+<div id="searchResultsUI" aria-hidden="true">
+  <div class="su-top">
+    <button type="button" class="su-back" id="srBack" aria-label="back"><i class="fa-solid fa-arrow-right"></i></button>
+    <div class="su-title" id="srTitle" style="flex:1;margin:0">نتائج البحث</div>
+  </div>
+  <div class="su-body" id="srBody"></div>
+</div>
+<script id="v4-search-ui-js">
+(function(){
+  'use strict';
+  var HIST_KEY='amgz-search-hist';
+  function T(a,e){ try{ return (typeof isEn==='function'?isEn():document.body.classList.contains('en'))?e:a; }catch(x){ return a; } }
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+  function apps(){ return window.allApps || []; }
+  function iconOf(a){
+    try{
+      if(a.icon) return a.icon;
+      var h='';
+      try{ h=new URL(a.url).hostname; }catch(e){}
+      return h ? ('https://www.google.com/s2/favicons?sz=128&domain='+h) : '';
+    }catch(e){ return ''; }
+  }
+  function nameOf(a){
+    try{
+      if(typeof nm==='function') return nm(a);
+      var en=document.body.classList.contains('en');
+      return (en && a.nameEn) ? a.nameEn : (a.nameAr || a.name || '');
+    }catch(e){ return a.name || ''; }
+  }
+  function norm(s){ return String(s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').trim(); }
+  function scoreApp(a,q){
+    var n=norm(nameOf(a));
+    var n2=norm(a.nameEn||'');
+    var n3=norm(a.nameAr||a.name||'');
+    var d=norm(a.description||'')+' '+norm(a.descriptionAr||'')+' '+norm(a.devName||'');
+    var qq=norm(q);
+    if(!qq) return 0;
+    if(n===qq || n2===qq || n3===qq) return 100;
+    if(n.indexOf(qq)===0 || n2.indexOf(qq)===0 || n3.indexOf(qq)===0) return 90;
+    if(n.indexOf(qq)>=0 || n2.indexOf(qq)>=0 || n3.indexOf(qq)>=0) return 70;
+    if(d.indexOf(qq)>=0) return 40;
+    // fuzzy: all chars in order
+    var i=0; for(var c=0;c<n.length && i<qq.length;c++){ if(n[c]===qq[i]) i++; }
+    if(i===qq.length) return 25;
+    return 0;
+  }
+  function searchApps(q, limit){
+    q=(q||'').trim(); if(!q) return [];
+    var list=apps().filter(function(a){ return a && !a.suspended; });
+    var scored=list.map(function(a){ return {a:a,s:scoreApp(a,q)}; }).filter(function(x){ return x.s>0; });
+    scored.sort(function(x,y){ return y.s-x.s; });
+    return scored.slice(0, limit||80).map(function(x){ return x.a; });
+  }
+  function suggestions(q){
+    var hits=searchApps(q, 12);
+    if(hits.length) return hits;
+    // nearby: first letters / partial
+    var qq=norm(q);
+    if(qq.length<1) return [];
+    return apps().filter(function(a){ return !a.suspended; }).map(function(a){
+      var n=norm(nameOf(a));
+      var dist=0;
+      // simple: shared prefix length
+      var p=0; while(p<n.length && p<qq.length && n[p]===qq[p]) p++;
+      return {a:a,s:p};
+    }).filter(function(x){ return x.s>=1; }).sort(function(x,y){ return y.s-x.s; }).slice(0,8).map(function(x){ return x.a; });
+  }
+  function histRead(){
+    try{ return JSON.parse(localStorage.getItem(HIST_KEY)||'[]'); }catch(e){ return []; }
+  }
+  function histAdd(q){
+    q=(q||'').trim(); if(!q) return;
+    var h=histRead().filter(function(x){ return x!==q; });
+    h.unshift(q); if(h.length>12) h=h.slice(0,12);
+    try{ localStorage.setItem(HIST_KEY, JSON.stringify(h)); }catch(e){}
+  }
+  function histClear(){
+    try{ localStorage.removeItem(HIST_KEY); }catch(e){}
+  }
+  function itemHTML(a){
+    var ic=iconOf(a);
+    var name=esc(nameOf(a));
+    var sub=esc((a.devName||'') + (a.category ? ' · '+(a.category) : ''));
+    return '<button type="button" class="su-item" data-id="'+esc(a.id)+'">'+
+      '<span class="su-ico">'+(ic?'<img src="'+esc(ic)+'" alt="" referrerpolicy="no-referrer" onerror="this.remove()">':'<i class="fa-solid fa-cube"></i>')+'</span>'+
+      '<span class="su-meta"><b>'+name+'</b><small>'+sub+'</small></span>'+
+      '<i class="fa-solid fa-chevron-left" style="opacity:.35"></i></button>';
+  }
+  function renderHome(q){
+    var body=$('suBody'); if(!body) return;
+    q=(q||'').trim();
+    var html='';
+    if(!q){
+      var h=histRead();
+      html+='<div class="su-sec">'+T('عمليات البحث الأخيرة','Recent searches')+'</div>';
+      if(!h.length) html+='<div class="su-empty"><i class="fa-solid fa-magnifying-glass"></i><p>'+T('ابدأ بكتابة اسم التطبيق','Start typing an app name')+'</p></div>';
+      else {
+        html+='<div class="su-history">'+h.map(function(x){
+          return '<button type="button" class="su-chip" data-q="'+esc(x)+'"><i class="fa-solid fa-clock-rotate-left"></i>'+esc(x)+'</button>';
+        }).join('')+'<button type="button" class="su-chip" id="suHistClear"><i class="fa-solid fa-trash"></i>'+T('مسح','Clear')+'</button></div>';
+      }
+      // show popular/latest as suggestions
+      var latest=apps().filter(function(a){return !a.suspended;}).slice(0,10);
+      if(latest.length){
+        html+='<div class="su-sec">'+T('مقترحات','Suggestions')+'</div><div class="su-list">'+latest.map(itemHTML).join('')+'</div>';
+      }
+    } else {
+      var hits=searchApps(q, 20);
+      if(hits.length){
+        html+='<div class="su-sec">'+T('نتائج سريعة','Quick results')+' · '+hits.length+'</div><div class="su-list">'+hits.map(itemHTML).join('')+'</div>';
+      } else {
+        var sug=suggestions(q);
+        html+='<div class="su-empty"><i class="fa-solid fa-magnifying-glass"></i><p>'+T('لا توجد نتائج مطابقة','No exact matches')+'</p></div>';
+        if(sug.length){
+          html+='<div class="su-sec">'+T('اقتراحات قريبة','Nearby suggestions')+'</div><div class="su-list">'+sug.map(itemHTML).join('')+'</div>';
+        }
+      }
+    }
+    body.innerHTML=html;
+  }
+  function openResults(q){
+    q=(q||'').trim(); if(!q) return;
+    histAdd(q);
+    var hits=searchApps(q, 100);
+    var body=$('srBody'), title=$('srTitle'), panel=$('searchResultsUI');
+    if(!body||!panel) return;
+    title.textContent = hits.length ? (T('نتائج','Results')+' «'+q+'» · '+hits.length) : (T('لا نتائج لـ','No results for')+' «'+q+'»');
+    if(!hits.length){
+      var sug=suggestions(q);
+      body.innerHTML = '<div class="su-empty"><i class="fa-solid fa-box-open"></i><p>'+T('لم نجد تطبيقات بهذا الاسم','No apps with this name')+'</p></div>'+
+        (sug.length ? ('<div class="su-sec">'+T('اقتراحات قريبة','Nearby suggestions')+'</div><div class="su-list">'+sug.map(itemHTML).join('')+'</div>') : '');
+    } else {
+      body.innerHTML = '<div class="su-list">'+hits.map(itemHTML).join('')+'</div>';
+    }
+    panel.classList.add('on'); panel.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function closeResults(){
+    var panel=$('searchResultsUI');
+    if(panel){ panel.classList.remove('on'); panel.setAttribute('aria-hidden','true'); }
+  }
+  window.openSearchUI=function(){
+    var ui=$('searchUI'); if(!ui) return;
+    ui.classList.add('on'); ui.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    var inp=$('suInput');
+    if(inp){
+      if(!inp.value) renderHome('');
+      setTimeout(function(){ inp.focus(); }, 350);
+    }
+  };
+  window.closeSearchUI=function(){
+    closeResults();
+    var ui=$('searchUI');
+    if(ui){ ui.classList.remove('on'); ui.setAttribute('aria-hidden','true'); }
+    if(!document.querySelector('.app-page.active')) document.body.style.overflow='';
+  };
+
+  // events
+  document.addEventListener('click', function(e){
+    if(e.target.closest('#suClose')) { window.closeSearchUI(); return; }
+    if(e.target.closest('#srBack')) { closeResults(); return; }
+    if(e.target.closest('#suGo')) {
+      var q=(($('suInput')||{}).value||'').trim();
+      if(q) openResults(q);
+      return;
+    }
+    if(e.target.closest('#suHistClear')) { histClear(); renderHome(''); return; }
+    var chip=e.target.closest('.su-chip[data-q]');
+    if(chip){
+      var q=chip.getAttribute('data-q')||'';
+      var inp=$('suInput'); if(inp) inp.value=q;
+      renderHome(q);
+      openResults(q);
+      return;
+    }
+    var item=e.target.closest('.su-item[data-id]');
+    if(item){
+      var id=item.getAttribute('data-id');
+      // keep search under, open app
+      if(typeof openAppPage==='function') openAppPage(id);
+      return;
+    }
+  });
+  var inpTimer=null;
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.id==='suInput'){
+      clearTimeout(inpTimer);
+      var v=e.target.value;
+      inpTimer=setTimeout(function(){ renderHome(v); }, 120);
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){
+      if($('searchResultsUI') && $('searchResultsUI').classList.contains('on')) { closeResults(); e.preventDefault(); return; }
+      if($('searchUI') && $('searchUI').classList.contains('on')) { window.closeSearchUI(); e.preventDefault(); }
+    }
+    if(e.key==='Enter' && e.target && e.target.id==='suInput'){
+      var q=e.target.value.trim();
+      if(q) openResults(q);
+    }
+  });
+
+  console.info('[AMGZRNT] V4 full search UI ready');
+})();
+</script>
+
 </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
     var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
@@ -3012,21 +3554,22 @@ body.hide-ads .ads-scroll, body.hide-ads .ad-banner, body.hide-ads .ad-banner2, 
     if (x.type === 'page' || x.type === 'img') {
       var pageUrl = (x.url || x.t || '').trim();
       if (!pageUrl) return '';
-      if (!/^https?:\/\//i.test(pageUrl)) pageUrl = 'https://' + pageUrl;
+      if (!/^https?:\/\//i.test(pageUrl)) pageUrl = 'https://' + pageUrl.replace(/^\/\//, '');
       var vp = (x.device === 'desktop') ? 1280 : 390;
       var w = (x.device === 'desktop') ? 960 : 720;
-      var src = 'https://image.thum.io/get/width/' + w + '/crop/1280/noanimate/wait/3/viewportWidth/' + vp + '/' + encodeURIComponent(pageUrl);
+      var src = 'https://image.thum.io/get/width/' + w + '/crop/1280/noanimate/wait/2/viewportWidth/' + vp + '/' + encodeURI(pageUrl);
       return '<img class="shot-img" src="' + esc(src) + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">';
     }
-    return '<div class="shot-slide" style="background:' + BGS[x.bg || 0][1] + '"><span style="font-size:' + (x.s || 13) + 'cqw;color:' + esc(x.c || '#fff') + ';font-weight:' + (x.b ? 800 : 500) + '">' + escHTML(x.t || '') + '</span></div>';
+    var bg = (typeof BGS !== 'undefined' && BGS[x.bg || 0]) ? BGS[x.bg || 0][1] : 'linear-gradient(135deg,#7c3aed,#4c1d95)';
+    return '<div class="shot-slide" style="background:' + bg + '"><span style="font-size:' + (x.s || 13) + 'cqw;color:' + esc(x.c || '#fff') + ';font-weight:' + (x.b ? 800 : 500) + '">' + escHTML(x.t || '') + '</span></div>';
   }
   function autoShots(a) {
-    var base = (a.url || '').replace(/\s/g, '');
-    if (!/^https?:\/\//i.test(base)) base = 'https://' + base;
-    var u = encodeURIComponent(base);
-    // Mobile first, then desktop — higher width, wait for page paint, no animate
-    return '<img class="shot-img" src="https://image.thum.io/get/width/720/crop/1280/noanimate/wait/3/viewportWidth/390/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">' +
-      '<img class="shot-img" src="https://image.thum.io/get/width/960/crop/1280/noanimate/wait/3/viewportWidth/1280/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">';
+    var base = ((a && a.url) || '').trim();
+    if (!base) return '';
+    if (!/^https?:\/\//i.test(base)) base = 'https://' + base.replace(/^\/\//, '');
+    var u = encodeURI(base);
+    return '<img class="shot-img" src="https://image.thum.io/get/width/720/crop/1280/noanimate/wait/2/viewportWidth/390/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">' +
+      '<img class="shot-img" src="https://image.thum.io/get/width/960/crop/1280/noanimate/wait/2/viewportWidth/1280/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">';
   }
 
   /* ---------- visibility + lists ---------- */
@@ -3146,7 +3689,7 @@ body.hide-ads .ads-scroll, body.hide-ads .ad-banner, body.hide-ads .ad-banner2, 
       '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><button type="button" class="ap-dev" onclick="openDeveloperFromApp(\'' + uid + '\')">' + escHTML(a.devName || '') + '</button></div></div>' +
       '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
       '<div class="ap-actions"><button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button>' +
-      '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
+      '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i><span> ' + T('معاينة', 'Preview') + ' </span></button></div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
       '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
@@ -3304,7 +3847,7 @@ body.hide-ads .ads-scroll, body.hide-ads .ad-banner, body.hide-ads .ad-banner2, 
   bn.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return; var k = b.dataset.k; bnSet(k);
     if (k === 'home') { sb.value = ''; sbWrap.classList.remove('has'); var all = document.querySelector('.chip[data-cat="all"]'); if (all) setCategory('all', all); else filterApps(); ['appPage', 'devPage', 'admPage'].forEach(function (i) { $(i).classList.remove('active'); }); lock(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    else if (k === 'search') { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { sb.focus(); }, 450); }
+    else if (k === 'search') { if (typeof window.openSearchUI==='function') window.openSearchUI(); else { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { sb.focus(); }, 450); } }
     else if (k === 'cats') { if (typeof window.openCatsPage === 'function') window.openCatsPage(); }
     else if (k === 'me') {
       var u = auth.currentUser;
@@ -4770,20 +5313,33 @@ html body .install-done .wv-svg { display:none!important; }
     if(!id){ var m=/startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openAppSheet\('([^']+)'/.exec(t.getAttribute('onclick')||''); if(m) id=m[1]; }
     if(!id) return;
     var a=findA(id);
-    if(a && !canInstallApp(a)){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(a); }
+    if(!a) return;
+    var isPrev = (t.getAttribute('onclick')||'').indexOf('openPreview')>=0;
+    if(isPrev){
+      if(a.suspended){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(a); }
+      return; /* preview allowed for live & under-dev */
+    }
+    if(!canInstallApp(a)){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(a); }
   },true);
 
   function lockActions(a){
     var actions=document.querySelector('#apBody .ap-actions');
     if(!actions) return;
     var reason=blockReason(a);
-    actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.85;flex:1;gap:8px"><i class="fa-solid fa-ban"></i> <span>'+T('لا يمكن تثبيت التطبيق','Cannot install app')+'</span></button>';
-    if(reason){
-      var note=document.createElement('div');
-      note.className='adm-note v4-ban-note';
-      note.innerHTML='<i class="fa-solid fa-ban"></i><div><b>'+T('التطبيق موقوف','App suspended')+'</b><p>'+reason+'</p></div>';
-      var body=$('apBody');
-      if(body && !body.querySelector('.v4-ban-note')) body.insertBefore(note, body.firstChild);
+    var id = a && a.id ? String(a.id) : '';
+    if (a && a.suspended) {
+      actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.85;flex:1;gap:8px"><i class="fa-solid fa-ban"></i> <span>'+T('لا يمكن تثبيت التطبيق','Cannot install app')+'</span></button>';
+      if(reason){
+        var note=document.createElement('div');
+        note.className='adm-note v4-ban-note';
+        note.innerHTML='<i class="fa-solid fa-ban"></i><div><b>'+T('التطبيق موقوف','App suspended')+'</b><p>'+reason+'</p></div>';
+        var body=$('apBody');
+        if(body && !body.querySelector('.v4-ban-note')) body.insertBefore(note, body.firstChild);
+      }
+    } else {
+      /* under-dev: disable install only, keep Preview */
+      actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.85;flex:1;gap:8px"><i class="fa-solid fa-ban"></i> <span>'+T('لا يمكن تثبيت التطبيق','Cannot install app')+'</span></button>'+
+        '<button class="btn btn-outline" onclick="openPreview(\''+id+'\')"><i class="fa-solid fa-mobile-screen-button"></i> <span>'+T('معاينة','Preview')+'</span></button>';
     }
   }
   function showAdminWarning(a){
