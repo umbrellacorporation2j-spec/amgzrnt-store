@@ -651,11 +651,96 @@
     body.no-glass .drawer-overlay,
     body.no-glass .sheet-overlay,
     body.no-glass .bottom-sheet,
-    body.no-glass .toast {
+    body.no-glass .toast,
+    body.no-glass .bnav,
+    body.no-glass .ap-bar,
+    body.no-glass .app-card,
+    body.no-glass .app-row,
+    body.no-glass .app-tile,
+    body.no-glass .search-box input,
+    body.no-glass .chip {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
     }
     body.no-glass .orb { display: none; }
+    body.no-glass .bnav { background: var(--card) !important; }
+    body.no-glass .app-card,
+    body.no-glass .app-row,
+    body.no-glass .app-tile {
+      background: var(--card) !important;
+      border-color: var(--border) !important;
+    }
+    body.no-glass .search-box input { background: var(--card) !important; }
+
+    /* Glass ON — فرق واضح: شفافية + ضبابية قوية */
+    body:not(.no-glass) nav {
+      background: rgba(8,6,18,.55) !important;
+      backdrop-filter: blur(22px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(180%) !important;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    body:not(.no-glass) .bnav {
+      background: rgba(18,15,34,.55) !important;
+      backdrop-filter: blur(24px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+      border: 1.5px solid rgba(167,139,250,.45) !important;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    body:not(.no-glass) .drawer {
+      background: rgba(15,12,28,.62) !important;
+      backdrop-filter: blur(28px) saturate(170%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(170%) !important;
+    }
+    body:not(.no-glass) .bottom-sheet,
+    body:not(.no-glass) .settings-sheet {
+      background: rgba(15,12,28,.72) !important;
+      backdrop-filter: blur(26px) saturate(170%) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(170%) !important;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    body:not(.no-glass) .app-card,
+    body:not(.no-glass) .app-row,
+    body:not(.no-glass) .app-tile {
+      background: rgba(255,255,255,.06) !important;
+      backdrop-filter: blur(14px) saturate(150%) !important;
+      -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
+      border: 1px solid rgba(255,255,255,.1) !important;
+      box-shadow: 0 8px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    body:not(.no-glass) .search-box input {
+      background: rgba(255,255,255,.07) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border-color: rgba(255,255,255,.12) !important;
+    }
+    body:not(.no-glass) .chip {
+      background: rgba(255,255,255,.06) !important;
+      backdrop-filter: blur(10px) !important;
+      -webkit-backdrop-filter: blur(10px) !important;
+      border-color: rgba(255,255,255,.1) !important;
+    }
+    body:not(.no-glass) .ap-bar {
+      background: rgba(8,6,18,.5) !important;
+      backdrop-filter: blur(18px) saturate(160%) !important;
+      -webkit-backdrop-filter: blur(18px) saturate(160%) !important;
+    }
+    body:not(.no-glass) .toast {
+      background: rgba(21,16,40,.65) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+    }
+    body.light:not(.no-glass) nav { background: rgba(245,244,251,.65) !important; }
+    body.light:not(.no-glass) .bnav { background: rgba(255,255,255,.7) !important; }
+    body.light:not(.no-glass) .app-card,
+    body.light:not(.no-glass) .app-row,
+    body.light:not(.no-glass) .app-tile {
+      background: rgba(255,255,255,.55) !important;
+      border-color: rgba(124,58,237,.12) !important;
+    }
+    body.light:not(.no-glass) .drawer,
+    body.light:not(.no-glass) .bottom-sheet {
+      background: rgba(255,255,255,.72) !important;
+    }
 
     .settings-btn:hover i { transform: rotate(60deg); }
     .settings-sheet {
@@ -1106,7 +1191,7 @@ body{padding-bottom:110px}
         <div class="form-group">
           <label data-lang="ar">رابط الأيقونة</label>
           <label data-lang="en">Icon URL</label>
-          <input type="url" id="appIcon" placeholder="https://.../icon-192.png">
+          <input type="url" id="appIcon" placeholder="https://.../icon-192.png" oninput="if(window.previewCustomIcon)previewCustomIcon('appIcon','iconPreviewCustom')" onblur="this.value=(window.normalizeIconUrl&&normalizeIconUrl(this.value))||this.value"><div id="iconPreviewCustom" class="icon-preview" style="margin-top:8px"></div>
         </div>
         <div class="form-group">
           <label data-lang="ar">حالة التطبيق</label>
@@ -1282,7 +1367,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V3.9</strong>
+      <strong class="version-number" dir="ltr">V4</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -1301,6 +1386,33 @@ body{padding-bottom:110px}
         <span data-lang="en">Light mode</span>
       </span>
       <span class="switch"><input type="checkbox" id="optLight" role="switch"><span class="track"></span></span>
+    </label>
+
+    <label class="setting-row" for="optMotion">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-wind"></i></span>
+        <span data-lang="ar">تقليل الحركة</span>
+        <span data-lang="en">Reduce motion</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optMotion" role="switch"><span class="track"></span></span>
+    </label>
+
+    <label class="setting-row" for="optCompact">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-table-cells"></i></span>
+        <span data-lang="ar">بطاقات مضغوطة</span>
+        <span data-lang="en">Compact cards</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optCompact" role="switch"><span class="track"></span></span>
+    </label>
+
+    <label class="setting-row" for="optHideAds">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-bullhorn"></i></span>
+        <span data-lang="ar">إخفاء الإعلانات</span>
+        <span data-lang="en">Hide ads</span>
+      </span>
+      <span class="switch"><input type="checkbox" id="optHideAds" role="switch"><span class="track"></span></span>
     </label>
 
     <button class="btn btn-primary btn-block settings-save" id="settingsSave" type="button">
@@ -2104,9 +2216,19 @@ body{padding-bottom:110px}
 
       saveBtn.addEventListener('click', function () {
         var s = { glass: optGlass.checked, light: optLight.checked };
+        try {
+          var prev = JSON.parse(localStorage.getItem(KEY) || '{}');
+          s.motion = !!(document.getElementById('optMotion') && document.getElementById('optMotion').checked);
+          s.compact = !!(document.getElementById('optCompact') && document.getElementById('optCompact').checked);
+          s.hideAds = !!(document.getElementById('optHideAds') && document.getElementById('optHideAds').checked);
+          if (typeof prev === 'object' && prev) { /* keep any other keys */ }
+        } catch (e) {}
         var ok = true;
-        try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { ok = false; }
+        try { localStorage.setItem(KEY, JSON.stringify(s)); localStorage.setItem('amgz-settings', JSON.stringify(s)); } catch (e) { ok = false; }
         applySettings(s);
+        document.body.classList.toggle('reduce-motion', !!s.motion);
+        document.body.classList.toggle('compact-cards', !!s.compact);
+        document.body.classList.toggle('hide-ads', !!s.hideAds);
         closeSettings();
         var en = body.classList.contains('en');
         notify(ok ? (en ? 'Settings saved successfully' : 'تم حفظ الإعدادات بنجاح')
@@ -2585,6 +2707,81 @@ body{padding-bottom:110px}
 
 
 
+
+<style id="v4-polish">
+/* Long-press / save image protection */
+img, .shot-img, .ap-shots img, .app-icon, .tile-icon, .row-icon, .ico-wrap, .shot-slide {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  pointer-events: auto;
+}
+.ap-shots, .ads-scroll { -webkit-touch-callout: none; }
+.shot-img { width:100%; border-radius:22px; display:block; object-fit:cover; background:#0a0a12; }
+.ap-shots { display:flex; gap:12px; overflow-x:auto; padding:4px 0 12px; scroll-snap-type:x mandatory; }
+.ap-shots > * { flex:0 0 min(78%,340px); scroll-snap-align:start; border-radius:22px; overflow:hidden; }
+.v4-warn-note, .v4-ban-note { margin-bottom:14px; border-radius:18px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; }
+body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after {
+  animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important;
+}
+body.compact-cards .app-tile { padding:10px; }
+body.compact-cards .app-row { padding:10px 12px; }
+body.hide-ads .ads-scroll, body.hide-ads .ad-banner, body.hide-ads .ad-banner2, body.hide-ads .ad-item { display:none !important; }
+.icon-preview img { width:56px; height:56px; border-radius:14px; object-fit:cover; border:1px solid var(--border); }
+.slrow { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0; padding:10px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); }
+.slrow .st { flex:1; min-width:140px; }
+</style>
+<script id="v4-polish-js">
+(function(){
+  function $(id){ return document.getElementById(id); }
+  // Icon live preview
+  window.previewCustomIcon = function(inputId, boxId){
+    var inp = $(inputId), box = $(boxId); if(!inp||!box) return;
+    var url = (inp.value||'').trim();
+    if(!url){ box.innerHTML=''; return; }
+    if(!/^https?:\/\//i.test(url) && url.indexOf('data:')!==0) url = 'https://' + url.replace(/^\/\//,'');
+    box.innerHTML = '<img src="'+url.replace(/"/g,'&quot;')+'" alt="" referrerpolicy="no-referrer" onerror="this.style.opacity=.3">';
+  };
+  window.normalizeIconUrl = function(v){
+    v=(v||'').trim(); if(!v) return '';
+    if(/^https?:\/\//i.test(v) || v.indexOf('data:')===0) return v;
+    return 'https://' + v.replace(/^\/\//,'');
+  };
+  // Block long-press context menu on images
+  document.addEventListener('contextmenu', function(e){
+    if (e.target && (e.target.tagName==='IMG' || e.target.closest('.ap-shots,.shot-slide,.ico-wrap'))) {
+      e.preventDefault();
+    }
+  }, true);
+  // Settings extras
+  function applyExtras(){
+    try {
+      var s = JSON.parse(localStorage.getItem('amgz-settings')||'{}');
+      document.body.classList.toggle('reduce-motion', !!s.motion);
+      document.body.classList.toggle('compact-cards', !!s.compact);
+      document.body.classList.toggle('hide-ads', !!s.hideAds);
+      var m=$('optMotion'), c=$('optCompact'), h=$('optHideAds');
+      if(m) m.checked=!!s.motion; if(c) c.checked=!!s.compact; if(h) h.checked=!!s.hideAds;
+    } catch(e){}
+  }
+  applyExtras();
+  var save = $('settingsSave');
+  if (save) {
+    save.addEventListener('click', function(){
+      try {
+        var s = JSON.parse(localStorage.getItem('amgz-settings')||'{}');
+        s.motion = !!( $('optMotion') && $('optMotion').checked );
+        s.compact = !!( $('optCompact') && $('optCompact').checked );
+        s.hideAds = !!( $('optHideAds') && $('optHideAds').checked );
+        localStorage.setItem('amgz-settings', JSON.stringify(s));
+        applyExtras();
+      } catch(e){}
+    });
+  }
+  console.info('[AMGZRNT] V4 polish: suspend-all, warn banner, no long-press, page slides');
+})();
+</script>
+
 </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
     var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
@@ -2771,39 +2968,65 @@ body{padding-bottom:110px}
   function mountSlides(box) {
     var list = [], auto = true;
     function draw() {
-      box.innerHTML = '<label class="chk"><input type="checkbox" class="sa"' + (auto ? ' checked' : '') + '> صور المعاينة تلقائياً من الموقع</label>' +
+      box.innerHTML = '<label class="chk"><input type="checkbox" class="sa"' + (auto ? ' checked' : '') + '> صور المعاينة تلقائياً من الموقع (جوال ثم كمبيوتر)</label>' +
         list.map(function (x, i) {
-          return '<div class="slrow" data-i="' + i + '"><input type="text" class="st" maxlength="80" value="' + esc(x.t) + '" placeholder="نص الشريحة"><select class="ss">' +
+          if (x.type === 'page') {
+            return '<div class="slrow" data-i="' + i + '" data-type="page"><span class="bdg" style="margin-inline-end:6px">صفحة</span>' +
+              '<input type="url" class="st" value="' + esc(x.url || x.t || '') + '" placeholder="https://موقع.com/صفحة">' +
+              '<select class="sdev"><option value="mobile"' + (x.device !== 'desktop' ? ' selected' : '') + '>جوال</option><option value="desktop"' + (x.device === 'desktop' ? ' selected' : '') + '>كمبيوتر</option></select>' +
+              '<button type="button" class="btn btn-outline btn-icon btn-sm sx"><i class="fa-solid fa-xmark"></i></button></div>';
+          }
+          return '<div class="slrow" data-i="' + i + '" data-type="text"><input type="text" class="st" maxlength="80" value="' + esc(x.t || '') + '" placeholder="نص الشريحة"><select class="ss">' +
             [['9', 'صغير'], ['13', 'وسط'], ['18', 'كبير'], ['24', 'ضخم']].map(function (o) { return '<option value="' + o[0] + '"' + (String(x.s) === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') +
-            '</select><input type="color" class="sc" value="' + x.c + '"><label class="chk"><input type="checkbox" class="sb"' + (x.b ? ' checked' : '') + '> غامق</label><select class="sg">' +
-            BGS.slice(0, 8).map(function (b, j) { return '<option value="' + j + '"' + (x.bg === j ? ' selected' : '') + '>' + b[0] + '</option>'; }).join('') +
+            '</select><input type="color" class="sc" value="' + (x.c || '#ffffff') + '"><label class="chk"><input type="checkbox" class="sb"' + (x.b ? ' checked' : '') + '> غامق</label><select class="sg">' +
+            BGS.slice(0, 8).map(function (b, j) { return '<option value="' + j + '"' + ((x.bg || 0) === j ? ' selected' : '') + '>' + b[0] + '</option>'; }).join('') +
             '</select><button type="button" class="btn btn-outline btn-icon btn-sm sx"><i class="fa-solid fa-xmark"></i></button></div>';
-        }).join('') + (list.length < 5 ? '<button type="button" class="btn btn-outline btn-sm sadd">+ شريحة نص</button>' : '');
+        }).join('') + (list.length < 5 ? '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button type="button" class="btn btn-outline btn-sm sadd">+ شريحة نص</button><button type="button" class="btn btn-outline btn-sm sadd-page">+ صفحة موقع (معاينة)</button></div>' : '');
     }
     function upd(e) {
       var t = e.target, row = t.closest('.slrow'); if (t.classList.contains('sa')) { auto = t.checked; return; } if (!row) return;
-      var x = list[+row.dataset.i];
-      if (t.classList.contains('st')) x.t = t.value; else if (t.classList.contains('ss')) x.s = +t.value;
-      else if (t.classList.contains('sc')) x.c = t.value; else if (t.classList.contains('sb')) x.b = t.checked; else if (t.classList.contains('sg')) x.bg = +t.value;
+      var x = list[+row.dataset.i]; if (!x) return;
+      if (t.classList.contains('st')) { if (x.type === 'page') { x.url = t.value; x.t = t.value; } else x.t = t.value; }
+      else if (t.classList.contains('ss')) x.s = +t.value;
+      else if (t.classList.contains('sc')) x.c = t.value;
+      else if (t.classList.contains('sb')) x.b = t.checked;
+      else if (t.classList.contains('sg')) x.bg = +t.value;
+      else if (t.classList.contains('sdev')) x.device = t.value;
     }
     box.addEventListener('input', upd); box.addEventListener('change', upd);
     box.addEventListener('click', function (e) {
-      if (e.target.closest('.sadd')) { list.push({ t: '', s: 13, c: '#ffffff', b: true, bg: list.length % 8 }); draw(); }
+      if (e.target.closest('.sadd-page')) { if (list.length < 5) { list.push({ type: 'page', url: '', t: '', device: 'mobile' }); draw(); } return; }
+      if (e.target.closest('.sadd')) { list.push({ type: 'text', t: '', s: 13, c: '#ffffff', b: true, bg: list.length % 8 }); draw(); return; }
       var x = e.target.closest('.sx'); if (x) { list.splice(+x.closest('.slrow').dataset.i, 1); draw(); }
     });
     draw();
     return {
-      get: function () { return { slides: list.filter(function (x) { return x.t.trim(); }).map(function (x) { return Object.assign({}, x); }), auto: auto }; },
+      get: function () { return { slides: list.filter(function (x) { return (x.type==='page' ? (x.url||x.t||'').trim() : (x.t||'').trim()); }).map(function (x) { return Object.assign({}, x); }), auto: auto }; },
       set: function (a) { list = (a && a.slides || []).map(function (x) { return Object.assign({}, x); }); auto = a ? a.autoShots !== false : true; draw(); }
     };
   }
   var cmps = { up: mountComposer($('cmpUp')), ed: mountComposer($('cmpEd')) };
   var sls = { up: mountSlides($('slUp')), ed: mountSlides($('slEd')) };
-  function slideHTML(x) { return '<div class="shot-slide" style="background:' + BGS[x.bg || 0][1] + '"><span style="font-size:' + x.s + 'cqw;color:' + esc(x.c) + ';font-weight:' + (x.b ? 800 : 500) + '">' + escHTML(x.t) + '</span></div>'; }
+  function slideHTML(x) {
+    if (!x) return '';
+    if (x.type === 'page' || x.type === 'img') {
+      var pageUrl = (x.url || x.t || '').trim();
+      if (!pageUrl) return '';
+      if (!/^https?:\/\//i.test(pageUrl)) pageUrl = 'https://' + pageUrl;
+      var vp = (x.device === 'desktop') ? 1280 : 390;
+      var w = (x.device === 'desktop') ? 960 : 720;
+      var src = 'https://image.thum.io/get/width/' + w + '/crop/1280/noanimate/wait/3/viewportWidth/' + vp + '/' + encodeURIComponent(pageUrl);
+      return '<img class="shot-img" src="' + esc(src) + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">';
+    }
+    return '<div class="shot-slide" style="background:' + BGS[x.bg || 0][1] + '"><span style="font-size:' + (x.s || 13) + 'cqw;color:' + esc(x.c || '#fff') + ';font-weight:' + (x.b ? 800 : 500) + '">' + escHTML(x.t || '') + '</span></div>';
+  }
   function autoShots(a) {
-    var u = encodeURI(a.url);
-    return '<img src="https://image.thum.io/get/viewportWidth/390/width/400/crop/760/noanimate/' + u + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
-      '<img src="https://image.thum.io/get/viewportWidth/820/width/560/crop/760/noanimate/' + u + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    var base = (a.url || '').replace(/\s/g, '');
+    if (!/^https?:\/\//i.test(base)) base = 'https://' + base;
+    var u = encodeURIComponent(base);
+    // Mobile first, then desktop — higher width, wait for page paint, no animate
+    return '<img class="shot-img" src="https://image.thum.io/get/width/720/crop/1280/noanimate/wait/3/viewportWidth/390/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">' +
+      '<img class="shot-img" src="https://image.thum.io/get/width/960/crop/1280/noanimate/wait/3/viewportWidth/1280/' + u + '" alt="" loading="lazy" draggable="false" onerror="this.style.display=\'none\'">';
   }
 
   /* ---------- visibility + lists ---------- */
@@ -4419,14 +4642,37 @@ html body .install-done .wv-svg { display:none!important; }
 #admPage{z-index:310}
 #catsPage{z-index:280}
 </style>
+
 <script id="v4-clean-js">
 (function(){
   'use strict';
   function T(a,e){ try{ return (typeof isEn==='function'?isEn():document.body.classList.contains('en')) ? e : a; }catch(x){ return a; } }
   function $(id){ return document.getElementById(id); }
   function findA(id){ try{ if(typeof findApp==='function'){ var a=findApp(id); if(a) return a; } }catch(e){} return (window.allApps||[]).find(function(x){return x&&String(x.id)===String(id);}); }
-  function mayAccess(a){ if(!a||!a.suspended) return true; try{ if(typeof isAdmin==='function'&&isAdmin()) return true; if(typeof canSee==='function'&&canSee(a)) return true; }catch(e){} return false; }
-  function blockMsg(){ if(typeof showToast==='function') showToast(T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.','You cannot download, open, or preview this app — suspended by admin.')); }
+  function isOwnerOrAdmin(a){
+    try{
+      if (typeof isAdmin==='function' && isAdmin()) return true;
+      var u = (typeof auth!=='undefined' && auth.currentUser) ? auth.currentUser : null;
+      if (u && a && (a.ownerUid===u.uid || a.devId===u.uid)) return true;
+    }catch(e){}
+    return false;
+  }
+  /* Block: suspended for public, OR under-development for public */
+  function canInstallApp(a){
+    if (!a) return false;
+    /* Suspended: NO ONE can install/open/preview — not even admin or developer */
+    if (a.suspended) return false;
+    /* Under development: only owner/admin may test */
+    if ((a.devStatus==='dev' || a.devStatus==='development') && !isOwnerOrAdmin(a)) return false;
+    return true;
+  }
+  function blockReason(a){
+    if (!a) return '';
+    if (a.suspended) return T('لا يمكن تثبيت التطبيق — تم إيقافه من الإدارة.','Cannot install this app — suspended by admin.');
+    if ((a.devStatus==='dev'||a.devStatus==='development') && !isOwnerOrAdmin(a)) return T('هذا التطبيق تحت التطوير — التثبيت غير متاح.','This app is under development — install unavailable.');
+    return '';
+  }
+  function blockMsg(a){ var m=blockReason(a); if(m && typeof showToast==='function') showToast(m); }
 
   var portal='user', sub='login';
   function syncAuthUI(){
@@ -4487,7 +4733,7 @@ html body .install-done .wv-svg { display:none!important; }
   ];
   function countCat(c){
     var list=window.allApps||[];
-    return list.filter(function(a){ return (c==='all'||(a.category||'other')===c) && (!a.suspended||mayAccess(a)); }).length;
+    return list.filter(function(a){ return (c==='all'||(a.category||'other')===c); }).length;
   }
   window.openCatsPage=function(){
     var page=$('catsPage'), body=$('catsBody'); if(!page||!body) return;
@@ -4516,15 +4762,40 @@ html body .install-done .wv-svg { display:none!important; }
     if(!document.querySelector('.app-page.active')) document.body.style.overflow='';
   };
 
+  /* Capture-phase block for install/preview */
   document.addEventListener('click',function(e){
-    var t=e.target.closest&&e.target.closest('[onclick*="startAppInstall"],[onclick*="openPreview"],.install-wave,#sheetInstallBtn');
+    var t=e.target.closest&&e.target.closest('[onclick*="startAppInstall"],[onclick*="openPreview"],.install-wave,#sheetInstallBtn,[onclick*="openAppSheet"]');
     if(!t) return;
     var id=t.getAttribute('data-app-id')||(window.selectedApp&&window.selectedApp.id);
-    if(!id){ var m=/startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||''); if(m) id=m[1]; }
+    if(!id){ var m=/startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openAppSheet\('([^']+)'/.exec(t.getAttribute('onclick')||''); if(m) id=m[1]; }
     if(!id) return;
     var a=findA(id);
-    if(a&&a.suspended&&!mayAccess(a)){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(); }
+    if(a && !canInstallApp(a)){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(a); }
   },true);
+
+  function lockActions(a){
+    var actions=document.querySelector('#apBody .ap-actions');
+    if(!actions) return;
+    var reason=blockReason(a);
+    actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.85;flex:1;gap:8px"><i class="fa-solid fa-ban"></i> <span>'+T('لا يمكن تثبيت التطبيق','Cannot install app')+'</span></button>';
+    if(reason){
+      var note=document.createElement('div');
+      note.className='adm-note v4-ban-note';
+      note.innerHTML='<i class="fa-solid fa-ban"></i><div><b>'+T('التطبيق موقوف','App suspended')+'</b><p>'+reason+'</p></div>';
+      var body=$('apBody');
+      if(body && !body.querySelector('.v4-ban-note')) body.insertBefore(note, body.firstChild);
+    }
+  }
+  function showAdminWarning(a){
+    if(!a || !a.adminNote) return;
+    var body=$('apBody'); if(!body) return;
+    if(body.querySelector('.v4-warn-note')) return;
+    var note=document.createElement('div');
+    note.className='adm-note v4-warn-note';
+    note.style.cssText='border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.12)';
+    note.innerHTML='<i class="fa-solid fa-triangle-exclamation" style="color:#fbbf24"></i><div><b>'+T('تحذير من الإدارة','Warning from admin')+'</b><p>'+String(a.adminNote).replace(/</g,'&lt;')+'</p></div>';
+    body.insertBefore(note, body.firstChild);
+  }
 
   var _oap=window.openAppPage;
   if(typeof _oap==='function'&&!_oap._v4c){
@@ -4532,21 +4803,35 @@ html body .install-done .wv-svg { display:none!important; }
       try{ closeCatsPage(); }catch(e){}
       var r=_oap.apply(this,arguments);
       var a=findA(id);
-      if(a&&a.suspended&&!mayAccess(a)){
-        setTimeout(function(){
-          var actions=document.querySelector('#apBody .ap-actions');
-          if(actions) actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.75;flex:1"><i class="fa-solid fa-ban"></i> '+T('لا يمكنك تنزيل أو فتح هذا التطبيق','You cannot download or open this app')+'</button>';
-        },0);
-      }
+      setTimeout(function(){
+        if(a) showAdminWarning(a);
+        if(a && !canInstallApp(a)) lockActions(a);
+      },0);
       return r;
     };
     window.openAppPage._v4c=true;
   }
 
+  /* ---- Autofill + translate to Arabic ---- */
   var BAD=/access\s*denied|reference\s*#|cloudflare|just a moment|attention required|captcha|forbidden|403|404 not found|error\s*\d{3}/i;
-  function isBad(s){ return !s || BAD.test(String(s)) || String(s).length<2; }
+  function isBad(s){ return !s || BAD.test(String(s)) || String(s).trim().length<2; }
+  function hasArabic(s){ return /[\u0600-\u06FF]/.test(String(s||'')); }
   function hostTitle(url){
     try{ var h=new URL(url).hostname.replace(/^www\./,''); var p=h.split('.')[0]||h; return p.charAt(0).toUpperCase()+p.slice(1); }catch(e){ return ''; }
+  }
+  function translateToAr(text){
+    text=String(text||'').trim();
+    if(!text) return Promise.resolve('');
+    if(hasArabic(text)) return Promise.resolve(text);
+    var q=text.slice(0,450);
+    return fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair=en|ar')
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        var t=j && j.responseData && j.responseData.translatedText;
+        if(!t || isBad(t) || t.toLowerCase()===q.toLowerCase()) return text;
+        return t;
+      })
+      .catch(function(){ return text; });
   }
   window.mirrorNameEn=function(){
     var ar=$('appName'), en=$('appNameEn'); if(!ar||!en) return;
@@ -4566,16 +4851,13 @@ html body .install-done .wv-svg { display:none!important; }
     el.style.color=ok===false?'#f87171':(ok?'#34d399':'var(--muted)');
     el.textContent=msg||'';
   }
-  function applyMeta(m, force){
-    if(!m) return;
-    var name=(m.title||'').trim(), desc=(m.description||'').trim(), icon=(m.image||'').trim();
-    if(isBad(name)) name='';
-    if(isBad(desc)) desc='';
+  function fillFields(nameAr, nameEn, descAr, descEn, icon){
     var n=$('appName'), ne=$('appNameEn'), d=$('appDesc'), de=$('appDescEn'), ic=$('appIcon');
-    if(name){ if(n&&(force||!n.value.trim()||isBad(n.value))) n.value=name; if(ne&&(force||!ne.value.trim()||isBad(ne.value)||ne.dataset.m==='1')){ ne.value=name; ne.dataset.m='1'; } }
-    if(desc){ if(d&&(force||!d.value.trim()||isBad(d.value))) d.value=desc.slice(0,500); if(de&&(force||!de.value.trim()||isBad(de.value)||de.dataset.m==='1')){ de.value=desc.slice(0,500); de.dataset.m='1'; } }
+    if(n) n.value=nameAr||'';
+    if(ne){ ne.value=nameEn||nameAr||''; ne.dataset.m='0'; }
+    if(d) d.value=descAr||'';
+    if(de){ de.value=descEn||descAr||''; de.dataset.m='0'; }
     if(icon&&ic&&!ic.value.trim()) ic.value=icon;
-    mirrorNameEn(); mirrorDescEn();
     if(typeof previewIcon==='function') previewIcon();
   }
   window.autoFillFromUrl=function(){
@@ -4584,21 +4866,30 @@ html body .install-done .wv-svg { display:none!important; }
     if(url&&!/^https?:\/\//i.test(url)){ url='https://'+url.replace(/^\/\//,''); urlEl.value=url; }
     if(!/^https?:\/\//i.test(url)) return;
     var fallback=hostTitle(url);
-    setMeta(T('جاري قراءة الموقع…','Reading site…'));
+    setMeta(T('جاري قراءة الموقع وترجمة الاسم…','Reading site & translating…'));
     ['appName','appNameEn','appDesc','appDescEn'].forEach(function(id){ var el=$(id); if(el&&isBad(el.value)) el.value=''; });
     fetch('https://api.microlink.io?url='+encodeURIComponent(url)+'&palette=false').then(function(r){return r.json();}).then(function(j){
       var d=j&&j.data; if(!d) throw 0;
-      var title=d.title||d.publisher||'';
-      var desc=d.description||'';
+      var titleEn=d.title||d.publisher||'';
+      var descEn=d.description||'';
       var img=(d.image&&(d.image.url||d.image))||(d.logo&&(d.logo.url||d.logo))||'';
-      if(isBad(title)) title=fallback;
-      if(isBad(desc)) desc='';
-      applyMeta({title:title, description:desc, image:typeof img==='string'?img:''}, true);
-      if(isBad(d.title)&&!desc) setMeta(T('الموقع محمي — تم اقتراح الاسم من الرابط (عدّله يدوياً)','Site protected — suggested name from URL (edit it)'), false);
-      else setMeta(T('تم جلب البيانات','Data filled'), true);
+      if(isBad(titleEn)) titleEn=fallback;
+      if(isBad(descEn)) descEn='';
+      // English fields get English; Arabic fields get translation
+      return Promise.all([
+        translateToAr(titleEn),
+        translateToAr(descEn)
+      ]).then(function(tr){
+        var nameAr=tr[0]||titleEn;
+        var descAr=tr[1]||descEn;
+        // If translation failed and still English brand, keep both as brand name
+        fillFields(nameAr, titleEn, descAr, descEn, typeof img==='string'?img:'');
+        if(isBad(d.title)&&!descEn) setMeta(T('الموقع محمي — تم اقتراح الاسم من الرابط','Site protected — suggested name from URL'), false);
+        else setMeta(T('تم الجلب والترجمة','Fetched & translated'), true);
+      });
     }).catch(function(){
-      applyMeta({title:fallback, description:'', image:''}, true);
-      setMeta(T('تعذر قراءة الموقع — استخدم الاسم المقترح وعدّله','Could not read site — edit the suggested name'), false);
+      fillFields(fallback, fallback, '', '', '');
+      setMeta(T('تعذر قراءة الموقع — عدّل الاسم يدوياً','Could not read site — edit name manually'), false);
     });
   };
 
@@ -4622,9 +4913,10 @@ html body .install-done .wv-svg { display:none!important; }
     });
   }
 
-  console.info('[AMGZRNT] V4 clean fix2');
+  console.info('[AMGZRNT] V4 — install block for under-dev + translate + version');
 })();
 </script>
+
 
 
 </body>
