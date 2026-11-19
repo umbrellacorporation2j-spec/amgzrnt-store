@@ -928,7 +928,7 @@ body{padding-bottom:110px}
         </div>
         <button class="btn btn-outline btn-sm" id="btnLogin" onclick="openDrawer('auth')">
           <i class="fa-solid fa-right-to-bracket"></i>
-          <span class="hide-sm" data-lang="ar">دخول</span>
+          <span class="hide-sm" data-lang="ar">دخول المطور</span>
           <span class="hide-sm" data-lang="en">Dev Login</span>
         </button>
         <button class="btn btn-outline btn-sm" id="btnInstallStore" style="display:inline-flex" onclick="installStore()"><i class="fa-solid fa-download"></i><span data-lang="ar">تثبيت المتجر</span><span data-lang="en">Install store</span></button>
@@ -968,48 +968,20 @@ body{padding-bottom:110px}
         <input type="text" id="searchInput" placeholder="ابحث عن تطبيق..." oninput="filterApps()" autocomplete="off"><button type="button" class="sb-clear" id="sbClear" aria-label="clear"><i class="fa-solid fa-xmark"></i></button><div class="sug-box" id="sugBox"></div>
       </div>
       <div class="chips" id="chips">
-        <button class="chip active" data-cat="all" onclick="setCategory('all', this)"><i class="fa-solid fa-border-all"></i>
-          <span data-lang="ar">الكل</span><span data-lang="en">All</span>
-        </button>
-        <button class="chip" data-cat="tools" onclick="setCategory('tools', this)"><i class="fa-solid fa-screwdriver-wrench"></i>
-          <span data-lang="ar">أدوات</span><span data-lang="en">Tools</span>
-        </button>
-        <button class="chip" data-cat="productivity" onclick="setCategory('productivity', this)"><i class="fa-solid fa-briefcase"></i>
-          <span data-lang="ar">إنتاجية</span><span data-lang="en">Productivity</span>
-        </button>
-        <button class="chip" data-cat="education" onclick="setCategory('education', this)"><i class="fa-solid fa-graduation-cap"></i>
-          <span data-lang="ar">تعليم</span><span data-lang="en">Education</span>
-        </button>
-        <button class="chip" data-cat="games" onclick="setCategory('games', this)"><i class="fa-solid fa-gamepad"></i>
-          <span data-lang="ar">ألعاب</span><span data-lang="en">Games</span>
-        </button>
-        <button class="chip" data-cat="finance" onclick="setCategory('finance', this)"><i class="fa-solid fa-coins"></i>
-          <span data-lang="ar">مالية</span><span data-lang="en">Finance</span>
-        </button>
-        <button class="chip" data-cat="health" onclick="setCategory('health', this)"><i class="fa-solid fa-heart-pulse"></i>
-          <span data-lang="ar">صحة</span><span data-lang="en">Health</span>
-        </button>
-        <button class="chip" data-cat="entertainment" onclick="setCategory('entertainment', this)"><i class="fa-solid fa-film"></i>
-          <span data-lang="ar">ترفيه</span><span data-lang="en">Entertainment</span>
-        </button>
-        <button class="chip" data-cat="social" onclick="setCategory('social', this)"><i class="fa-solid fa-users"></i>
-          <span data-lang="ar">اجتماعي</span><span data-lang="en">Social</span>
-        </button>
-        <button class="chip" data-cat="shopping" onclick="setCategory('shopping', this)"><i class="fa-solid fa-bag-shopping"></i>
-          <span data-lang="ar">تسوق</span><span data-lang="en">Shopping</span>
-        </button>
-        <button class="chip" data-cat="news" onclick="setCategory('news', this)"><i class="fa-solid fa-newspaper"></i>
-          <span data-lang="ar">أخبار</span><span data-lang="en">News</span>
-        </button>
-        <button class="chip" data-cat="travel" onclick="setCategory('travel', this)"><i class="fa-solid fa-plane"></i>
-          <span data-lang="ar">سفر</span><span data-lang="en">Travel</span>
-        </button>
-        <button class="chip" data-cat="utilities" onclick="setCategory('utilities', this)"><i class="fa-solid fa-sliders"></i>
-          <span data-lang="ar">خدمات</span><span data-lang="en">Utilities</span>
-        </button>
-        <button class="chip" data-cat="other" onclick="setCategory('other', this)"><i class="fa-solid fa-shapes"></i>
-          <span data-lang="ar">أخرى</span><span data-lang="en">Other</span>
-        </button>
+        <button class="chip active" data-cat="all" onclick="setCategory('all', this)"><i class="fa-solid fa-border-all"></i><span data-lang="ar">الكل</span><span data-lang="en">All</span></button>
+        <button class="chip" data-cat="tools" onclick="setCategory('tools', this)"><i class="fa-solid fa-screwdriver-wrench"></i><span data-lang="ar">أدوات</span><span data-lang="en">Tools</span></button>
+        <button class="chip" data-cat="productivity" onclick="setCategory('productivity', this)"><i class="fa-solid fa-briefcase"></i><span data-lang="ar">إنتاجية</span><span data-lang="en">Productivity</span></button>
+        <button class="chip" data-cat="education" onclick="setCategory('education', this)"><i class="fa-solid fa-graduation-cap"></i><span data-lang="ar">تعليم</span><span data-lang="en">Education</span></button>
+        <button class="chip" data-cat="games" onclick="setCategory('games', this)"><i class="fa-solid fa-gamepad"></i><span data-lang="ar">ألعاب</span><span data-lang="en">Games</span></button>
+        <button class="chip" data-cat="finance" onclick="setCategory('finance', this)"><i class="fa-solid fa-coins"></i><span data-lang="ar">مالية</span><span data-lang="en">Finance</span></button>
+        <button class="chip" data-cat="health" onclick="setCategory('health', this)"><i class="fa-solid fa-heart-pulse"></i><span data-lang="ar">صحة</span><span data-lang="en">Health</span></button>
+        <button class="chip" data-cat="entertainment" onclick="setCategory('entertainment', this)"><i class="fa-solid fa-tv"></i><span data-lang="ar">ترفيه</span><span data-lang="en">Entertainment</span></button>
+        <button class="chip" data-cat="social" onclick="setCategory('social', this)"><i class="fa-solid fa-users"></i><span data-lang="ar">اجتماعي</span><span data-lang="en">Social</span></button>
+        <button class="chip" data-cat="shopping" onclick="setCategory('shopping', this)"><i class="fa-solid fa-bag-shopping"></i><span data-lang="ar">تسوق</span><span data-lang="en">Shopping</span></button>
+        <button class="chip" data-cat="news" onclick="setCategory('news', this)"><i class="fa-solid fa-newspaper"></i><span data-lang="ar">أخبار</span><span data-lang="en">News</span></button>
+        <button class="chip" data-cat="travel" onclick="setCategory('travel', this)"><i class="fa-solid fa-plane"></i><span data-lang="ar">سفر</span><span data-lang="en">Travel</span></button>
+        <button class="chip" data-cat="utilities" onclick="setCategory('utilities', this)"><i class="fa-solid fa-sliders"></i><span data-lang="ar">خدمات</span><span data-lang="en">Utilities</span></button>
+        <button class="chip" data-cat="other" onclick="setCategory('other', this)"><i class="fa-solid fa-shapes"></i><span data-lang="ar">أخرى</span><span data-lang="en">Other</span></button>
       </div>
     </div>
 
@@ -1041,19 +1013,19 @@ body{padding-bottom:110px}
       </button>
     </div>
     <div class="drawer-body">
-      <div class="tabs auth-main-tabs" id="authMainTabs">
+      <div class="tabs auth-main-tabs">
         <button type="button" class="tab-btn active" id="tabUser" onclick="switchTab('user')"><i class="fa-solid fa-user"></i> <span data-lang="ar">مستخدم</span><span data-lang="en">User</span></button>
-        <button type="button" class="tab-btn" id="tabDev" onclick="switchTab('dev')"><i class="fa-solid fa-code"></i> <span data-lang="ar">مطور</span><span data-lang="en">Developer</span></button>
+        <button type="button" class="tab-btn" id="tabDev" onclick="switchTab('dev')"><i class="fa-solid fa-code"></i> <span data-lang="ar">مطور</span><span data-lang="en">Dev</span></button>
         <button type="button" class="tab-btn" id="tabAdmin" onclick="switchTab('admin')"><i class="fa-solid fa-shield-halved"></i> <span data-lang="ar">مدير</span><span data-lang="en">Admin</span></button>
       </div>
-      <div class="auth-subtabs" id="authSubTabs" style="display:flex;gap:8px;margin:10px 0 14px">
-        <button type="button" class="btn btn-outline btn-sm auth-sub on" data-sub="login" onclick="setAuthSub('login')" id="subLogin"><span data-lang="ar">دخول</span><span data-lang="en">Login</span></button>
-        <button type="button" class="btn btn-outline btn-sm auth-sub" data-sub="register" onclick="setAuthSub('register')" id="subRegister"><span data-lang="ar">إنشاء حساب</span><span data-lang="en">Sign up</span></button>
+      <div id="authSubTabs" style="display:flex;gap:8px;margin:0 0 14px">
+        <button type="button" class="btn btn-outline btn-sm auth-sub on" data-sub="login" onclick="setAuthSub('login')"><span data-lang="ar">دخول</span><span data-lang="en">Login</span></button>
+        <button type="button" class="btn btn-outline btn-sm auth-sub" data-sub="register" onclick="setAuthSub('register')"><span data-lang="ar">إنشاء حساب</span><span data-lang="en">Sign up</span></button>
       </div>
       <div id="devTypeRow" style="display:none;margin:0 0 12px">
-        <label class="chk" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.9rem">
           <input type="checkbox" id="authCollective">
-          <span data-lang="ar">مطور جماعي (فريق)</span><span data-lang="en">Team / collective developer</span>
+          <span data-lang="ar">مطور جماعي (فريق)</span><span data-lang="en">Team developer</span>
         </label>
       </div>
       <div class="form-error" id="authError"></div>
@@ -1106,16 +1078,15 @@ body{padding-bottom:110px}
         <div class="form-group">
           <label data-lang="ar">رابط التطبيق</label>
           <label data-lang="en">App URL</label>
-          <input type="url" id="appUrl" required placeholder="https://myapp.example.com" oninput="previewIcon()" onblur="autoFillFromUrl()">
+          <input type="url" id="appUrl" required placeholder="https://myapp.example.com" oninput="previewIcon()" onblur="if(window.autoFillFromUrl)autoFillFromUrl()">
           <div class="form-hint" data-lang="ar">الصق الرابط — يُجلب الاسم والوصف والأيقونة تلقائياً</div>
-          <div class="form-hint" data-lang="en">Paste the URL — name, description and icon fill automatically</div>
           <div id="urlMetaStatus" class="form-hint" style="display:none;margin-top:6px"></div>
           <div id="iconPreview" class="icon-preview"></div>
         </div>
         <div class="form-group">
           <label data-lang="ar">اسم التطبيق</label>
           <label data-lang="en">App Name</label>
-          <input type="text" id="appName" required placeholder="منظم المهام" oninput="mirrorNameEn()">
+          <input type="text" id="appName" required placeholder="منظم المهام" oninput="if(window.mirrorNameEn)mirrorNameEn()">
         </div>
         <div class="form-group">
           <label data-lang="ar">الاسم بالإنجليزية</label>
@@ -1125,19 +1096,17 @@ body{padding-bottom:110px}
         <div class="form-group">
           <label data-lang="ar">الوصف</label>
           <label data-lang="en">Description</label>
-          <textarea id="appDesc" required placeholder="وصف مختصر..." oninput="mirrorDescEn()"></textarea>
+          <textarea id="appDesc" required placeholder="وصف مختصر..." oninput="if(window.mirrorDescEn)mirrorDescEn()"></textarea>
         </div>
         <div class="form-group">
           <label data-lang="ar">الوصف بالإنجليزية</label>
           <label data-lang="en">English description</label>
-          <textarea id="appDescEn" rows="3" placeholder="Short description in English..."></textarea>
+          <textarea id="appDescEn" rows="3" placeholder="Short description..."></textarea>
         </div>
         <div class="form-group">
           <label data-lang="ar">رابط الأيقونة</label>
           <label data-lang="en">Icon URL</label>
-          <input type="url" id="appIcon" placeholder="https://.../icon-192.png" oninput="previewCustomIcon('appIcon','iconPreviewCustom')" onblur="this.value=(window.normalizeIconUrl&&normalizeIconUrl(this.value))||this.value">
-          <div class="form-hint" data-lang="ar">يُملأ تلقائياً من الموقع إن وُجد — يمكنك تعديله</div>
-          <div id="iconPreviewCustom" class="icon-preview" style="margin-top:8px"></div>
+          <input type="url" id="appIcon" placeholder="https://.../icon-192.png">
         </div>
         <div class="form-group">
           <label data-lang="ar">حالة التطبيق</label>
@@ -1261,9 +1230,8 @@ body{padding-bottom:110px}
         <div class="form-group"><label>الاسم بالإنجليزية / English name</label><input id="editNameEn"></div>
         <div class="form-group"><label>الوصف بالعربية / Arabic description</label><textarea id="editDescAr" rows="3"></textarea></div>
         <div class="form-group"><label>الوصف بالإنجليزية / English description</label><textarea id="editDescEn" rows="3"></textarea></div>
-        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="games">ألعاب / Games</option><option value="finance">مالية / Finance</option><option value="health">صحة / Health</option><option value="entertainment">ترفيه / Entertainment</option><option value="social">اجتماعي / Social</option><option value="shopping">تسوق / Shopping</option><option value="news">أخبار / News</option><option value="travel">سفر / Travel</option><option value="utilities">خدمات / Utilities</option><option value="other">أخرى / Other</option></select></div>
-        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="url" oninput="previewCustomIcon('editIcon','editIconPreview')" onblur="this.value=(window.normalizeIconUrl&&normalizeIconUrl(this.value))||this.value"><div id="editIconPreview" class="icon-preview" style="margin-top:8px"></div></div>
-        <div class="form-group"><label>حالة التطبيق / App status</label><select id="editDevStatus"><option value="live">منشور / Live</option><option value="dev">تحت التطوير / Under development</option></select></div>
+        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="other">أخرى / Other</option></select></div>
+        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="url"></div>
         <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
         <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="url" required></div>
         <div class="form-group"><label>لقطات الشاشة (روابط، كل رابط في سطر) / Screenshots (one URL per line)</label><textarea id="editScreenshots" rows="4"></textarea></div>
@@ -1314,7 +1282,7 @@ body{padding-bottom:110px}
         <span data-lang="ar">إصدار المتجر</span>
         <span data-lang="en">Store version</span>
       </span>
-      <strong class="version-number" dir="ltr">V4</strong>
+      <strong class="version-number" dir="ltr">V3.9</strong>
     </div>
 
     <label class="setting-row" for="optGlass">
@@ -1355,16 +1323,13 @@ body{padding-bottom:110px}
     <div class="pv-frame"><div class="pv-notch"></div><iframe id="pvFrame" title="preview" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" referrerpolicy="no-referrer"></iframe></div>
     <p class="pv-note" id="pvNote"></p>
   </div>
-  
-  <div class="app-page" id="catsPage" style="z-index:280">
+    <div class="app-page" id="catsPage" style="z-index:280">
     <div class="ap-top">
       <button type="button" class="btn btn-ghost btn-icon" onclick="closeCatsPage()" aria-label="back"><i class="fa-solid fa-arrow-right"></i></button>
-      <h2 style="flex:1;font-size:1.1rem;font-weight:800;margin:0" data-lang="ar">الأقسام</h2>
-      <h2 style="flex:1;font-size:1.1rem;font-weight:800;margin:0;display:none" data-lang="en">Categories</h2>
+      <h2 style="flex:1;font-size:1.15rem;font-weight:800;margin:0">الأقسام</h2>
     </div>
-    <div class="ap-body" id="catsBody" style="padding:16px 16px 100px"></div>
+    <div class="ap-body" id="catsBody" style="padding:12px 14px 110px"></div>
   </div>
-
   <div class="bnav" id="bnav"><div class="bn-ind" id="bnInd"></div>
     <button data-k="home" class="on"><i class="fa-solid fa-house"></i><span>الرئيسية</span></button>
     <button data-k="search"><i class="fa-solid fa-magnifying-glass"></i><span>بحث</span></button>
@@ -1440,9 +1405,9 @@ body{padding-bottom:110px}
       var mySection = document.getElementById('myAppsSection');
       var btnSettings = document.getElementById('btnDevSettings');
       if (user) {
-        btnLogin.style.display = 'none';
-        /* upload/settings visibility decided by applyRole after profile load */
+        btnLogin.style.display = 'none'; btnUpload.style.display = 'inline-flex';
         btnLogout.style.display = 'inline-flex';
+        if (btnSettings) btnSettings.style.display = 'inline-flex';
         userBar.classList.add('show');
         var name = user.displayName || user.email || 'D';
         document.getElementById('userEmail').textContent = maskEmail(user.email || name);
@@ -1540,17 +1505,10 @@ body{padding-bottom:110px}
 
     function getFiltered() {
       var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
-      var list = allApps || [];
-      if (typeof window.searchApps === 'function' && q) {
-        list = window.searchApps(q, 200);
-      }
-      return list.filter(function(a) {
+      return allApps.filter(function(a) {
         var catOk = activeCategory === 'all' || a.category === activeCategory;
-        if (!catOk) return false;
-        if (!q) return true;
-        if (typeof window.searchApps === 'function') return true; // already filtered by search
         var text = [a.name,a.nameAr,a.nameEn,a.description,a.descriptionAr,a.descriptionEn,a.devName].filter(Boolean).join(' ').toLowerCase();
-        return text.indexOf(q) !== -1;
+        return catOk && (!q || text.indexOf(q) !== -1);
       });
     }
     window.getFiltered = getFiltered;
@@ -1647,9 +1605,7 @@ body{padding-bottom:110px}
       document.getElementById('editDescEn').value = app.descriptionEn || '';
       document.getElementById('editCategory').value = app.category || 'other';
       document.getElementById('editIcon').value = app.icon || '';
-      if (document.getElementById('editDevStatus')) document.getElementById('editDevStatus').value = (app.devStatus === 'dev' ? 'dev' : 'live');
       document.getElementById('editColor').value = app.primaryColor || '#7c3aed';
-      if (typeof window.previewCustomIcon === 'function') setTimeout(function(){ previewCustomIcon('editIcon','editIconPreview'); }, 50);
       document.getElementById('editUrl').value = app.url || '';
       document.getElementById('editScreenshots').value = (app.screenshots || []).join('\n');
       openDrawer('edit');
@@ -1676,10 +1632,9 @@ body{padding-bottom:110px}
         nameAr: nameAr, nameEn: nameEn, name: nameAr || nameEn,
         descriptionAr: descAr, descriptionEn: descEn, description: descAr || descEn,
         category: document.getElementById('editCategory').value,
-        icon: (window.normalizeIconUrl ? normalizeIconUrl(document.getElementById('editIcon').value.trim()) : document.getElementById('editIcon').value.trim()),
+        icon: document.getElementById('editIcon').value.trim(),
         primaryColor: document.getElementById('editColor').value,
-        url: (window.normalizeUrl ? normalizeUrl(document.getElementById('editUrl').value.trim()) : document.getElementById('editUrl').value.trim()) || document.getElementById('editUrl').value.trim(),
-        devStatus: (document.getElementById('editDevStatus') && document.getElementById('editDevStatus').value) || 'live',
+        url: document.getElementById('editUrl').value.trim(),
         screenshots: document.getElementById('editScreenshots').value.split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean),
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
@@ -1716,7 +1671,7 @@ body{padding-bottom:110px}
     window.deleteApp = deleteApp;
 
     function openDrawer(type) {
-      if (type === 'auth') switchTab(window._authPortal || 'user');
+      if (type === 'auth') switchTab('login');
       if (type === 'upload') {
         document.getElementById('uploadError').classList.remove('show');
         document.getElementById('uploadSuccess').classList.remove('show');
@@ -1744,55 +1699,18 @@ body{padding-bottom:110px}
     }
     window.closeDrawer = closeDrawer;
 
-    var authPortal = 'user'; // user | dev | admin
-    var authSub = 'login'; // login | register
     function switchTab(mode) {
-      // Back-compat: map old modes
-      if (mode === 'login' || mode === 'register' || mode === 'collective') {
-        authPortal = (mode === 'collective') ? 'dev' : (authPortal === 'admin' ? 'user' : (authPortal || 'user'));
-        if (mode === 'collective') { authPortal = 'dev'; authSub = 'register'; }
-        else if (mode === 'register') authSub = 'register';
-        else if (mode === 'login') authSub = 'login';
-        mode = authPortal;
-      }
-      if (mode === 'user' || mode === 'dev' || mode === 'admin') authPortal = mode;
-      authMode = (authPortal === 'admin') ? 'admin' : authSub;
-      window._authPortal = authPortal;
-      window._authSub = authSub;
-      window._pendingRole = authPortal === 'dev' ? 'dev' : (authPortal === 'user' ? 'user' : null);
-      ['tabUser','tabDev','tabAdmin'].forEach(function(id){
-        var el = document.getElementById(id); if (el) el.classList.toggle('active', id === 'tab' + (authPortal === 'user' ? 'User' : authPortal === 'dev' ? 'Dev' : 'Admin'));
-      });
-      var subTabs = document.getElementById('authSubTabs');
-      var devRow = document.getElementById('devTypeRow');
-      var nameGroup = document.getElementById('nameGroup');
-      var hint = document.getElementById('authHint');
-      if (authPortal === 'admin') {
-        if (subTabs) subTabs.style.display = 'none';
-        if (devRow) devRow.style.display = 'none';
-        if (nameGroup) nameGroup.style.display = 'none';
-        authMode = 'admin';
-        if (hint) hint.textContent = isEn() ? 'Admin access only.' : 'دخول الإدارة فقط.';
-      } else {
-        if (subTabs) subTabs.style.display = 'flex';
-        document.querySelectorAll('.auth-sub').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sub') === authSub); });
-        if (devRow) devRow.style.display = authPortal === 'dev' ? 'block' : 'none';
-        if (nameGroup) nameGroup.style.display = authSub === 'register' ? 'block' : 'none';
-        if (hint) {
-          if (authPortal === 'dev') hint.textContent = isEn() ? 'Developer account can publish apps.' : 'حساب المطوّر يمكنه نشر التطبيقات.';
-          else hint.textContent = isEn() ? 'Regular account to save installed apps.' : 'حساب عادي لحفظ التطبيقات المثبّتة.';
-        }
-      }
+      authMode = mode;
+      document.getElementById('tabLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', mode === 'register');
+      document.getElementById('nameGroup').style.display = mode === 'register' ? 'block' : 'none';
       var btn = document.getElementById('authSubmit');
-      if (btn) {
-        if (authPortal === 'admin') btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i><span data-lang="ar">دخول المدير</span><span data-lang="en">Admin login</span>';
-        else if (authSub === 'login') btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i><span data-lang="ar">دخول</span><span data-lang="en">Login</span>';
-        else btn.innerHTML = '<i class="fa-solid fa-user-plus"></i><span data-lang="ar">إنشاء حساب</span><span data-lang="en">Create account</span>';
-      }
-      var err = document.getElementById('authError'); if (err) err.classList.remove('show');
+      btn.innerHTML = mode === 'login'
+        ? '<i class="fa-solid fa-right-to-bracket"></i><span data-lang="ar">دخول</span><span data-lang="en">Login</span>'
+        : '<i class="fa-solid fa-user-plus"></i><span data-lang="ar">إنشاء حساب</span><span data-lang="en">Create Account</span>';
+      document.getElementById('authError').classList.remove('show');
     }
     window.switchTab = switchTab;
-    window.setAuthSub = function(sub){ authSub = sub; switchTab(authPortal); };
 
     function withTimeout(promise, ms) {
       return new Promise(function(resolve, reject) {
@@ -1887,6 +1805,7 @@ body{padding-bottom:110px}
         descriptionAr: document.getElementById('appDesc').value.trim(),
         descriptionEn: (document.getElementById('appDescEn') && document.getElementById('appDescEn').value.trim()) || document.getElementById('appDesc').value.trim(),
         category: document.getElementById('appCategory').value,
+        devStatus: (document.getElementById('appDevStatus') && document.getElementById('appDevStatus').value) || 'live',
         ownerUid: auth.currentUser.uid,
         ownerEmail: auth.currentUser.email || '',
         ownerName: auth.currentUser.displayName || '',
@@ -2239,46 +2158,19 @@ body{padding-bottom:110px}
   function nm(a) { return (isEn() && a.nameEn) ? a.nameEn : (a.nameAr || a.name || ''); }
   function ds(a) { return (isEn() && a.descriptionEn) ? a.descriptionEn : (a.descriptionAr || a.description || ''); }
   function host(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
-  function host(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
-  function iconSrc(a) {
-    var custom = (a && a.icon) ? String(a.icon).trim() : '';
-    if (custom && window.normalizeIconUrl) custom = normalizeIconUrl(custom) || custom;
-    if (custom) return custom;
-    var h = host(a && a.url);
-    return h ? 'https://www.google.com/s2/favicons?sz=128&domain=' + h : '';
-  }
+  function iconSrc(a) { var h = host(a.url); return a.icon || (h ? 'https://www.google.com/s2/favicons?sz=128&domain=' + h : ''); }
+  var CAT = { tools: ['أدوات','Tools'], productivity: ['إنتاجية','Productivity'], education: ['تعليم','Education'], games: ['ألعاب','Games'], finance: ['مالية','Finance'], health: ['صحة','Health'], entertainment: ['ترفيه','Entertainment'], social: ['اجتماعي','Social'], shopping: ['تسوق','Shopping'], news: ['أخبار','News'], travel: ['سفر','Travel'], utilities: ['خدمات','Utilities'], other: ['أخرى','Other'] };
+  function catName(c) { var x = CAT[c] || CAT.other; return isEn() ? x[1] : x[0]; }
+  function isCol(u) { return !!(u && u.email && u.email.indexOf(COL) > 0); }
+
   window.iconErr = function (img) {
-    try {
-      var step = parseInt(img.dataset.fb || '0', 10);
-      var hostName = img.dataset.host || '';
-      var original = img.dataset.orig || img.getAttribute('src') || '';
-      if (step === 0 && original && original.indexOf('images.weserv.nl') === -1 && /^https?:\/\//i.test(original)) {
-        img.dataset.fb = '1';
-        img.dataset.orig = original;
-        img.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(original.replace(/^https?:\/\//i, '')) + '&w=192&h=192&fit=contain&output=png';
-        return;
-      }
-      if (step <= 1 && hostName) {
-        img.dataset.fb = '2';
-        img.src = 'https://www.google.com/s2/favicons?sz=128&domain=' + hostName;
-        return;
-      }
-      if (step <= 2 && hostName) {
-        img.dataset.fb = '3';
-        img.src = 'https://icons.duckduckgo.com/ip3/' + hostName + '.ico';
-        return;
-      }
-    } catch (e) {}
-    img.style.display = 'none';
-    var n = img.nextElementSibling; if (n) n.style.display = 'flex';
+    if (!img.dataset.t && img.dataset.host) { img.dataset.t = 1; img.src = 'https://icons.duckduckgo.com/ip3/' + img.dataset.host + '.ico'; }
+    else { img.style.display = 'none'; if (img.nextElementSibling) img.nextElementSibling.style.display = 'flex'; }
   };
   function iconHTML(a, cls) {
     var src = iconSrc(a);
-    var hname = host(a && a.url);
-    var origAttr = src ? ' data-orig="' + esc(src) + '"' : '';
-    return '<span class="ico-wrap ' + cls + '" aria-hidden="true">' +
-      (src ? '<img class="' + cls + '" src="' + esc(src) + '" data-host="' + esc(hname) + '"' + origAttr + ' alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="iconErr(this)">' : '') +
-      '<div class="app-icon-placeholder ' + cls + '" style="' + (src ? 'display:none' : '') + '"><i class="fa-solid fa-cube"></i></div></span>';
+    return (src ? '<img class="' + cls + '" src="' + esc(src) + '" data-host="' + esc(host(a.url)) + '" alt="" referrerpolicy="no-referrer" onerror="iconErr(this)">' : '') +
+      '<div class="app-icon-placeholder ' + cls + '" style="' + (src ? 'display:none' : '') + '"><i class="fa-solid fa-cube"></i></div>';
   }
   window.previewIcon = function () {
     var h = host($('appUrl').value.trim()), box = $('iconPreview');
@@ -2313,34 +2205,20 @@ body{padding-bottom:110px}
   function rowHTML(a, i, manage) {
     var mg = manage ? '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
       '<button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button>' : '';
-    return '<div class="app-row" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    return '<div class="app-row" style="animation-delay:' + Math.min(i * 0.05, 0.4) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div>' +
       '<div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>' + mg + '</div>';
   }
   function adHTML(a) {
     var bg = a.adImage ? 'url(' + encodeURI(a.adImage).replace(/\(/g, '%28').replace(/\)/g, '%29') + ') center/cover' : 'linear-gradient(135deg,' + esc(a.primaryColor || '#7c3aed') + ',#2e1065)';
-    return '<div class="ad-item"><div class="ad-banner" style="background:' + bg + '" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>' +
-      '<div class="app-row ad-row" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    return '<div class="ad-item"><div class="ad-banner" style="background:' + bg + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>' +
+      '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openAppSheet(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
-  var CAT = {
-    tools: true, productivity: true, education: true, games: true, finance: true, health: true,
-    entertainment: true, social: true, shopping: true, news: true, travel: true, utilities: true, other: true
-  };
   var CATI = { tools: 'fa-screwdriver-wrench', productivity: 'fa-briefcase', education: 'fa-graduation-cap', games: 'fa-gamepad', finance: 'fa-coins', health: 'fa-heart-pulse', entertainment: 'fa-film', social: 'fa-users', shopping: 'fa-bag-shopping', news: 'fa-newspaper', travel: 'fa-plane', utilities: 'fa-sliders', other: 'fa-shapes' };
-  function catName(c) {
-    var map = {
-      all: ['الكل','All'], tools: ['أدوات','Tools'], productivity: ['إنتاجية','Productivity'], education: ['تعليم','Education'],
-      games: ['ألعاب','Games'], finance: ['مالية','Finance'], health: ['صحة','Health'], entertainment: ['ترفيه','Entertainment'],
-      social: ['اجتماعي','Social'], shopping: ['تسوق','Shopping'], news: ['أخبار','News'], travel: ['سفر','Travel'],
-      utilities: ['خدمات','Utilities'], other: ['أخرى','Other']
-    };
-    var p = map[c]; return p ? T(p[0], p[1]) : (c || '');
-  }
-  window.CAT = CAT; window.CATI = CATI; window.catName = catName;
   function tileHTML(a, i) {
-    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
       '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
   }
   function secHTML(icon, title, apps, cat) {
@@ -2369,7 +2247,7 @@ body{padding-bottom:110px}
         (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="apps-list">' +
         apps.map(function (a, i) { return rowHTML(a, i, adm); }).join('') + '</div>';
     } else {
-      var ads = apps.filter(function (a) { return (a.adText || a.adImage) && (!a.suspended || (typeof canSee==='function' && canSee(a))); });
+      var ads = apps.filter(function (a) { return a.adText || a.adImage; });
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
       Object.keys(CAT).forEach(function (c) {
@@ -2544,16 +2422,8 @@ body{padding-bottom:110px}
     errBox.classList.remove('show'); okBox.classList.remove('show'); setBtnLoading(btn, true);
     var bio = $('profileBio'), links = $('profileLinks');
     var data = {
-      name: $('appName').value.trim(),
-      nameAr: $('appName').value.trim(),
-      nameEn: ($('appNameEn') && $('appNameEn').value.trim()) || $('appName').value.trim(),
-      url: (window.normalizeUrl ? normalizeUrl($('appUrl').value.trim()) : $('appUrl').value.trim()) || $('appUrl').value.trim(),
-      icon: (window.normalizeIconUrl ? normalizeIconUrl($('appIcon').value.trim()) : $('appIcon').value.trim()),
-      description: $('appDesc').value.trim(),
-      descriptionAr: $('appDesc').value.trim(),
-      descriptionEn: ($('appDescEn') && $('appDescEn').value.trim()) || $('appDesc').value.trim(),
-      category: $('appCategory').value,
-      devStatus: ($('appDevStatus') && $('appDevStatus').value) || 'live',
+      name: $('appName').value.trim(), url: $('appUrl').value.trim(), icon: $('appIcon').value.trim(),
+      description: $('appDesc').value.trim(), category: $('appCategory').value,
       pwaKitAvailable: true, pwaKitVersion: '3.7',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
@@ -2802,10 +2672,6 @@ body{padding-bottom:110px}
   /* ---------- preview ---------- */
   window.openPreview = function (id) {
     var a = findApp(id); if (!a) return;
-    if (a.suspended && !(typeof canSee === 'function' && canSee(a))) {
-      if (typeof showToast === 'function') showToast(T('لا يمكنك معاينة هذا التطبيق — تم إيقافه من الإدارة.', 'You cannot preview this app — it was suspended by admin.'));
-      return;
-    }
     $('pvTitle').textContent = nm(a); $('pvOpen').href = a.url;
     $('pvNote').textContent = T('إذا ظهرت الشاشة فارغة فالموقع يمنع المعاينة — استخدم زر الفتح.', 'If the screen stays blank the site blocks previews — use the open button.');
     $('pvFrame').src = a.url;
@@ -2943,22 +2809,15 @@ body{padding-bottom:110px}
   /* ---------- visibility + lists ---------- */
   window.getFiltered = function () {
     var q = ($('searchInput').value || '').trim().toLowerCase();
-    var list = (typeof allApps !== 'undefined' && allApps) ? allApps : (window.allApps || []);
-    if (q && typeof window.searchApps === 'function') {
-      list = window.searchApps(q, 200);
-      return list.filter(function (a) {
-        return activeCategory === 'all' || a.category === activeCategory;
-      });
-    }
-    return list.filter(function (a) {
+    return allApps.filter(function (a) {
       var t = ((a.nameAr || '') + ' ' + (a.name || '') + ' ' + (a.nameEn || '') + ' ' + (a.description || '') + ' ' + (a.devName || '')).toLowerCase();
       return (activeCategory === 'all' || a.category === activeCategory) && (!q || t.indexOf(q) > -1);
     });
   };
   function tileHTML(a, i, mg) {
     var b = mg ? '<div class="tile-mg"><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash"></i></button></div>' : '';
-    var f = (a.suspended ? '<span class="bdg red">' + T('موقوف', 'Suspended') + '</span> ' : '') + (a.devStatus === 'dev' ? '<span class="bdg" style="background:rgba(59,130,246,.2);color:#93c5fd">' + T('تحت التطوير', 'In development') + '</span> ' : '') + (a.adminNote && canSee(a) ? '<span class="bdg gold">⚠ ' + T('تنبيه', 'Notice') + '</span>' : '');
-    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
+    var f = (a.suspended ? '<span class="bdg red">' + T('موقوف', 'Suspended') + '</span> ' : '') + (a.adminNote && canSee(a) ? '<span class="bdg gold">⚠ ' + T('تنبيه', 'Notice') + '</span>' : '');
+    return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
       '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div>' + f + b + '</div>';
   }
   function secHTML(icon, title, apps, cat) {
@@ -2967,9 +2826,9 @@ body{padding-bottom:110px}
   }
   function adHTML(a) {
     var ban;
-    if (a.ad) ban = '<div class="ad-banner2" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + stageHTML(a.ad) + '<span class="ad-tag">' + T('إعلان', 'Ad') + '</span></div>';
-    else ban = '<div class="ad-banner" style="background:' + (a.adImage ? 'url(' + encodeURI(a.adImage) + ') center/cover' : 'linear-gradient(135deg,#7c3aed,#2e1065)') + '" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>';
-    return '<div class="ad-item">' + ban + '<div class="app-row ad-row" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
+    if (a.ad) ban = '<div class="ad-banner2" onclick="openAppPage(\'' + a.id + '\')">' + stageHTML(a.ad) + '<span class="ad-tag">' + T('إعلان', 'Ad') + '</span></div>';
+    else ban = '<div class="ad-banner" style="background:' + (a.adImage ? 'url(' + encodeURI(a.adImage) + ') center/cover' : 'linear-gradient(135deg,#7c3aed,#2e1065)') + '" onclick="openAppPage(\'' + a.id + '\')"><span class="ad-tag">' + T('إعلان', 'Ad') + '</span><h2>' + escHTML(a.adText || nm(a)) + '</h2></div>';
+    return '<div class="ad-item">' + ban + '<div class="app-row ad-row" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'row-icon') +
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();installApp(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
@@ -2981,7 +2840,7 @@ body{padding-bottom:110px}
     if (q || activeCategory !== 'all') {
       h = '<div class="section-title"><i class="fa-solid ' + (q ? 'fa-magnifying-glass' : (CATI[activeCategory] || 'fa-shapes')) + '"></i>' + (q ? T('نتائج البحث', 'Results') + ' (' + apps.length + ')' : catName(activeCategory)) + '</div><div class="tgrid">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div>';
     } else {
-      var ads = apps.filter(function (a) { return (a.ad || a.adText || a.adImage) && (!a.suspended || (typeof canSee==='function' && canSee(a))); });
+      var ads = apps.filter(function (a) { return a.ad || a.adText || a.adImage; });
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
       Object.keys(CAT).forEach(function (c) { var l = apps.filter(function (a) { return (a.category || 'other') === c; }); if (l.length) h += secHTML(CATI[c], catName(c), l, c); });
@@ -3044,14 +2903,7 @@ body{padding-bottom:110px}
   function fetchViews(id) { return db.collection('apps').doc(id).collection('views').limit(500).get().then(function (s) { return s.size; }).catch(function () { return 0; }); }
 
   /* ---------- app page (Play style) ---------- */
-  window.installApp = function (id) {
-    var a = findApp(id); if (!a) return;
-    if (a.suspended && !(typeof canSee === 'function' && canSee(a))) {
-      if (typeof showToast === 'function') showToast(T('لا يمكنك فتح هذا التطبيق — تم إيقافه من الإدارة.', 'You cannot open this app — it was suspended by admin.'));
-      return;
-    }
-    if (a.url) window.open(a.url, '_blank', 'noopener');
-  };
+  window.installApp = function (id) { var a = findApp(id); if (a) window.open(a.url, '_blank', 'noopener'); };
   window.openAppSheet = window.installApp;
   var WAVE = '<path d="M0 30 Q75 6 150 30 T300 30 T450 30 T600 30 T750 30 T900 30 T1050 30 T1200 30 V60 H0Z"/>';
   window.openAppPage = function (id, fromHash) {
@@ -3066,14 +2918,12 @@ body{padding-bottom:110px}
     var uid = a.ownerUid || a.devId || '';
     var shots = (a.slides || []).map(slideHTML).join('') + (a.autoShots !== false ? autoShots(a) : '') + (a.screenshots || []).map(function (u) { return '<img src="' + esc(u) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'; }).join('');
     $('apBody').innerHTML =
-      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('تم إيقاف هذا التطبيق من الإدارة. لا يمكن تنزيله أو فتحه أو معاينته من أي مكان في المتجر.', 'This app was suspended by the admin. It cannot be downloaded, opened, or previewed anywhere in the store.') + '</p></div></div>' : '') +
-      (a.devStatus === 'dev' && !a.suspended ? '<div class="adm-note" style="border-color:rgba(59,130,246,.35);background:rgba(59,130,246,.08)"><i class="fa-solid fa-code" style="color:#60a5fa"></i><div><b>' + T('تحت التطوير', 'Under development') + '</b><p>' + T('هذا التطبيق ما زال قيد التطوير وقد يتغيّر أو يكون غير مكتمل.', 'This app is still under development and may change or be incomplete.') + '</p></div></div>' : '') +
+      (a.suspended ? '<div class="adm-note"><i class="fa-solid fa-ban"></i><div><b>' + T('التطبيق موقوف', 'App suspended') + '</b><p>' + T('هذا التطبيق متوقف مؤقتاً أو محذوف من المتجر.', 'This app is temporarily suspended or removed from the store.') + '</p></div></div>' : '') +
       (a.adminNote && canSee(a) ? '<div class="adm-note"><i class="fa-solid fa-triangle-exclamation"></i><div><b>' + T('تنبيه من الإدارة', 'Notice from admin') + '</b><p>' + escHTML(a.adminNote) + '</p></div></div>' : '') +
       '<div class="ap-head">' + iconHTML(a, 'ap-icon') + '<div><h1>' + escHTML(nm(a)) + '</h1><button type="button" class="ap-dev" onclick="openDeveloperFromApp(\'' + uid + '\')">' + escHTML(a.devName || '') + '</button></div></div>' +
       '<div class="ap-stats"><div id="apStat"><b>—</b><small>' + T('التقييم', 'Rating') + '</small></div><div><b>PWA</b><small>' + T('النوع', 'Type') + '</small></div><div><b>' + catName(a.category) + '</b><small>' + T('الفئة', 'Category') + '</small></div></div>' +
-      '<div class="ap-actions">' + (a.suspended && !canSee(a)
-        ? '<button type="button" class="btn btn-outline" disabled style="opacity:.7;cursor:not-allowed;flex:1"><i class="fa-solid fa-ban"></i><span>' + T('لا يمكنك تنزيل أو فتح هذا التطبيق', 'You cannot download or open this app') + '</span></button>'
-        : '<button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button><button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button>') + '</div>' +
+      '<div class="ap-actions"><button type="button" class="wave-btn install-wave" data-app-id="' + esc(a.id) + '" onclick="startAppInstall(\'' + a.id + '\',this)"><span class="wave-liquid" aria-hidden="true"></span><span class="wave-label">' + T('تثبيت', 'Install') + '</span></button>' +
+      '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
       '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
@@ -3186,7 +3036,7 @@ body{padding-bottom:110px}
     if (admTab === 'apps') {
       h += allApps.map(function (a, i) {
         return '<div class="adm-row" style="animation-delay:' + Math.min(i * 0.04, 0.4) + 's">' + iconHTML(a, 'row-icon') + '<div class="info"><b>' + escHTML(nm(a)) + '</b><small>' + escHTML(a.devName || '') + '</small> ' + (a.suspended ? '<span class="bdg red">موقوف</span>' : '<span class="bdg">نشط</span>') + (a.adminNote ? ' <span class="bdg gold">تنبيه</span>' : '') + '</div>' +
-          '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
+          '<div class="adm-act"><button class="btn btn-outline" title="فتح" onclick="openAppPage(\'' + a.id + '\')"><i class="fa-solid fa-eye"></i></button><button class="btn btn-outline" title="تعديل" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button>' +
           '<button class="btn btn-outline" title="تنبيه" onclick="admNote(\'' + a.id + '\')"><i class="fa-solid fa-triangle-exclamation"></i></button><button class="btn btn-outline" title="إيقاف/تفعيل" onclick="admSuspend(\'' + a.id + '\')"><i class="fa-solid fa-' + (a.suspended ? 'play' : 'pause') + '"></i></button><button class="btn btn-outline" title="حذف الإعلان" onclick="admRemoveAd(\'' + a.id + '\')"><i class="fa-solid fa-bullhorn"></i></button>' +
           '<button class="btn btn-outline" title="حذف" onclick="deleteApp(\'' + a.id + '\');setTimeout(renderAdmin,600)"><i class="fa-solid fa-trash" style="color:var(--danger)"></i></button></div></div>';
       }).join('') || '<div class="state-box"><p>لا توجد تطبيقات</p></div>';
@@ -3232,7 +3082,7 @@ body{padding-bottom:110px}
     var b = e.target.closest('button'); if (!b) return; var k = b.dataset.k; bnSet(k);
     if (k === 'home') { sb.value = ''; sbWrap.classList.remove('has'); var all = document.querySelector('.chip[data-cat="all"]'); if (all) setCategory('all', all); else filterApps(); ['appPage', 'devPage', 'admPage'].forEach(function (i) { $(i).classList.remove('active'); }); lock(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     else if (k === 'search') { window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(function () { sb.focus(); }, 450); }
-    else if (k === 'cats') { if (typeof window.openCatsPage === 'function') window.openCatsPage(); else { var c = $('chips'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+    else if (k === 'cats') { if (typeof window.openCatsPage === 'function') window.openCatsPage(); }
     else if (k === 'me') {
       var u = auth.currentUser;
       if (!u) openDrawer('auth'); else if (isAdmin()) openAdmin(); else if (role === 'dev') openDevPage(u.uid);
@@ -4081,8 +3931,8 @@ body{padding-bottom:110px}
 })();
 </script>
 
-<style id="v40-waves-and-library">
-/* ===== V4: real moving waves (no glow blobs) ===== */
+<style id="v39-waves-and-library">
+/* ===== V3.9: real moving waves (no glow blobs) ===== */
 html body .wave-btn > .wave-liquid::before,
 html body .wave-btn > .wave-liquid::after,
 html body #sheetInstallBtn > .wave-liquid::before,
@@ -4116,55 +3966,55 @@ html body .install-wave > .wave-label, html body #sheetInstallBtn > .wave-label 
   color:#fff!important; font-weight:800!important; text-shadow:0 1px 2px rgba(0,0,0,.28); pointer-events:none!important;
 }
 .wv-svg { position:absolute; left:0; top:-12px; width:200%; height:20px; display:block; pointer-events:none;
-  fill:#7c3aed; will-change:transform; animation:v40wa 4.8s linear infinite; }
-.wv-svg.b { top:-15px; fill:#a78bfa; opacity:.6; animation:v40wb 7.4s linear infinite; }
+  fill:#7c3aed; will-change:transform; animation:v39wa 4.8s linear infinite; }
+.wv-svg.b { top:-15px; fill:#a78bfa; opacity:.6; animation:v39wb 7.4s linear infinite; }
 html body .install-done .wv-svg { display:none!important; }
-@keyframes v40wa { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
-@keyframes v40wb { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
+@keyframes v39wa { from{transform:translate3d(0,0,0)} to{transform:translate3d(-50%,0,0)} }
+@keyframes v39wb { from{transform:translate3d(-50%,0,0)} to{transform:translate3d(0,0,0)} }
 @media (prefers-reduced-motion:reduce) { .wv-svg{animation-duration:16s!important} .wv-svg.b{animation-duration:24s!important} }
 
 /* ===== installed badge + shelf ===== */
-.v40-badge { display:inline-flex; margin-inline-start:6px; color:#10b981; font-size:.8em; vertical-align:middle; }
-.v40-shelf { margin:4px 0 22px; }
-.v40-shelf[hidden] { display:none!important; }
-.v40-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.v40-row { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x proximity; padding:4px 2px 10px; scrollbar-width:none; }
-.v40-row::-webkit-scrollbar { display:none; }
-.v40-card { flex:0 0 150px; scroll-snap-align:start; background:var(--card2); border:1px solid var(--border);
+.v39-badge { display:inline-flex; margin-inline-start:6px; color:#10b981; font-size:.8em; vertical-align:middle; }
+.v39-shelf { margin:4px 0 22px; }
+.v39-shelf[hidden] { display:none!important; }
+.v39-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.v39-row { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x proximity; padding:4px 2px 10px; scrollbar-width:none; }
+.v39-row::-webkit-scrollbar { display:none; }
+.v39-card { flex:0 0 150px; scroll-snap-align:start; background:var(--card2); border:1px solid var(--border);
   border-radius:22px; padding:12px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
-.v40-ico { width:56px; height:56px; border-radius:16px; object-fit:cover; background:var(--card); display:block; }
-.v40-ph { width:56px; height:56px; border-radius:16px; display:none; align-items:center; justify-content:center; background:var(--gradient); color:#fff; font-size:1.3rem; }
-.v40-ph.show { display:flex; }
-.v40-name { font-weight:800; font-size:.88rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.v40-acts { display:flex; gap:6px; width:100%; }
-.v40-open { flex:1; border:0; border-radius:12px; padding:8px 0; font:800 .82rem Cairo,sans-serif; background:linear-gradient(135deg,#059669,#047857); color:#fff; cursor:pointer; }
-.v40-rm { min-width:38px; border:1px solid var(--border); border-radius:12px; background:transparent; color:var(--muted); cursor:pointer; font:800 .78rem Cairo,sans-serif; }
-.v40-rm.sure { background:var(--danger); border-color:var(--danger); color:#fff; padding:0 10px; }
+.v39-ico { width:56px; height:56px; border-radius:16px; object-fit:cover; background:var(--card); display:block; }
+.v39-ph { width:56px; height:56px; border-radius:16px; display:none; align-items:center; justify-content:center; background:var(--gradient); color:#fff; font-size:1.3rem; }
+.v39-ph.show { display:flex; }
+.v39-name { font-weight:800; font-size:.88rem; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.v39-acts { display:flex; gap:6px; width:100%; }
+.v39-open { flex:1; border:0; border-radius:12px; padding:8px 0; font:800 .82rem Cairo,sans-serif; background:linear-gradient(135deg,#059669,#047857); color:#fff; cursor:pointer; }
+.v39-rm { min-width:38px; border:1px solid var(--border); border-radius:12px; background:transparent; color:var(--muted); cursor:pointer; font:800 .78rem Cairo,sans-serif; }
+.v39-rm.sure { background:var(--danger); border-color:var(--danger); color:#fff; padding:0 10px; }
 
 /* ===== account / library sheet ===== */
-.v40-ov { position:fixed; inset:0; z-index:600; background:rgba(4,3,12,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+.v39-ov { position:fixed; inset:0; z-index:600; background:rgba(4,3,12,.55); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
   opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; }
-.v40-ov.on { opacity:1; visibility:visible; }
-.v40-sheet { position:fixed; left:0; right:0; bottom:0; z-index:610; max-height:86vh; overflow-y:auto; overscroll-behavior:contain;
+.v39-ov.on { opacity:1; visibility:visible; }
+.v39-sheet { position:fixed; left:0; right:0; bottom:0; z-index:610; max-height:86vh; overflow-y:auto; overscroll-behavior:contain;
   background:var(--card); border:1px solid var(--border); border-bottom:0; border-radius:30px 30px 0 0;
   padding:12px 16px calc(22px + env(safe-area-inset-bottom,0px)); transform:translateY(105%); visibility:hidden;
   transition:transform .45s var(--ease), visibility .45s; width:min(100%,560px); margin:0 auto; }
-.v40-sheet.on { transform:none; visibility:visible; }
-.v40-me { display:flex; align-items:center; gap:12px; margin:6px 0 14px; }
-.v40-av { width:48px; height:48px; border-radius:16px; background:var(--gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; background-size:cover; background-position:center; }
-.v40-me b { display:block; font-size:1rem; } .v40-me small { color:var(--muted); }
-.v40-sheet h3 { font-size:1.05rem; margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
-.v40-item { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:18px; background:var(--card2); margin-bottom:8px; }
-.v40-item .v40-ico, .v40-item .v40-ph { width:46px; height:46px; border-radius:14px; flex:0 0 46px; }
-.v40-info { flex:1; min-width:0; } .v40-info .v40-name { text-align:start; } .v40-info small { color:var(--muted); font-size:.75rem; }
-.v40-empty { text-align:center; color:var(--muted); padding:22px 8px; }
-.v40-out { width:100%; margin-top:10px; }
+.v39-sheet.on { transform:none; visibility:visible; }
+.v39-me { display:flex; align-items:center; gap:12px; margin:6px 0 14px; }
+.v39-av { width:48px; height:48px; border-radius:16px; background:var(--gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem; background-size:cover; background-position:center; }
+.v39-me b { display:block; font-size:1rem; } .v39-me small { color:var(--muted); }
+.v39-sheet h3 { font-size:1.05rem; margin:6px 0 10px; display:flex; align-items:center; gap:8px; }
+.v39-item { display:flex; align-items:center; gap:12px; padding:10px; border:1px solid var(--border); border-radius:18px; background:var(--card2); margin-bottom:8px; }
+.v39-item .v39-ico, .v39-item .v39-ph { width:46px; height:46px; border-radius:14px; flex:0 0 46px; }
+.v39-info { flex:1; min-width:0; } .v39-info .v39-name { text-align:start; } .v39-info small { color:var(--muted); font-size:.75rem; }
+.v39-empty { text-align:center; color:var(--muted); padding:22px 8px; }
+.v39-out { width:100%; margin-top:10px; }
 </style>
 
-<script id="v40-install-library">
+<script id="v39-install-library">
 (function () {
   'use strict';
-  /* V4 — authoritative install flow.
+  /* V3.9 — authoritative install flow.
      - Install = visual simulation (wave fill), then "Open app" (instant).
      - An account is required: installed apps are saved per account (localStorage + Firestore
        users/{uid}/installedApps), so coming back from the app never resets them.
@@ -4413,8 +4263,8 @@ html body .install-done .wv-svg { display:none!important; }
     });
   }
   function iconBlock(src) {
-    return (src ? '<img class="v40-ico" src="' + h(src) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')">' : '') +
-           '<div class="v40-ph' + (src ? '' : ' show') + '"><i class="fa-solid fa-cube"></i></div>';
+    return (src ? '<img class="v39-ico" src="' + h(src) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.classList.add(\'show\')">' : '') +
+           '<div class="v39-ph' + (src ? '' : ' show') + '"><i class="fa-solid fa-cube"></i></div>';
   }
   function view(e) {
     var a = findApp(e.id);
@@ -4422,21 +4272,21 @@ html body .install-done .wv-svg { display:none!important; }
   }
 
   /* ---------- home shelf ---------- */
-  var shelf = document.createElement('section'); shelf.id = 'v40Shelf'; shelf.className = 'v40-shelf'; shelf.hidden = true;
+  var shelf = document.createElement('section'); shelf.id = 'v39Shelf'; shelf.className = 'v39-shelf'; shelf.hidden = true;
   var ac = $('appsContainer'); if (ac && ac.parentNode) ac.parentNode.insertBefore(shelf, ac);
   bindCards(shelf);
-  shelf.addEventListener('click', function (ev) { if (ev.target.closest('#v40More')) openLibrary(); });
+  shelf.addEventListener('click', function (ev) { if (ev.target.closest('#v39More')) openLibrary(); });
   function renderShelf() {
     var list = (auth.currentUser || optimisticUid) ? liveList() : [];
     var si = $('searchInput'), home = !(si && si.value.trim()) && (typeof activeCategory === 'undefined' || activeCategory === 'all');
     if (!list.length || !home) { shelf.hidden = true; return; }
-    var html = '<div class="v40-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-circle-check"></i></span>' + T('تطبيقاتي المثبّتة', 'My installed apps') + '</div>' +
-      '<button class="sec-more" id="v40More" aria-label="' + T('عرض الكل', 'View all') + '"><i class="fa-solid fa-arrow-left"></i></button></div><div class="v40-row">';
+    var html = '<div class="v39-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-circle-check"></i></span>' + T('تطبيقاتي المثبّتة', 'My installed apps') + '</div>' +
+      '<button class="sec-more" id="v39More" aria-label="' + T('عرض الكل', 'View all') + '"><i class="fa-solid fa-arrow-left"></i></button></div><div class="v39-row">';
     list.forEach(function (e) {
       var v = view(e);
-      html += '<div class="v40-card">' + iconBlock(v.icon) + '<div class="v40-name">' + h(v.name) + '</div><div class="v40-acts">' +
-        '<button class="v40-open" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
-        '<button class="v40-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div></div>';
+      html += '<div class="v39-card">' + iconBlock(v.icon) + '<div class="v39-name">' + h(v.name) + '</div><div class="v39-acts">' +
+        '<button class="v39-open" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div></div>';
     });
     shelf.innerHTML = html + '</div>'; shelf.hidden = false;
   }
@@ -4447,9 +4297,9 @@ html body .install-done .wv-svg { display:none!important; }
     var c = $('appsContainer'); if (!c) return;
     if (mo) mo.disconnect();
     c.querySelectorAll('.app-row,.app-tile').forEach(function (el) {
-      var m = /openAppPage\('([^']+)'/.exec(el.getAttribute('onclick') || '') || /\)\(\\'([^']+)\\'\)/.exec(el.getAttribute('onclick') || ''); if (!m) return;
-      var has = el.querySelector('.v40-badge'), ok = installed(m[1]);
-      if (ok && !has) { var t = el.querySelector('h3,h4'); if (t) { var s = document.createElement('span'); s.className = 'v40-badge'; s.title = T('مثبّت', 'Installed'); s.innerHTML = '<i class="fa-solid fa-circle-check"></i>'; t.appendChild(s); } }
+      var m = /openAppPage\('([^']+)'/.exec(el.getAttribute('onclick') || ''); if (!m) return;
+      var has = el.querySelector('.v39-badge'), ok = installed(m[1]);
+      if (ok && !has) { var t = el.querySelector('h3,h4'); if (t) { var s = document.createElement('span'); s.className = 'v39-badge'; s.title = T('مثبّت', 'Installed'); s.innerHTML = '<i class="fa-solid fa-circle-check"></i>'; t.appendChild(s); } }
       else if (!ok && has) has.remove();
     });
     if (mo && c) mo.observe(c, { childList: true, subtree: true });
@@ -4458,8 +4308,8 @@ html body .install-done .wv-svg { display:none!important; }
   if (window.MutationObserver && ac) { mo = new MutationObserver(schedule); mo.observe(ac, { childList: true, subtree: true }); }
 
   /* ---------- account / library sheet ---------- */
-  var ov = document.createElement('div'); ov.className = 'v40-ov'; ov.id = 'v40Ov';
-  var sh = document.createElement('div'); sh.className = 'v40-sheet'; sh.id = 'v40Sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-hidden', 'true');
+  var ov = document.createElement('div'); ov.className = 'v39-ov'; ov.id = 'v39Ov';
+  var sh = document.createElement('div'); sh.className = 'v39-sheet'; sh.id = 'v39Sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-hidden', 'true');
   document.body.appendChild(ov); document.body.appendChild(sh);
   bindCards(sh);
   ov.addEventListener('click', closeLibrary);
@@ -4467,20 +4317,20 @@ html body .install-done .wv-svg { display:none!important; }
     var u = auth.currentUser; if (!u) { closeLibrary(); return; }
     var name = u.displayName || (u.email || '').split('@')[0] || 'U', list = liveList();
     var mask = (typeof maskEmail === 'function') ? maskEmail(u.email || '') : (u.email || '');
-    var html = '<div class="sheet-handle"></div><div class="v40-me"><div class="v40-av"' + (u.photoURL ? ' style="background-image:url(' + h(u.photoURL) + ')"' : '') + '>' + (u.photoURL ? '' : h(name.charAt(0).toUpperCase())) + '</div>' +
+    var html = '<div class="sheet-handle"></div><div class="v39-me"><div class="v39-av"' + (u.photoURL ? ' style="background-image:url(' + h(u.photoURL) + ')"' : '') + '>' + (u.photoURL ? '' : h(name.charAt(0).toUpperCase())) + '</div>' +
       '<div><b>' + h(name) + '</b><small>' + h(mask) + '</small></div></div>' +
       '<h3><i class="fa-solid fa-circle-check" style="color:#10b981"></i>' + T('تطبيقاتي المثبّتة', 'My installed apps') + ' (' + list.length + ')</h3>';
-    if (!list.length) html += '<div class="v40-empty">' + T('لم تثبّت أي تطبيق بعد. افتح أي تطبيق واضغط «تثبيت».', 'Nothing installed yet. Open any app and tap Install.') + '</div>';
+    if (!list.length) html += '<div class="v39-empty">' + T('لم تثبّت أي تطبيق بعد. افتح أي تطبيق واضغط «تثبيت».', 'Nothing installed yet. Open any app and tap Install.') + '</div>';
     list.forEach(function (e) {
       var v = view(e);
-      html += '<div class="v40-item">' + iconBlock(v.icon) + '<div class="v40-info"><div class="v40-name">' + h(v.name) + '</div><small>' +
+      html += '<div class="v39-item">' + iconBlock(v.icon) + '<div class="v39-info"><div class="v39-name">' + h(v.name) + '</div><small>' +
         (v.opens ? T('فُتح ' + v.opens + ' مرة', 'Opened ' + v.opens + '×') : T('جاهز للفتح', 'Ready to open')) + '</small></div>' +
-        '<button class="v40-open" style="flex:0 0 auto;padding:8px 16px" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
-        '<button class="v40-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div>';
+        '<button class="v39-open" style="flex:0 0 auto;padding:8px 16px" data-act="open" data-id="' + h(v.id) + '">' + T('فتح', 'Open') + '</button>' +
+        '<button class="v39-rm" data-act="rm" data-id="' + h(v.id) + '" aria-label="' + T('إزالة', 'Remove') + '"><i class="fa-solid fa-trash"></i></button></div>';
     });
-    html += '<button class="btn btn-outline v40-out" id="v40Logout"><i class="fa-solid fa-right-from-bracket"></i> ' + T('تسجيل الخروج', 'Log out') + '</button>';
+    html += '<button class="btn btn-outline v39-out" id="v39Logout"><i class="fa-solid fa-right-from-bracket"></i> ' + T('تسجيل الخروج', 'Log out') + '</button>';
     sh.innerHTML = html;
-    var lo = $('v40Logout'); if (lo) lo.onclick = function () { closeLibrary(); if (typeof logout === 'function') logout(); };
+    var lo = $('v39Logout'); if (lo) lo.onclick = function () { closeLibrary(); if (typeof logout === 'function') logout(); };
   }
   function openLibrary() {
     if (!auth.currentUser) return; renderLib();
@@ -4536,1024 +4386,251 @@ html body .install-done .wv-svg { display:none!important; }
 </script>
 
 
-<script id="v4-unified-lockdown">
-/* AMGZRNT STORE — Unified V4
-   Hard-blocks suspended apps everywhere (install, preview, open, library, ads, deep links).
-   Unified URL normalizer (auto https://). Stronger admin→dev messages. Ad UX polish. */
-(function () {
-  'use strict';
-  var T = window.T || function (ar, en) { return (document.body && document.body.classList.contains('en') ? en : ar); };
-
-  function isSuspended(a) { return !!(a && a.suspended); }
-  function mayAccess(a) {
-    if (!a) return false;
-    if (!isSuspended(a)) return true;
-    try {
-      if (typeof window.isAdmin === 'function' && window.isAdmin()) return true;
-      if (typeof window.canSee === 'function' && window.canSee(a)) return true;
-    } catch (e) {}
-    return false;
-  }
-  function findA(id) {
-    try {
-      if (typeof window.findApp === 'function') return window.findApp(id);
-      if (typeof window.appById === 'function') return window.appById(id);
-      var list = window.allApps || [];
-      return list.find(function (x) { return x && String(x.id) === String(id); }) || null;
-    } catch (e) { return null; }
-  }
-  function blockMsg() {
-    var m = T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.',
-              'You cannot download, open, or preview this app — it was suspended by the admin.');
-    if (typeof window.showToast === 'function') window.showToast(m);
-    else if (typeof window.toast === 'function') window.toast(m);
-    else alert(m);
-  }
-
-  /* ---- Unified URL normalizer: add https:// if missing; never double-prefix; keep www as entered ---- */
-  function normalizeUrlV4(value) {
-    var raw = String(value == null ? '' : value).trim();
-    if (!raw) return '';
-    raw = raw.replace(/^['"]|['"]$/g, '').trim();
-    // strip accidental protocol duplicates
-    raw = raw.replace(/^(https?:\/\/)+/i, function (m) { return m.toLowerCase().indexOf('https') === 0 ? 'https://' : 'http://'; });
-    if (/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) {
-      raw = 'https://' + raw;
-    }
-    try {
-      var u = new URL(raw);
-      if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
-      if (!u.hostname) return '';
-      // Prefer https
-      if (u.protocol === 'http:') { u.protocol = 'https:'; }
-      return u.href;
-    } catch (e) { return ''; }
-  }
-  window.normalizeUrl = normalizeUrlV4;
-  // Keep legacy aliases pointing to the same function
-  try {
-    // Override inner normalize helpers used by install flows by monkey-patching after they exist
-  } catch (e) {}
-
-  /* ---- Guard every open / install / preview entry point ---- */
-  function guardId(id) {
-    var a = findA(id);
-    if (isSuspended(a) && !mayAccess(a)) { blockMsg(); return false; }
-    return true;
-  }
-
-  var _openPreview = window.openPreview;
-  window.openPreview = function (id) {
-    if (!guardId(id)) return;
-    if (_openPreview) return _openPreview.apply(this, arguments);
-  };
-
-  var _startAppInstall = window.startAppInstall;
-  window.startAppInstall = function (id, btn) {
-    if (!guardId(id)) {
-      if (btn) {
-        try {
-          btn.disabled = true;
-          btn.classList.remove('wave-loading', 'install-done');
-          var lab = btn.querySelector('.wave-label');
-          if (lab) lab.textContent = T('لا يمكنك التثبيت', 'Cannot install');
-        } catch (e) {}
-      }
-      return;
-    }
-    if (_startAppInstall) return _startAppInstall.apply(this, arguments);
-  };
-
-  var _sheetInstall = window.sheetInstallAction;
-  window.sheetInstallAction = function () {
-    var sel = window.selectedApp;
-    if (sel && !guardId(sel.id)) return;
-    if (_sheetInstall) return _sheetInstall.apply(this, arguments);
-  };
-
-  var _sheetOpen = window.sheetOpenAction;
-  window.sheetOpenAction = function () {
-    var sel = window.selectedApp;
-    if (sel && !guardId(sel.id)) return;
-    if (_sheetOpen) return _sheetOpen.apply(this, arguments);
-  };
-
-  var _installApp = window.installApp;
-  window.installApp = function (id) {
-    if (!guardId(id)) return;
-    if (_installApp) return _installApp.apply(this, arguments);
-  };
-
-  var _openAppPage = window.openAppPage;
-  window.openAppPage = function (id, fromHash) {
-    var a = findA(id);
-    if (isSuspended(a) && !mayAccess(a)) {
-      // Still open the page so user sees the official suspended notice, but
-      // actions are already disabled in the renderer; double-guard navigation.
-      if (_openAppPage) {
-        var r = _openAppPage.apply(this, arguments);
-        // After render, force-disable any remaining action buttons that older layers may inject
-        setTimeout(function () {
-          try {
-            var page = document.getElementById('appPage') || document.getElementById('apBody');
-            var root = document.getElementById('apBody') || page;
-            if (!root) return;
-            root.querySelectorAll('.install-wave, #sheetInstallBtn, [onclick*="startAppInstall"], [onclick*="openPreview"]').forEach(function (b) {
-              b.disabled = true;
-              b.onclick = function (e) { e && e.preventDefault(); blockMsg(); return false; };
-              b.removeAttribute('onclick');
-            });
-            // Replace actions row if still showing install
-            var actions = root.querySelector('.ap-actions');
-            if (actions && !actions.querySelector('[data-v4-blocked]')) {
-              actions.innerHTML = '<button type="button" class="btn btn-outline" data-v4-blocked="1" disabled style="opacity:.75;cursor:not-allowed;flex:1;gap:8px"><i class="fa-solid fa-ban"></i><span>' +
-                T('لا يمكنك تنزيل أو فتح هذا التطبيق', 'You cannot download or open this app') + '</span></button>';
-            }
-            // Kill preview iframe target if any residual open link
-            var pvOpen = document.getElementById('pvOpen');
-            if (pvOpen) { pvOpen.removeAttribute('href'); pvOpen.onclick = function (e) { e.preventDefault(); blockMsg(); }; }
-          } catch (e) {}
-        }, 0);
-        return r;
-      }
-      blockMsg();
-      return;
-    }
-    if (_openAppPage) return _openAppPage.apply(this, arguments);
-  };
-
-  /* ---- Library / installed shelf open ---- */
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('[data-act="open"]');
-    if (!btn) return;
-    var id = btn.getAttribute('data-id');
-    if (id && !guardId(id)) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    }
-  }, true);
-
-  /* ---- Intercept window.open used for app destinations when suspended is known ---- */
-  var _wopen = window.open;
-  // We do not globally block window.open; only our known entry points are guarded.
-
-  /* ---- Admin suspend: clearer developer notification ---- */
-  var _admSuspend = window.admSuspend;
-  window.admSuspend = function (id) {
-    var a = findA(id);
-    if (!_admSuspend) return;
-    var was = a && a.suspended;
-    var r = _admSuspend.apply(this, arguments);
-    // Extra toast for admin
-    setTimeout(function () {
-      if (typeof window.showToast === 'function') {
-        window.showToast(was
-          ? T('تم تفعيل التطبيق — أصبح متاحاً للزوار', 'App re-enabled — now available to visitors')
-          : T('تم إيقاف التطبيق — لن يستطيع أحد تنزيله أو فتحه أو معاينته', 'App suspended — no one can download, open, or preview it'));
-      }
-    }, 400);
-    return r;
-  };
-
-  /* ---- Improve ads: filter suspended from public ad strip + soft auto-scroll ---- */
-  function polishAds() {
-    try {
-      document.querySelectorAll('.ads-scroll .ad-item, .ads-scroll .ad-banner, .ads-scroll .ad-banner2').forEach(function (el) {
-        var onclick = el.getAttribute('onclick') || '';
-        var m = /openAppPage\('([^']+)'/.exec(onclick) || /\)\(\'([^\']+)\'\)/.exec(onclick);
-        if (!m) return;
-        var a = findA(m[1]);
-        if (isSuspended(a) && !mayAccess(a)) {
-          el.style.opacity = '0.55';
-          el.style.filter = 'grayscale(0.35)';
-          el.setAttribute('title', T('إعلان لتطبيق موقوف', 'Ad for a suspended app'));
-        }
-      });
-      var sc = document.querySelector('.ads-scroll');
-      if (sc && !sc.dataset.v4Scroll && sc.children.length > 1) {
-        sc.dataset.v4Scroll = '1';
-        var dir = 1, pause = false;
-        sc.addEventListener('pointerdown', function () { pause = true; });
-        sc.addEventListener('pointerup', function () { setTimeout(function () { pause = false; }, 4000); });
-        setInterval(function () {
-          if (pause || document.hidden) return;
-          var max = sc.scrollWidth - sc.clientWidth;
-          if (max <= 8) return;
-          sc.scrollLeft += dir * 1.2;
-          if (sc.scrollLeft >= max - 2) dir = -1;
-          if (sc.scrollLeft <= 2) dir = 1;
-        }, 40);
-      }
-    } catch (e) {}
-  }
-  setInterval(polishAds, 2500);
-  setTimeout(polishAds, 1200);
-
-  /* ---- When saving app URL (upload/edit), normalize automatically ---- */
-  function attachUrlNormalize() {
-    ['appUrl'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (!el || el.dataset.v4norm) return;
-      el.dataset.v4norm = '1';
-      el.addEventListener('blur', function () {
-        var n = normalizeUrlV4(el.value);
-        if (n) el.value = n;
-      });
-    });
-  }
-  setInterval(attachUrlNormalize, 2000);
-  attachUrlNormalize();
-
-  /* ---- Version banner once ---- */
-  try {
-    if (!sessionStorage.getItem('amgz-v40')) {
-      sessionStorage.setItem('amgz-v40', '1');
-      setTimeout(function () {
-        if (typeof window.showToast === 'function')
-          window.showToast(T('تم تحديث المتجر إلى V4 — حماية أقوى وتجربة أسلس', 'Store updated to V4 — stronger protection & smoother experience'));
-      }, 1800);
-    }
-  } catch (e) {}
-
-  console.info('[AMGZRNT] V4 unified active');
-})();
-</script>
-
-
-<script id="v40-icons-status-admin-reviews">
-/* AMGZRNT V4 — icon URL reliability, under-development status, admin reviews */
-(function () {
-  'use strict';
-  var T = window.T || function (ar, en) { return (document.body && document.body.classList.contains('en') ? en : ar); };
-
-  /* ---- Normalize any image URL the developer pastes ---- */
-  function normalizeIconUrl(value) {
-    var raw = String(value == null ? '' : value).trim();
-    if (!raw) return '';
-    raw = raw.replace(/^['"]|['"]$/g, '').trim();
-    // strip query junk that sometimes breaks display when double-encoded
-    raw = raw.replace(/^(https?:\/\/)+/i, function (m) {
-      return m.toLowerCase().indexOf('https') === 0 ? 'https://' : 'http://';
-    });
-    if (/^www\./i.test(raw) || /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}(?::\d+)?(?:[/:?#]|$)/i.test(raw)) {
-      raw = 'https://' + raw;
-    }
-    // Google Drive share → direct view attempt
-    var g = /drive\.google\.com\/file\/d\/([^/]+)/i.exec(raw);
-    if (g) raw = 'https://drive.google.com/uc?export=view&id=' + g[1];
-    // Dropbox share → raw
-    if (/dropbox\.com\//i.test(raw)) {
-      raw = raw.replace(/([?&])dl=0/, '$1dl=1');
-      if (raw.indexOf('raw=1') === -1) raw += (raw.indexOf('?') >= 0 ? '&' : '?') + 'raw=1';
-    }
-    try {
-      var u = new URL(raw);
-      if (u.protocol !== 'https:' && u.protocol !== 'http:') return '';
-      if (!u.hostname) return '';
-      if (u.protocol === 'http:') u.protocol = 'https:';
-      return u.href;
-    } catch (e) { return ''; }
-  }
-  window.normalizeIconUrl = normalizeIconUrl;
-
-  /* Live preview for custom icon fields */
-  window.previewCustomIcon = function (inputId, boxId) {
-    var inp = document.getElementById(inputId);
-    var box = document.getElementById(boxId);
-    if (!box) return;
-    var v = inp ? String(inp.value || '').trim() : '';
-    var n = normalizeIconUrl(v);
-    if (!n) { box.innerHTML = v ? '<small style="color:#f87171">' + T('رابط الأيقونة غير صالح', 'Invalid icon URL') + '</small>' : ''; return; }
-    box.innerHTML = '<img src="' + n.replace(/"/g, '&quot;') + '" alt="" style="width:56px;height:56px;border-radius:14px;object-fit:cover;background:#111" referrerpolicy="no-referrer" data-orig="' + n.replace(/"/g, '&quot;') + '" onerror="iconErr(this)"><small style="display:block;margin-top:6px;color:var(--muted)">' + T('معاينة الأيقونة', 'Icon preview') + '</small>';
-  };
-
-  /* Ensure iconErr exists even if earlier layers failed */
-  if (typeof window.iconErr !== 'function') {
-    window.iconErr = function (img) {
-      try {
-        var step = parseInt(img.dataset.fb || '0', 10);
-        var hostName = img.dataset.host || '';
-        var original = img.dataset.orig || img.getAttribute('src') || '';
-        if (step === 0 && original && original.indexOf('images.weserv.nl') === -1 && /^https?:\/\//i.test(original)) {
-          img.dataset.fb = '1'; img.dataset.orig = original;
-          img.src = 'https://images.weserv.nl/?url=' + encodeURIComponent(original.replace(/^https?:\/\//i, '')) + '&w=192&h=192&fit=contain&output=png';
-          return;
-        }
-        if (step <= 1 && hostName) { img.dataset.fb = '2'; img.src = 'https://www.google.com/s2/favicons?sz=128&domain=' + hostName; return; }
-        if (step <= 2 && hostName) { img.dataset.fb = '3'; img.src = 'https://icons.duckduckgo.com/ip3/' + hostName + '.ico'; return; }
-      } catch (e) {}
-      img.style.display = 'none';
-      var n = img.nextElementSibling; if (n) n.style.display = 'flex';
-    };
-  }
-
-  /* ---- Admin can always write ratings; prefill name; mark as admin ---- */
-  var _submitRating = window.submitRating;
-  window.submitRating = function () {
-    try {
-      if (typeof window.isAdmin === 'function' && window.isAdmin()) {
-        var nameEl = document.getElementById('rvName');
-        if (nameEl && !String(nameEl.value || '').trim()) {
-          nameEl.value = T('الإدارة', 'Admin');
-        }
-      }
-    } catch (e) {}
-    if (_submitRating) return _submitRating.apply(this, arguments);
-  };
-
-  /* Enhance ratings UI after render: admin tools + write as admin */
-  var _renderRatings = window.renderRatings;
-  if (typeof _renderRatings === 'function') {
-    // some codepaths assign renderRatings as function declaration not on window
-  }
-
-  function enhanceRatingsPanel() {
-    var box = document.getElementById('apRatings');
-    if (!box || box.dataset.v40 === '1') return;
-    var isAdm = false;
-    try { isAdm = typeof window.isAdmin === 'function' && window.isAdmin(); } catch (e) {}
-    if (!isAdm) return;
-    // Mark reviews and add admin write helper once
-    if (!box.querySelector('[data-v40-admin-tools]')) {
-      var tools = document.createElement('div');
-      tools.setAttribute('data-v40-admin-tools', '1');
-      tools.style.cssText = 'margin:12px 0 8px;padding:12px;border-radius:14px;border:1px solid rgba(124,58,237,.3);background:rgba(124,58,237,.08)';
-      tools.innerHTML = '<b style="display:block;margin-bottom:6px"><i class="fa-solid fa-shield-halved"></i> ' +
-        T('صلاحيات المدير على التقييمات', 'Admin review tools') + '</b>' +
-        '<small style="color:var(--muted);display:block;margin-bottom:8px">' +
-        T('يمكنك كتابة تقييم باسم الإدارة، وحذف أي مراجعة.', 'You can post a review as Admin and delete any review.') +
-        '</small>' +
-        '<button type="button" class="btn btn-outline btn-sm" id="v40AdminFill">' + T('تعبئة اسم الإدارة', 'Fill Admin name') + '</button>';
-      var formAnchor = box.querySelector('#starIn') || box.querySelector('.star-input');
-      if (formAnchor && formAnchor.parentNode) formAnchor.parentNode.insertBefore(tools, formAnchor);
-      else box.appendChild(tools);
-      var fill = document.getElementById('v40AdminFill');
-      if (fill) fill.onclick = function () {
-        var n = document.getElementById('rvName');
-        if (n) n.value = T('الإدارة', 'Admin');
-        if (typeof window.showToast === 'function') showToast(T('تم تعبئة الاسم', 'Name filled'));
-      };
-    }
-    // Badge admin-authored reviews
-    box.querySelectorAll('.review b').forEach(function (b) {
-      var t = (b.textContent || '').trim();
-      if (/^(الإدارة|Admin|Administration)$/i.test(t) && !b.querySelector('.bdg')) {
-        var s = document.createElement('span');
-        s.className = 'bdg';
-        s.style.cssText = 'margin-inline-start:6px;background:rgba(124,58,237,.25);color:#c4b5fd';
-        s.textContent = T('مدير', 'Admin');
-        b.appendChild(s);
-      }
-    });
-  }
-
-  // Observe ratings container
-  var obs = null;
-  function watchRatings() {
-    var box = document.getElementById('apRatings');
-    if (!box) return;
-    enhanceRatingsPanel();
-    if (obs) return;
-    if (window.MutationObserver) {
-      obs = new MutationObserver(function () {
-        var b = document.getElementById('apRatings');
-        if (b) { b.dataset.v40 = ''; enhanceRatingsPanel(); }
-      });
-      var ap = document.getElementById('apBody') || document.getElementById('appPage');
-      if (ap) obs.observe(ap, { childList: true, subtree: true });
-    }
-  }
-  setInterval(watchRatings, 1500);
-  setTimeout(watchRatings, 800);
-
-  /* Wrap fetch/render if exposed later */
-  var tries = 0;
-  var t = setInterval(function () {
-    tries++;
-    if (typeof window.renderRatings === 'function' && !window.renderRatings._v40) {
-      var orig = window.renderRatings;
-      window.renderRatings = function () {
-        var r = orig.apply(this, arguments);
-        setTimeout(enhanceRatingsPanel, 30);
-        return r;
-      };
-      window.renderRatings._v40 = true;
-      clearInterval(t);
-    }
-    if (tries > 40) clearInterval(t);
-  }, 250);
-
-  /* Admin quick-toggle under development from admin list if missing */
-  var _admSuspend = window.admSuspend;
-  // leave suspend alone
-
-  if (!window.admSetDevStatus) {
-    window.admSetDevStatus = function (id) {
-      var a = (typeof window.findApp === 'function') ? window.findApp(id) : null;
-      if (!a) return;
-      var next = a.devStatus === 'dev' ? 'live' : 'dev';
-      if (typeof window.admUpdate === 'function') {
-        window.admUpdate(id, { devStatus: next }, next === 'dev'
-          ? T('تم وضع التطبيق تحت التطوير', 'App marked under development')
-          : T('تم نشر التطبيق (لم يعد تحت التطوير)', 'App marked as live'));
-      }
-    };
-  }
-
-  /* Patch admin row actions to include dev-status toggle when admin list re-renders */
-  function patchAdminRows() {
-    document.querySelectorAll('.adm-row .adm-act').forEach(function (act) {
-      if (act.querySelector('[data-v40-dev]')) return;
-      var btn = act.querySelector('button[onclick*="admSuspend"]');
-      if (!btn) return;
-      var m = /admSuspend\('([^']+)'\)/.exec(btn.getAttribute('onclick') || '');
-      if (!m) return;
-      var id = m[1];
-      var a = (typeof window.findApp === 'function') ? window.findApp(id) : null;
-      var b = document.createElement('button');
-      b.className = 'btn btn-outline';
-      b.title = T('تحت التطوير / منشور', 'Dev / Live');
-      b.setAttribute('data-v40-dev', '1');
-      b.innerHTML = '<i class="fa-solid fa-' + ((a && a.devStatus === 'dev') ? 'rocket' : 'code') + '"></i>';
-      b.onclick = function () { window.admSetDevStatus(id); };
-      act.insertBefore(b, btn);
-    });
-  }
-  setInterval(patchAdminRows, 2000);
-
-  console.info('[AMGZRNT] V4 icons + status + admin reviews active');
-})();
-</script>
-
-
-<style id="v4-icons-search-cats">
-/* Icon wrap: one slot, no stacked icons */
-.ico-wrap{
-  position:relative;display:inline-block;flex-shrink:0;overflow:hidden;
-  background:var(--card2);vertical-align:middle;
-}
-.ico-wrap > img,
-.ico-wrap > .app-icon-placeholder{
-  position:absolute;inset:0;width:100%!important;height:100%!important;
-  object-fit:cover;border-radius:inherit;margin:0;display:block;
-}
-.ico-wrap > .app-icon-placeholder{
-  display:none;align-items:center;justify-content:center;
-  color:var(--muted);font-size:1.25rem;background:var(--card2);
-}
-.ico-wrap > .app-icon-placeholder[style*="flex"],
-.ico-wrap > .app-icon-placeholder.show{display:flex!important}
-.ico-wrap.row-icon,.ico-wrap.row-icon > *{width:64px;height:64px;border-radius:18px}
-.ico-wrap.tile-icon,.ico-wrap.tile-icon > *{width:96px;height:96px;border-radius:28px}
-.ico-wrap.ap-icon,.ico-wrap.ap-icon > *{width:96px;height:96px;border-radius:26px}
-.ico-wrap.sug-i,.ico-wrap.sug-i > *{width:44px;height:44px;border-radius:13px}
-.tgrid .ico-wrap.tile-icon{width:min(96px,100%);height:auto;aspect-ratio:1}
-.tgrid .ico-wrap.tile-icon > *{width:100%;height:100%}
-/* Search highlight */
-.sug mark,.search-hit mark{background:rgba(124,58,237,.35);color:inherit;border-radius:4px;padding:0 2px}
-.sug-empty{padding:14px 16px;color:var(--muted);text-align:center}
-.chips{gap:8px}
-</style>
-<script id="v4-search-cats">
-(function(){
-  'use strict';
-  var T = window.T || function(ar,en){ return (document.body && document.body.classList.contains('en') ? en : ar); };
-
-  /* Unified category map */
-  var CAT = {
-    tools: ['أدوات','Tools'],
-    productivity: ['إنتاجية','Productivity'],
-    education: ['تعليم','Education'],
-    games: ['ألعاب','Games'],
-    finance: ['مالية','Finance'],
-    health: ['صحة','Health'],
-    entertainment: ['ترفيه','Entertainment'],
-    social: ['اجتماعي','Social'],
-    shopping: ['تسوق','Shopping'],
-    news: ['أخبار','News'],
-    travel: ['سفر','Travel'],
-    utilities: ['خدمات','Utilities'],
-    other: ['أخرى','Other']
-  };
-  var CATI = {
-    tools:'fa-screwdriver-wrench', productivity:'fa-briefcase', education:'fa-graduation-cap',
-    games:'fa-gamepad', finance:'fa-coins', health:'fa-heart-pulse', entertainment:'fa-film',
-    social:'fa-users', shopping:'fa-bag-shopping', news:'fa-newspaper', travel:'fa-plane',
-    utilities:'fa-sliders', other:'fa-shapes'
-  };
-  window.CAT = CAT;
-  window.CATI = Object.assign(window.CATI || {}, CATI);
-
-  function catName(c){
-    if (!c || c === 'all') return T('الكل','All');
-    var p = CAT[c];
-    return p ? T(p[0], p[1]) : c;
-  }
-  window.catName = catName;
-
-  /* Smarter search */
-  function norm(s){
-    return String(s||'').toLowerCase()
-      .replace(/[أإآا]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
-      .replace(/[\u064B-\u065F]/g,'').trim();
-  }
-  function appSearchText(a){
-    var cat = a.category || '';
-    var cn = CAT[cat];
-    return [a.nameAr,a.name,a.nameEn,a.descriptionAr,a.description,a.descriptionEn,a.devName,a.ownerName,cat, cn&&cn[0], cn&&cn[1]].join(' ');
-  }
-  function scoreApp(a, q){
-    if (!q) return 0;
-    var nq = norm(q);
-    var name = norm((a.nameAr||'')+' '+(a.name||'')+' '+(a.nameEn||''));
-    var dev = norm(a.devName||a.ownerName||'');
-    var all = norm(appSearchText(a));
-    if (name === nq) return 100;
-    if (name.indexOf(nq) === 0) return 90;
-    if (name.indexOf(nq) >= 0) return 75;
-    if (dev.indexOf(nq) >= 0) return 55;
-    if (all.indexOf(nq) >= 0) return 40;
-    // token AND
-    var toks = nq.split(/\s+/).filter(Boolean);
-    if (toks.length > 1 && toks.every(function(t){ return all.indexOf(t)>=0; })) return 50;
-    return 0;
-  }
-  function searchApps(q, limit){
-    limit = limit || 50;
-    var list = (window.allApps || []).slice();
-    var scored = [];
-    for (var i=0;i<list.length;i++){
-      var a = list[i];
-      if (a.suspended && !(typeof window.canSee==='function' && window.canSee(a))) continue;
-      var s = scoreApp(a, q);
-      if (s > 0) scored.push({a:a,s:s});
-    }
-    scored.sort(function(x,y){ return y.s - x.s; });
-    return scored.slice(0, limit).map(function(x){ return x.a; });
-  }
-  window.searchApps = searchApps;
-
-  function highlight(text, q){
-    text = String(text||'');
-    if (!q) return text.replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); });
-    var esc = text.replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); });
-    try {
-      var re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
-      return esc.replace(re, '<mark>$1</mark>');
-    } catch(e){ return esc; }
-  }
-
-  /* Override suggestions */
-  function wireSearch(){
-    var sb = document.getElementById('searchInput');
-    var sug = document.getElementById('sugBox');
-    if (!sb || !sug || sb.dataset.v4search) return;
-    sb.dataset.v4search = '1';
-    var timer = null;
-    function run(){
-      var q = sb.value.trim();
-      var wrap = sb.parentNode;
-      if (wrap) wrap.classList.toggle('has', !!q);
-      if (!q){ sug.classList.remove('on'); sug.innerHTML=''; if (typeof window.filterApps==='function') filterApps(); return; }
-      var m = searchApps(q, 8);
-      if (!m.length){
-        sug.innerHTML = '<div class="sug-empty">' + T('لا نتائج عن «'+q+'»','No results for “‘+q+’”') + '</div>';
-      } else {
-        sug.innerHTML = m.map(function(a){
-          var title = (typeof window.nm==='function') ? window.nm(a) : (a.nameAr||a.name||'');
-          var meta = (a.devName||'') + ' • ' + catName(a.category);
-          var icon = (typeof window.iconHTML==='function') ? window.iconHTML(a,'sug-i') : '';
-          return '<div class="sug" onmousedown="event.preventDefault()" onclick="openFromSug(\''+a.id+'\')">'+
-            icon+'<div><b>'+highlight(title,q)+'</b><small>'+highlight(meta,q)+'</small></div></div>';
-        }).join('');
-      }
-      sug.classList.add('on');
-      if (typeof window.filterApps==='function') filterApps();
-    }
-    sb.addEventListener('input', function(){ clearTimeout(timer); timer=setTimeout(run, 120); });
-    sb.addEventListener('focus', function(){ if (sb.value.trim()) run(); });
-  }
-
-  /* Improve getFiltered if present */
-  function patchFilter(){ /* disabled: was causing Maximum call stack via getFiltered recursion */ }
-
-  setInterval(function(){ wireSearch(); }, 2000);
-  setTimeout(function(){ wireSearch(); }, 400);
-
-  console.info('[AMGZRNT] V4 search + categories + icon wrap active');
-})();
-</script>
-
-
-<style id="v4-cats-auth-ads">
-.auth-main-tabs{display:flex;gap:6px;flex-wrap:nowrap}
-.auth-main-tabs .tab-btn{flex:1;justify-content:center;font-size:.82rem;padding:8px 6px}
+<style id="v4-clean">
+.auth-main-tabs .tab-btn{flex:1;font-size:.82rem;padding:8px 4px}
 .auth-sub.on{background:var(--primary)!important;color:#fff!important;border-color:transparent!important}
 #catsPage.app-page{z-index:280}
-#catsBody{padding:12px 14px 110px!important}
-.cat-bento{
-  display:grid;
-  grid-template-columns:1.15fr 1fr;
-  grid-auto-rows:minmax(110px,auto);
-  gap:12px;
-}
-.cat-tile{
-  position:relative;overflow:hidden;border:0;cursor:pointer;text-align:start;
-  border-radius:28px;padding:18px 16px 16px;min-height:118px;
-  display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;
-  color:#fff;box-shadow:0 14px 36px rgba(0,0,0,.32);
-  transition:transform .28s cubic-bezier(.3,1.5,.5,1),box-shadow .28s;
-  isolation:isolate;
-}
+.cat-bento{display:grid;grid-template-columns:1.15fr 1fr;grid-auto-rows:minmax(110px,auto);gap:12px}
+.cat-tile{position:relative;overflow:hidden;border:0;cursor:pointer;text-align:start;border-radius:28px;padding:18px 16px 16px;min-height:118px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;color:#fff;box-shadow:0 14px 36px rgba(0,0,0,.32);transition:transform .28s cubic-bezier(.3,1.5,.5,1)}
 .cat-tile:active{transform:scale(.97)}
-.cat-tile .ct-ico{
-  position:absolute;top:14px;inset-inline-end:14px;
-  width:54px;height:54px;border-radius:18px;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.16);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  font-size:1.45rem;color:#fff;z-index:2;
-  box-shadow:0 8px 20px rgba(0,0,0,.18);
-}
-.cat-tile .ct-title{position:relative;z-index:2;font-size:1.12rem;font-weight:900;line-height:1.25;margin:0 0 4px}
+.cat-tile .ct-ico{position:absolute;top:14px;inset-inline-end:14px;width:54px;height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:1.45rem;z-index:2}
+.cat-tile .ct-title{position:relative;z-index:2;font-size:1.12rem;font-weight:900;margin:0 0 4px}
 .cat-tile .ct-sub{position:relative;z-index:2;font-size:.78rem;opacity:.88;font-weight:600}
-.cat-tile::after{
-  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.38) 100%);
-}
-.cat-tile.span2{grid-column:1 / -1;min-height:132px;border-radius:30px}
+.cat-tile::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.38))}
+.cat-tile.span2{grid-column:1/-1;min-height:132px}
 .cat-tile.tall{min-height:160px}
-.cat-tile.wide{grid-column:1 / -1}
-/* soft decorative blob */
-.cat-tile .ct-blob{
-  position:absolute;width:140px;height:140px;border-radius:50%;filter:blur(2px);
-  background:rgba(255,255,255,.12);z-index:0;pointer-events:none;
-  top:-30px;inset-inline-start:-24px;
-}
-.ads-scroll{scroll-behavior:smooth}
-.ad-banner,.ad-banner2{box-shadow:0 12px 32px rgba(0,0,0,.28)}
-.ad-tag{backdrop-filter:blur(8px)}
+.cat-tile.wide{grid-column:1/-1}
+.cat-tile .ct-blob{position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.12);z-index:0;top:-30px;inset-inline-start:-24px}
+.ico-wrap{position:relative;display:inline-block;flex-shrink:0;overflow:hidden;background:var(--card2)}
+.ico-wrap>img,.ico-wrap>.app-icon-placeholder{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:cover;border-radius:inherit;margin:0}
+.ico-wrap.row-icon{width:64px;height:64px;border-radius:18px}
+.ico-wrap.tile-icon{width:96px;height:96px;border-radius:28px}
+.ico-wrap.ap-icon{width:96px;height:96px;border-radius:26px}
+.ico-wrap.sug-i{width:44px;height:44px;border-radius:13px}
 </style>
-<script id="v4-cats-auth-role">
+<script id="v4-clean-js">
 (function(){
   'use strict';
-  var T = window.T || function(a,e){ return (document.body && document.body.classList.contains('en')) ? e : a; };
+  var T = window.T || function(a,e){ return document.body.classList.contains('en') ? e : a; };
   function $(id){ return document.getElementById(id); }
-
-  /* ---------- Categories sliding page ---------- */
-  var CAT = window.CAT || {
-    tools:['أدوات','Tools'], productivity:['إنتاجية','Productivity'], education:['تعليم','Education'],
-    games:['ألعاب','Games'], finance:['مالية','Finance'], health:['صحة','Health'],
-    entertainment:['ترفيه','Entertainment'], social:['اجتماعي','Social'], shopping:['تسوق','Shopping'],
-    news:['أخبار','News'], travel:['سفر','Travel'], utilities:['خدمات','Utilities'], other:['أخرى','Other']
-  };
-  var CATI = window.CATI || {
-    tools:'fa-screwdriver-wrench', productivity:'fa-briefcase', education:'fa-graduation-cap',
-    games:'fa-gamepad', finance:'fa-coins', health:'fa-heart-pulse', entertainment:'fa-film',
-    social:'fa-users', shopping:'fa-bag-shopping', news:'fa-newspaper', travel:'fa-plane',
-    utilities:'fa-sliders', other:'fa-shapes'
-  };
-  function catLabel(c){
-    if (typeof window.catName === 'function') return window.catName(c);
-    var p = CAT[c]; return p ? T(p[0],p[1]) : c;
+  function findA(id){ return (typeof findApp==='function'?findApp(id):null) || (window.allApps||[]).find(function(a){return a&&String(a.id)===String(id);}); }
+  function mayAccess(a){
+    if (!a || !a.suspended) return true;
+    try { if (typeof isAdmin==='function' && isAdmin()) return true; if (typeof canSee==='function' && canSee(a)) return true; } catch(e){}
+    return false;
   }
+  function blockMsg(){ if (typeof showToast==='function') showToast(T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.','You cannot download, open, or preview this app — suspended by admin.')); }
+
+  /* ---- Auth: 3 portals without breaking existing handlers ---- */
+  var portal = 'user', sub = 'login';
+  function syncAuthUI(){
+    ['tabUser','tabDev','tabAdmin'].forEach(function(id){
+      var el=$(id); if(!el) return;
+      el.classList.toggle('active', (id==='tabUser'&&portal==='user')||(id==='tabDev'&&portal==='dev')||(id==='tabAdmin'&&portal==='admin'));
+    });
+    var subTabs=$('authSubTabs'), devRow=$('devTypeRow'), nameG=$('nameGroup'), hint=$('authHint');
+    if (portal==='admin'){
+      if(subTabs) subTabs.style.display='none';
+      if(devRow) devRow.style.display='none';
+      if(nameG) nameG.style.display='none';
+      try { authMode='admin'; } catch(e){}
+      if(hint) hint.textContent=T('دخول الإدارة فقط','Admin access only');
+    } else {
+      if(subTabs) subTabs.style.display='flex';
+      document.querySelectorAll('.auth-sub').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sub')===sub); });
+      if(devRow) devRow.style.display = portal==='dev' ? 'block' : 'none';
+      if(nameG) nameG.style.display = sub==='register' ? 'block' : 'none';
+      try { authMode = sub==='register' ? (portal==='user'?'user':'register') : (portal==='user'?'login':'login'); } catch(e){}
+      if (portal==='user' && sub==='register') { try { authMode='user'; } catch(e){} }
+      if (portal==='dev' && sub==='register') { try { authMode = ($('authCollective')&&$('authCollective').checked)?'collective':'register'; } catch(e){} }
+      if (portal==='dev' && sub==='login') { try { authMode='login'; } catch(e){} }
+      if (portal==='user' && sub==='login') { try { authMode='login'; } catch(e){} }
+      window._pendingRole = portal==='dev' ? 'dev' : 'user';
+      if(hint) hint.textContent = portal==='dev' ? T('حساب المطوّر يمكنه نشر التطبيقات','Developer can publish apps') : T('حساب عادي لحفظ التطبيقات المثبّتة','Regular account to save installed apps');
+    }
+    var btn=$('authSubmit');
+    if(btn){
+      if(portal==='admin') btn.innerHTML='<i class="fa-solid fa-shield-halved"></i><span>'+T('دخول المدير','Admin login')+'</span>';
+      else if(sub==='login') btn.innerHTML='<i class="fa-solid fa-right-to-bracket"></i><span>'+T('دخول','Login')+'</span>';
+      else btn.innerHTML='<i class="fa-solid fa-user-plus"></i><span>'+T('إنشاء حساب','Create account')+'</span>';
+    }
+  }
+  var _st = window.switchTab;
+  window.switchTab = function(mode){
+    if (mode==='user'||mode==='dev'||mode==='admin'){ portal=mode; syncAuthUI(); return; }
+    if (mode==='login'||mode==='register'||mode==='collective'||mode==='user'){
+      if (mode==='collective'){ portal='dev'; sub='register'; var c=$('authCollective'); if(c) c.checked=true; }
+      else if (mode==='register'){ sub='register'; if(portal==='admin') portal='dev'; }
+      else if (mode==='login'){ sub='login'; }
+      else if (mode==='user'){ portal='user'; sub='register'; }
+      syncAuthUI();
+      if (_st) {
+        // map to legacy modes for underlying handlers
+        var legacy = portal==='admin' ? 'admin' : (sub==='register' ? (portal==='user'?'user':( ($('authCollective')&&$('authCollective').checked)?'collective':'register')) : 'login');
+        try { _st(legacy); } catch(e){}
+      }
+      syncAuthUI();
+      return;
+    }
+    if (_st) return _st.apply(this, arguments);
+  };
+  window.setAuthSub = function(s){ sub=s; window.switchTab(portal); };
+
+  /* ---- Categories bento page ---- */
+  var ORDER = [
+    {c:'all', span:'span2', g:'linear-gradient(135deg,#7c3aed,#4c1d95 55%,#1e1b4b)', ic:'fa-border-all'},
+    {c:'games', span:'tall', g:'linear-gradient(145deg,#f97316,#ea580c 45%,#9a3412)', ic:'fa-gamepad'},
+    {c:'entertainment', span:'', g:'linear-gradient(145deg,#6366f1,#4f46e5 50%,#312e81)', ic:'fa-tv'},
+    {c:'shopping', span:'', g:'linear-gradient(145deg,#ec4899,#db2777 50%,#9d174d)', ic:'fa-bag-shopping'},
+    {c:'finance', span:'', g:'linear-gradient(145deg,#10b981,#059669 50%,#064e3b)', ic:'fa-coins'},
+    {c:'tools', span:'', g:'linear-gradient(145deg,#0ea5e9,#0284c7 50%,#0c4a6e)', ic:'fa-screwdriver-wrench'},
+    {c:'productivity', span:'', g:'linear-gradient(145deg,#8b5cf6,#7c3aed 50%,#4c1d95)', ic:'fa-briefcase'},
+    {c:'education', span:'', g:'linear-gradient(145deg,#14b8a6,#0d9488 50%,#115e59)', ic:'fa-graduation-cap'},
+    {c:'health', span:'', g:'linear-gradient(145deg,#f43f5e,#e11d48 50%,#9f1239)', ic:'fa-heart-pulse'},
+    {c:'social', span:'', g:'linear-gradient(145deg,#3b82f6,#2563eb 50%,#1e3a8a)', ic:'fa-users'},
+    {c:'news', span:'', g:'linear-gradient(145deg,#64748b,#475569 50%,#1e293b)', ic:'fa-newspaper'},
+    {c:'travel', span:'', g:'linear-gradient(145deg,#06b6d4,#0891b2 50%,#155e75)', ic:'fa-plane'},
+    {c:'utilities', span:'', g:'linear-gradient(145deg,#a78bfa,#8b5cf6 50%,#5b21b6)', ic:'fa-sliders'},
+    {c:'other', span:'wide', g:'linear-gradient(145deg,#78716c,#57534e 50%,#292524)', ic:'fa-shapes'}
+  ];
+  function catLabel(c){ return (typeof catName==='function') ? catName(c) : c; }
   function countCat(c){
-    var list = window.allApps || [];
-    if (c === 'all') return list.filter(function(a){ return !a.suspended || (typeof canSee==='function'&&canSee(a)); }).length;
-    return list.filter(function(a){ return (a.category||'other')===c && (!a.suspended || (typeof canSee==='function'&&canSee(a))); }).length;
+    var list=window.allApps||[];
+    return list.filter(function(a){ return (c==='all'||(a.category||'other')===c) && (!a.suspended || mayAccess(a)); }).length;
   }
   window.openCatsPage = function(){
-    var page = $('catsPage'), body = $('catsBody');
-    if (!page || !body) return;
-    var order = [
-      {c:'all', span:'span2', g:'linear-gradient(135deg,#7c3aed 0%,#4c1d95 55%,#1e1b4b 100%)', ic:'fa-border-all'},
-      {c:'games', span:'tall', g:'linear-gradient(145deg,#f97316 0%,#ea580c 45%,#9a3412 100%)', ic:'fa-gamepad'},
-      {c:'entertainment', span:'', g:'linear-gradient(145deg,#6366f1 0%,#4f46e5 50%,#312e81 100%)', ic:'fa-tv'},
-      {c:'shopping', span:'', g:'linear-gradient(145deg,#ec4899 0%,#db2777 50%,#9d174d 100%)', ic:'fa-bag-shopping'},
-      {c:'finance', span:'', g:'linear-gradient(145deg,#10b981 0%,#059669 50%,#064e3b 100%)', ic:'fa-coins'},
-      {c:'tools', span:'', g:'linear-gradient(145deg,#0ea5e9 0%,#0284c7 50%,#0c4a6e 100%)', ic:'fa-screwdriver-wrench'},
-      {c:'productivity', span:'', g:'linear-gradient(145deg,#8b5cf6 0%,#7c3aed 50%,#4c1d95 100%)', ic:'fa-briefcase'},
-      {c:'education', span:'', g:'linear-gradient(145deg,#14b8a6 0%,#0d9488 50%,#115e59 100%)', ic:'fa-graduation-cap'},
-      {c:'health', span:'', g:'linear-gradient(145deg,#f43f5e 0%,#e11d48 50%,#9f1239 100%)', ic:'fa-heart-pulse'},
-      {c:'social', span:'', g:'linear-gradient(145deg,#3b82f6 0%,#2563eb 50%,#1e3a8a 100%)', ic:'fa-users'},
-      {c:'news', span:'', g:'linear-gradient(145deg,#64748b 0%,#475569 50%,#1e293b 100%)', ic:'fa-newspaper'},
-      {c:'travel', span:'', g:'linear-gradient(145deg,#06b6d4 0%,#0891b2 50%,#155e75 100%)', ic:'fa-plane'},
-      {c:'utilities', span:'', g:'linear-gradient(145deg,#a78bfa 0%,#8b5cf6 50%,#5b21b6 100%)', ic:'fa-sliders'},
-      {c:'other', span:'wide', g:'linear-gradient(145deg,#78716c 0%,#57534e 50%,#292524 100%)', ic:'fa-shapes'}
-    ];
-    body.innerHTML = '<div class="cat-bento">' + order.map(function(it){
-      var n = countCat(it.c);
-      var title = it.c === 'all' ? T('كل التطبيقات','All apps') : catLabel(it.c);
-      var cls = 'cat-tile' + (it.span ? (' ' + it.span) : '');
-      return '<button type="button" class="'+cls+'" data-cat="'+it.c+'" style="background:'+it.g+'">'+
-        '<span class="ct-blob" aria-hidden="true"></span>'+
-        '<span class="ct-ico"><i class="fa-solid '+it.ic+'"></i></span>'+
-        '<span class="ct-title">'+title+'</span>'+
-        '<span class="ct-sub">'+n+' '+T('تطبيق','apps')+'</span></button>';
-    }).join('') + '</div>';
+    var page=$('catsPage'), body=$('catsBody'); if(!page||!body) return;
+    body.innerHTML = '<div class="cat-bento">'+ORDER.map(function(it){
+      var title = it.c==='all' ? T('كل التطبيقات','All apps') : catLabel(it.c);
+      return '<button type="button" class="cat-tile '+(it.span||'')+'" data-cat="'+it.c+'" style="background:'+it.g+'">'+
+        '<span class="ct-blob"></span><span class="ct-ico"><i class="fa-solid '+it.ic+'"></i></span>'+
+        '<span class="ct-title">'+title+'</span><span class="ct-sub">'+countCat(it.c)+' '+T('تطبيق','apps')+'</span></button>';
+    }).join('')+'</div>';
     body.querySelectorAll('.cat-tile').forEach(function(btn){
-      btn.onclick = function(){
-        var c = btn.getAttribute('data-cat');
-        closeCatsPage();
-        var chip = document.querySelector('.chip[data-cat="'+c+'"]');
-        if (typeof window.setCategory === 'function') window.setCategory(c, chip || document.body);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      btn.onclick=function(){
+        var c=btn.getAttribute('data-cat');
+        window.closeCatsPage();
+        var chip=document.querySelector('.chip[data-cat="'+c+'"]');
+        if (typeof setCategory==='function') setCategory(c, chip||document.body);
+        window.scrollTo({top:0,behavior:'smooth'});
       };
     });
-    page.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    page.classList.add('active'); document.body.style.overflow='hidden';
   };
   window.closeCatsPage = function(){
-    var page = $('catsPage');
-    if (page) page.classList.remove('active');
-    if (!document.querySelector('.app-page.active,.drawer.active')) document.body.style.overflow = '';
+    var page=$('catsPage'); if(page) page.classList.remove('active');
+    if(!document.querySelector('.app-page.active')) document.body.style.overflow='';
   };
 
-  /* ---------- Role persistence: never demote a developer ---------- */
-  function hasPublishedApps(uid){
-    return (window.allApps||[]).some(function(a){ return (a.ownerUid===uid || a.devId===uid); });
-  }
-  function ensureDevRole(u){
-    if (!u || !window.db) return Promise.resolve(null);
-    var ref = db.collection('users').doc(u.uid);
-    return ref.get().then(function(d){
-      var data = d.exists ? (d.data()||{}) : {};
-      var role = data.role;
-      var pending = window._pendingRole;
-      var shouldDev = pending === 'dev' || role === 'dev' || role === 'admin' || hasPublishedApps(u.uid);
-      var shouldAdmin = (u.email === 'admin@amgzrnt.app') || role === 'admin';
-      var next = shouldAdmin ? 'admin' : (shouldDev ? 'dev' : (role || pending || 'user'));
-      // Never overwrite admin/dev down to user if they have apps or were already dev
-      if ((role === 'dev' || role === 'admin') && next === 'user') next = role;
-      if (hasPublishedApps(u.uid) && next === 'user') next = 'dev';
-      var patch = { role: next, email: u.email || data.email || '', name: u.displayName || data.name || '' };
-      var col = document.getElementById('authCollective');
-      if (col && col.checked) patch.collective = true;
-      if (pending === 'dev' && col && col.checked) patch.collective = true;
-      return ref.set(patch, { merge: true }).then(function(){ return next; }).catch(function(){ return next; });
-    }).catch(function(){ return window._pendingRole || 'user'; });
-  }
-
-  // Wrap handleAuth to persist role after success
-  var _handleAuth = window.handleAuth;
-  window.handleAuth = function(e){
-    if (e && e.preventDefault) e.preventDefault();
-    // Set pending role from current portal
-    var portal = window._authPortal || 'user';
-    if (portal === 'dev') window._pendingRole = 'dev';
-    else if (portal === 'user') window._pendingRole = 'user';
-    else window._pendingRole = null;
-
-    // Admin path stays on existing handlers if present
-    if (portal === 'admin' && typeof window.adminLogin === 'function') {
-      return window.adminLogin(e);
+  /* ---- Suspend hard block (guards only, no recursive wrappers of install pipeline) ---- */
+  document.addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('[onclick*="startAppInstall"],[onclick*="openPreview"],.install-wave,#sheetInstallBtn');
+    if (!t) return;
+    var id = t.getAttribute('data-app-id') || (window.selectedApp && window.selectedApp.id);
+    if (!id) {
+      var m = /startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'') || /openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||'');
+      if (m) id = m[1];
     }
-    // Prefer later specialized handlers if they exist for admin
-    if (portal === 'admin' && document.getElementById('tabAdmin')) {
-      // fall through to original; many builds handle admin via authMode==='admin'
-      if (typeof window.authMode !== 'undefined') window.authMode = 'admin';
+    if (!id) return;
+    var a = findA(id);
+    if (a && a.suspended && !mayAccess(a)) {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      blockMsg();
     }
-
-    var email = ($('authEmail')||{}).value;
-    var pass = ($('authPassword')||{}).value;
-    var name = ($('authName')||{}).value;
-    var sub = window._authSub || 'login';
-    var isReg = sub === 'register' && portal !== 'admin';
-
-    if (_handleAuth && portal !== 'admin') {
-      // Temporarily map to login/register for legacy handleAuth
-      try {
-        if (typeof authMode !== 'undefined') {
-          // can't assign const - use window
-        }
-        window.authMode = isReg ? 'register' : 'login';
-      } catch (err) {}
-      // Monkey-patch create path by listening once
-      var unsub = null;
-      var done = false;
-      function after(){
-        if (done) return; done = true;
-        var u = auth.currentUser;
-        if (!u) return;
-        ensureDevRole(u).then(function(role){
-          try {
-            if (typeof window.role !== 'undefined') window.role = role;
-          } catch(e){}
-          if (typeof window.applyRole === 'function') window.applyRole();
-          // Force upload button for devs
-          var up = $('btnUpload'), ds = $('btnDevSettings');
-          if (role === 'dev' || role === 'admin') {
-            if (up) up.style.display = '';
-            if (ds) ds.style.display = '';
-          } else {
-            if (up) up.style.display = 'none';
-            if (ds) ds.style.display = 'none';
-          }
-        });
-      }
-      auth.onAuthStateChanged(function(u){ if (u) setTimeout(after, 300); });
-      return _handleAuth.apply(this, arguments);
-    }
-    if (_handleAuth) return _handleAuth.apply(this, arguments);
-  };
-
-  // Reinforce applyRole whenever auth changes
-  if (window.auth) {
-    auth.onAuthStateChanged(function(u){
-      if (!u) return;
-      setTimeout(function(){
-        ensureDevRole(u).then(function(role){
-          try { window.role = role; } catch(e){}
-          var up = $('btnUpload'), ds = $('btnDevSettings'), ms = $('myAppsSection');
-          var isPub = role === 'dev' || role === 'admin' || hasPublishedApps(u.uid);
-          if (up) up.style.display = isPub ? '' : 'none';
-          if (ds) ds.style.display = isPub ? '' : 'none';
-          if (ms && isPub) ms.style.display = '';
-          if (typeof window.applyRole === 'function') {
-            try { window.role = isPub && role !== 'admin' ? 'dev' : role; window.applyRole(); } catch(e){}
-          }
-        });
-      }, 600);
-    });
-  }
-
-  /* ---------- Ads polish ---------- */
-  function polishAds(){
-    try {
-      document.querySelectorAll('.ad-banner, .ad-banner2').forEach(function(el){
-        if (el.dataset.v4ad) return;
-        el.dataset.v4ad = '1';
-        el.style.transition = 'transform .3s cubic-bezier(.3,1.4,.5,1), box-shadow .3s';
-      });
-    } catch(e){}
-  }
-  setInterval(polishAds, 2500);
-
-  /* Init auth UI once */
-  setTimeout(function(){
-    if (typeof window.switchTab === 'function') window.switchTab(window._authPortal || 'user');
-  }, 200);
-
-  console.info('[AMGZRNT] V4 cats page + auth portals + role lock active');
-})();
-</script>
-
-
-<script id="v4-autofill-ads-dev">
-(function(){
-  'use strict';
-  var T = window.T || function(a,e){ return (document.body && document.body.classList.contains('en')) ? e : a; };
-  function $(id){ return document.getElementById(id); }
-  var lastFetchedUrl = '';
-  var fetchTimer = null;
-
-  window.mirrorNameEn = function(){
-    var ar = $('appName'), en = $('appNameEn');
-    if (!ar || !en) return;
-    // Only auto-mirror if EN empty or was previously mirrored from same AR
-    if (!en.value.trim() || en.dataset.mirrored === '1') {
-      en.value = ar.value;
-      en.dataset.mirrored = '1';
-    }
-  };
-  window.mirrorDescEn = function(){
-    var ar = $('appDesc'), en = $('appDescEn');
-    if (!ar || !en) return;
-    if (!en.value.trim() || en.dataset.mirrored === '1') {
-      en.value = ar.value;
-      en.dataset.mirrored = '1';
-    }
-  };
-  // If user edits EN manually, stop auto-mirror for that field
-  document.addEventListener('input', function(e){
-    if (e.target && e.target.id === 'appNameEn') e.target.dataset.mirrored = '0';
-    if (e.target && e.target.id === 'appDescEn') e.target.dataset.mirrored = '0';
   }, true);
 
-  function setStatus(msg, ok){
-    var el = $('urlMetaStatus');
-    if (!el) return;
-    el.style.display = msg ? 'block' : 'none';
-    el.style.color = ok === false ? '#f87171' : (ok ? '#34d399' : 'var(--muted)');
-    el.textContent = msg || '';
+  /* After openAppPage renders, replace actions if suspended */
+  var _oap = window.openAppPage;
+  if (typeof _oap === 'function' && !_oap._v4c) {
+    window.openAppPage = function(id, fromHash){
+      var r = _oap.apply(this, arguments);
+      var a = findA(id);
+      if (a && a.suspended && !mayAccess(a)) {
+        setTimeout(function(){
+          var actions = document.querySelector('#apBody .ap-actions');
+          if (actions) actions.innerHTML = '<button type="button" class="btn btn-outline" disabled style="opacity:.75;flex:1"><i class="fa-solid fa-ban"></i> '+T('لا يمكنك تنزيل أو فتح هذا التطبيق','You cannot download or open this app')+'</button>';
+        }, 0);
+      }
+      return r;
+    };
+    window.openAppPage._v4c = true;
   }
 
-  function applyMeta(meta){
-    if (!meta) return;
-    var name = (meta.title || meta.name || '').trim();
-    var desc = (meta.description || meta.desc || '').trim();
-    var icon = (meta.image || meta.logo || meta.icon || '').trim();
-    var nameEl = $('appName'), nameEn = $('appNameEn'), descEl = $('appDesc'), descEn = $('appDescEn'), iconEl = $('appIcon');
-    if (name) {
-      if (nameEl && !nameEl.value.trim()) nameEl.value = name;
-      if (nameEn && (!nameEn.value.trim() || nameEn.dataset.mirrored === '1')) {
-        nameEn.value = name; nameEn.dataset.mirrored = '1';
-      }
-      // also fill AR if still empty after EN-only source
-      if (nameEl && !nameEl.value.trim()) nameEl.value = name;
-    }
-    if (desc) {
-      if (descEl && !descEl.value.trim()) descEl.value = desc.slice(0, 500);
-      if (descEn && (!descEn.value.trim() || descEn.dataset.mirrored === '1')) {
-        descEn.value = desc.slice(0, 500); descEn.dataset.mirrored = '1';
-      }
-    }
-    if (icon && iconEl) {
-      var nIcon = (window.normalizeIconUrl ? normalizeIconUrl(icon) : icon) || icon;
-      if (!iconEl.value.trim()) {
-        iconEl.value = nIcon;
-        if (typeof window.previewCustomIcon === 'function') previewCustomIcon('appIcon','iconPreviewCustom');
-      }
-    }
-    if (typeof window.previewIcon === 'function') previewIcon();
-    // mirror if EN still empty
+  /* ---- URL autofill ---- */
+  window.mirrorNameEn = function(){
+    var ar=$('appName'), en=$('appNameEn'); if(!ar||!en) return;
+    if(!en.value.trim()||en.dataset.m==='1'){ en.value=ar.value; en.dataset.m='1'; }
+  };
+  window.mirrorDescEn = function(){
+    var ar=$('appDesc'), en=$('appDescEn'); if(!ar||!en) return;
+    if(!en.value.trim()||en.dataset.m==='1'){ en.value=ar.value; en.dataset.m='1'; }
+  };
+  document.addEventListener('input', function(e){
+    if(e.target&&e.target.id==='appNameEn') e.target.dataset.m='0';
+    if(e.target&&e.target.id==='appDescEn') e.target.dataset.m='0';
+  }, true);
+  function setMeta(msg, ok){
+    var el=$('urlMetaStatus'); if(!el) return;
+    el.style.display=msg?'block':'none';
+    el.style.color=ok===false?'#f87171':(ok?'#34d399':'var(--muted)');
+    el.textContent=msg||'';
+  }
+  function applyMeta(m){
+    if(!m) return;
+    var name=(m.title||'').trim(), desc=(m.description||'').trim(), icon=(m.image||'').trim();
+    var n=$('appName'), ne=$('appNameEn'), d=$('appDesc'), de=$('appDescEn'), ic=$('appIcon');
+    if(name){ if(n&&!n.value.trim()) n.value=name; if(ne&&(!ne.value.trim()||ne.dataset.m==='1')){ne.value=name;ne.dataset.m='1';} }
+    if(desc){ if(d&&!d.value.trim()) d.value=desc.slice(0,500); if(de&&(!de.value.trim()||de.dataset.m==='1')){de.value=desc.slice(0,500);de.dataset.m='1';} }
+    if(icon&&ic&&!ic.value.trim()) ic.value=icon;
     mirrorNameEn(); mirrorDescEn();
+    if(typeof previewIcon==='function') previewIcon();
   }
-
-  function hostnameTitle(url){
-    try {
-      var h = new URL(url).hostname.replace(/^www\./,'');
-      var base = h.split('.')[0] || h;
-      return base.charAt(0).toUpperCase() + base.slice(1);
-    } catch(e){ return ''; }
-  }
-
   window.autoFillFromUrl = function(){
-    var urlEl = $('appUrl');
-    if (!urlEl) return;
-    var raw = urlEl.value.trim();
-    var url = (window.normalizeUrl ? normalizeUrl(raw) : raw) || raw;
-    if (url && url !== raw) urlEl.value = url;
-    if (!url || !/^https?:\/\//i.test(url)) return;
-    if (url === lastFetchedUrl) return;
-    clearTimeout(fetchTimer);
-    fetchTimer = setTimeout(function(){ fetchMeta(url); }, 280);
+    var urlEl=$('appUrl'); if(!urlEl) return;
+    var url=urlEl.value.trim();
+    if(url && !/^https?:\/\//i.test(url)) { url='https://'+url.replace(/^\/\//,''); urlEl.value=url; }
+    if(!/^https?:\/\//i.test(url)) return;
+    setMeta(T('جاري قراءة الموقع…','Reading site…'));
+    fetch('https://api.microlink.io?url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(j){
+      var d=j&&j.data; if(!d) throw 0;
+      var img=(d.image&&(d.image.url||d.image))||(d.logo&&(d.logo.url||d.logo))||'';
+      applyMeta({title:d.title||d.publisher||'', description:d.description||'', image:typeof img==='string'?img:''});
+      setMeta(T('تم جلب الاسم والوصف','Name & description filled'), true);
+    }).catch(function(){
+      try {
+        var h=new URL(url).hostname.replace(/^www\./,'');
+        var base=h.split('.')[0];
+        applyMeta({title:base.charAt(0).toUpperCase()+base.slice(1), description:'', image:''});
+      } catch(e){}
+      setMeta(T('تعذر قراءة الموقع بالكامل','Could not read full metadata'), false);
+    });
   };
 
-  function fetchMeta(url){
-    lastFetchedUrl = url;
-    setStatus(T('جاري قراءة الموقع…','Reading site metadata…'));
-    var api = 'https://api.microlink.io?url=' + encodeURIComponent(url);
-    fetch(api, { method:'GET' }).then(function(r){ return r.json(); }).then(function(j){
-      var d = j && j.data ? j.data : null;
-      if (!d) throw new Error('no data');
-      var image = (d.image && (d.image.url || d.image)) || (d.logo && (d.logo.url || d.logo)) || '';
-      applyMeta({
-        title: d.title || d.publisher || hostnameTitle(url),
-        description: d.description || '',
-        image: typeof image === 'string' ? image : ''
-      });
-      setStatus(T('تم جلب الاسم والوصف من الموقع','Name & description filled from the site'), true);
-    }).catch(function(){
-      // fallback: hostname as name
-      var ht = hostnameTitle(url);
-      if (ht) applyMeta({ title: ht, description: '', image: '' });
-      setStatus(T('تعذر قراءة الموقع بالكامل — تم اقتراح اسم من الرابط','Could not read full metadata — suggested name from URL'), false);
+  /* ---- Role: keep developers as developers (no recursive auth loops) ---- */
+  if (window.auth) {
+    auth.onAuthStateChanged(function(u){
+      if (!u || !window.db) return;
+      var ref = db.collection('users').doc(u.uid);
+      ref.get().then(function(doc){
+        var data = doc.exists ? (doc.data()||{}) : {};
+        var role = data.role;
+        var hasApps = (window.allApps||[]).some(function(a){ return a.ownerUid===u.uid || a.devId===u.uid; });
+        var pending = window._pendingRole;
+        var next = (u.email==='admin@amgzrnt.app') ? 'admin' : (role==='admin'||role==='dev'||pending==='dev'||hasApps) ? (role==='admin'?'admin':'dev') : (role||pending||'user');
+        if ((role==='dev'||role==='admin') && next==='user') next = role;
+        if (hasApps && next==='user') next = 'dev';
+        var patch = { role: next, email: u.email||'', name: u.displayName||data.name||'' };
+        if ($('authCollective') && $('authCollective').checked) patch.collective = true;
+        // only write if needed
+        if (data.role !== next || !doc.exists) ref.set(patch, {merge:true}).catch(function(){});
+        var up=$('btnUpload'), ds=$('btnDevSettings');
+        if (next==='dev'||next==='admin'){ if(up) up.style.display=''; if(ds) ds.style.display=''; }
+        else { if(up) up.style.display='none'; if(ds) ds.style.display='none'; }
+      }).catch(function(){});
     });
   }
 
-  // Also trigger on paste
-  document.addEventListener('paste', function(e){
-    if (e.target && e.target.id === 'appUrl') setTimeout(function(){ autoFillFromUrl(); }, 50);
-  });
-
-  /* Ensure upload saves EN fields even if older handleUpload runs */
-  var _hu = window.handleUpload;
-  if (typeof _hu === 'function') {
-    window.handleUpload = function(e){
-      // normalize url first
-      try {
-        var u = $('appUrl');
-        if (u) {
-          var n = window.normalizeUrl ? normalizeUrl(u.value.trim()) : u.value.trim();
-          if (n) u.value = n;
-        }
-        mirrorNameEn(); mirrorDescEn();
-      } catch(err){}
-      return _hu.apply(this, arguments);
-    };
-  }
-
-  /* Developer effectiveness: quick-publish helpers + keep role buttons visible */
-  function boostDevUI(){
-    var up = $('btnUpload');
-    if (!up || up.dataset.v4boost) return;
-    // only when visible
-  }
-  setInterval(boostDevUI, 3000);
-
-  /* Ads: pause on hover, indicator dots optional */
-  function enhanceAds(){
-    document.querySelectorAll('.ads-scroll').forEach(function(sc){
-      if (sc.dataset.v4ads2) return;
-      sc.dataset.v4ads2 = '1';
-      sc.addEventListener('mouseenter', function(){ sc.dataset.pause = '1'; });
-      sc.addEventListener('mouseleave', function(){ sc.dataset.pause = ''; });
-    });
-  }
-  setInterval(enhanceAds, 2000);
-
-  console.info('[AMGZRNT] V4 autofill + EN fields + ads polish active');
+  console.info('[AMGZRNT] V4 clean enhancements ready');
 })();
 </script>
 
