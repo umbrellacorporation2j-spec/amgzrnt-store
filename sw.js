@@ -5,7 +5,7 @@
    - Same-origin assets: stale-while-revalidate.
    - Fonts / icons / Firebase SDK scripts (cross-origin): cached so the UI also loads offline.
    - Firestore / Auth / app websites are never cached. */
-const VERSION = 'v48';
+const VERSION = 'v49';
 const CACHE_NAME = 'amgzrnt-store-' + VERSION;
 const RUNTIME = 'amgzrnt-store-runtime-' + VERSION;
 const APP_SHELL = [
