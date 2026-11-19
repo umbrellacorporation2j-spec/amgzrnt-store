@@ -1540,12 +1540,20 @@ body{padding-bottom:110px}
 
     function getFiltered() {
       var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
-      return (typeof window.getFiltered === 'function' ? window.getFiltered() : allApps.filter(function(a) {
+      var list = allApps || [];
+      if (typeof window.searchApps === 'function' && q) {
+        list = window.searchApps(q, 200);
+      }
+      return list.filter(function(a) {
         var catOk = activeCategory === 'all' || a.category === activeCategory;
+        if (!catOk) return false;
+        if (!q) return true;
+        if (typeof window.searchApps === 'function') return true; // already filtered by search
         var text = [a.name,a.nameAr,a.nameEn,a.description,a.descriptionAr,a.descriptionEn,a.devName].filter(Boolean).join(' ').toLowerCase();
-        return catOk && (!q || text.indexOf(q) !== -1);
-      }));
+        return text.indexOf(q) !== -1;
+      });
     }
+    window.getFiltered = getFiltered;
 
     function filterApps() {
       renderApps(getFiltered());
@@ -2316,7 +2324,21 @@ body{padding-bottom:110px}
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openAppSheet(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
+  var CAT = {
+    tools: true, productivity: true, education: true, games: true, finance: true, health: true,
+    entertainment: true, social: true, shopping: true, news: true, travel: true, utilities: true, other: true
+  };
   var CATI = { tools: 'fa-screwdriver-wrench', productivity: 'fa-briefcase', education: 'fa-graduation-cap', games: 'fa-gamepad', finance: 'fa-coins', health: 'fa-heart-pulse', entertainment: 'fa-film', social: 'fa-users', shopping: 'fa-bag-shopping', news: 'fa-newspaper', travel: 'fa-plane', utilities: 'fa-sliders', other: 'fa-shapes' };
+  function catName(c) {
+    var map = {
+      all: ['الكل','All'], tools: ['أدوات','Tools'], productivity: ['إنتاجية','Productivity'], education: ['تعليم','Education'],
+      games: ['ألعاب','Games'], finance: ['مالية','Finance'], health: ['صحة','Health'], entertainment: ['ترفيه','Entertainment'],
+      social: ['اجتماعي','Social'], shopping: ['تسوق','Shopping'], news: ['أخبار','News'], travel: ['سفر','Travel'],
+      utilities: ['خدمات','Utilities'], other: ['أخرى','Other']
+    };
+    var p = map[c]; return p ? T(p[0], p[1]) : (c || '');
+  }
+  window.CAT = CAT; window.CATI = CATI; window.catName = catName;
   function tileHTML(a, i) {
     return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="(function(id){var a=findApp(id);if(a&&a.suspended&&!(typeof canSee==='function'&&canSee(a))){if(typeof showToast==='function')showToast(T('التطبيق موقوف','App suspended'));return;}openAppPage(id);})(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
       '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
@@ -2921,8 +2943,14 @@ body{padding-bottom:110px}
   /* ---------- visibility + lists ---------- */
   window.getFiltered = function () {
     var q = ($('searchInput').value || '').trim().toLowerCase();
-    return allApps.filter(function (a) {
-      /* Keep suspended apps visible so visitors see the manager warning. */
+    var list = (typeof allApps !== 'undefined' && allApps) ? allApps : (window.allApps || []);
+    if (q && typeof window.searchApps === 'function') {
+      list = window.searchApps(q, 200);
+      return list.filter(function (a) {
+        return activeCategory === 'all' || a.category === activeCategory;
+      });
+    }
+    return list.filter(function (a) {
       var t = ((a.nameAr || '') + ' ' + (a.name || '') + ' ' + (a.nameEn || '') + ' ' + (a.description || '') + ' ' + (a.devName || '')).toLowerCase();
       return (activeCategory === 'all' || a.category === activeCategory) && (!q || t.indexOf(q) > -1);
     });
@@ -5108,40 +5136,10 @@ html body .install-done .wv-svg { display:none!important; }
   }
 
   /* Improve getFiltered if present */
-  function patchFilter(){
-    if (window.getFiltered && window.getFiltered._v4) return;
-    var prev = window.getFiltered;
-    window.getFiltered = function(){
-      var q = ((document.getElementById('searchInput')||{}).value||'').trim();
-      var active = (typeof activeCategory!=='undefined' ? activeCategory : 'all');
-      var base;
-      if (q) base = searchApps(q, 200);
-      else if (typeof prev === 'function') base = prev();
-      else base = (window.allApps||[]).slice();
-      if (active && active !== 'all') base = base.filter(function(a){ return (a.category||'other') === active; });
-      return base;
-    };
-    window.getFiltered._v4 = true;
-  }
+  function patchFilter(){ /* disabled: was causing Maximum call stack via getFiltered recursion */ }
 
-  /* iconErr: hide img inside wrap, show placeholder only */
-  var _iconErr = window.iconErr;
-  window.iconErr = function(img){
-    if (_iconErr) {
-      try { _iconErr(img); } catch(e){}
-    }
-    try {
-      if (img.style.display === 'none') {
-        var ph = img.nextElementSibling;
-        if (ph && ph.classList.contains('app-icon-placeholder')) {
-          ph.style.display = 'flex';
-        }
-      }
-    } catch(e){}
-  };
-
-  setInterval(function(){ wireSearch(); patchFilter(); }, 1500);
-  setTimeout(function(){ wireSearch(); patchFilter(); }, 400);
+  setInterval(function(){ wireSearch(); }, 2000);
+  setTimeout(function(){ wireSearch(); }, 400);
 
   console.info('[AMGZRNT] V4 search + categories + icon wrap active');
 })();
