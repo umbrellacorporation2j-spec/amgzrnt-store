@@ -1209,23 +1209,26 @@ body{padding-bottom:110px}
           </label>
         </div>
         <div class="form-group">
-          <label data-lang="ar">التصنيف</label>
-          <label data-lang="en">Category</label>
-          <select id="appCategory">
-            <option value="tools">أدوات / Tools</option>
-            <option value="productivity">إنتاجية / Productivity</option>
-            <option value="education">تعليم / Education</option>
-            <option value="games">ألعاب / Games</option>
-            <option value="finance">مالية / Finance</option>
-            <option value="health">صحة / Health</option>
-            <option value="entertainment">ترفيه / Entertainment</option>
-            <option value="social">اجتماعي / Social</option>
-            <option value="shopping">تسوق / Shopping</option>
-            <option value="news">أخبار / News</option>
-            <option value="travel">سفر / Travel</option>
-            <option value="utilities">خدمات / Utilities</option>
-            <option value="other">أخرى / Other</option>
-          </select>
+          <label data-lang="ar">التصنيفات (حتى 3)</label>
+          <label data-lang="en">Categories (max 3)</label>
+          <div class="cat-picks" id="appCatPicks">
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="games"> ألعاب / Games</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="entertainment"> ترفيه / Entertainment</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="shopping"> تسوق / Shopping</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="finance"> مالية / Finance</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="tools"> أدوات / Tools</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="productivity"> إنتاجية / Productivity</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="education"> تعليم / Education</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="health"> صحة / Health</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="social"> اجتماعي / Social</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="news"> أخبار / News</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="travel"> سفر / Travel</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="utilities"> خدمات / Utilities</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="other"> أخرى / Other</label>
+
+          </div>
+          <div class="form-hint" data-lang="ar">اختر حتى ثلاثة تصنيفات</div>
+          <input type="hidden" id="appCategory" value="other">
         </div>
         <div class="form-group"><label>إعلان المتجر (مستطيل عريض) — خلفية + إيموجي + عنوان</label><div id="cmpUp"></div></div>
         <div class="form-group"><label>معاينات التطبيق</label><div id="slUp"></div></div>
@@ -1318,18 +1321,81 @@ body{padding-bottom:110px}
       <div class="form-success" id="editSuccess"></div>
       <form id="editForm" onsubmit="saveAppEdit(event)">
         <input type="hidden" id="editAppId">
-        <div class="form-group"><label>الاسم بالعربية / Arabic name</label><input id="editNameAr" required></div>
-        <div class="form-group"><label>الاسم بالإنجليزية / English name</label><input id="editNameEn"></div>
-        <div class="form-group"><label>الوصف بالعربية / Arabic description</label><textarea id="editDescAr" rows="3"></textarea></div>
-        <div class="form-group"><label>الوصف بالإنجليزية / English description</label><textarea id="editDescEn" rows="3"></textarea></div>
-        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="other">أخرى / Other</option></select></div>
-        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="url"></div>
-        <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
-        <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="url" required></div>
-        <div class="form-group"><label>لقطات الشاشة (روابط، كل رابط في سطر) / Screenshots (one URL per line)</label><textarea id="editScreenshots" rows="4"></textarea></div>
+        <div class="form-group">
+          <label data-lang="ar">رابط التطبيق</label>
+          <label data-lang="en">App URL</label>
+          <input type="url" id="editUrl" required placeholder="https://myapp.example.com">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">اسم التطبيق</label>
+          <label data-lang="en">App Name</label>
+          <input type="text" id="editNameAr" required placeholder="منظم المهام">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">الاسم بالإنجليزية</label>
+          <label data-lang="en">English name</label>
+          <input type="text" id="editNameEn" placeholder="Task Organizer">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">الوصف</label>
+          <label data-lang="en">Description</label>
+          <textarea id="editDescAr" required placeholder="وصف مختصر..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">الوصف بالإنجليزية</label>
+          <label data-lang="en">English description</label>
+          <textarea id="editDescEn" rows="3" placeholder="Short description..."></textarea>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">رابط الأيقونة</label>
+          <label data-lang="en">Icon URL</label>
+          <input type="url" id="editIcon" placeholder="https://.../icon-192.png" oninput="if(window.previewCustomIcon)previewCustomIcon('editIcon','editIconPreview')"><div id="editIconPreview" class="icon-preview" style="margin-top:8px"></div>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">حالة التطبيق</label>
+          <label data-lang="en">App status</label>
+          <select id="editDevStatus">
+            <option value="live">منشور / Live</option>
+            <option value="dev">تحت التطوير / Under development</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="chk" style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" id="editFeaturedRibbon">
+            <span data-lang="ar">🥇 شريط «تطبيق مميز» على البطاقة</span>
+            <span data-lang="en">🥇 “Featured” ribbon on card</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">التصنيفات (حتى 3)</label>
+          <label data-lang="en">Categories (max 3)</label>
+          <div class="cat-picks" id="editCatPicks">
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="games"> ألعاب / Games</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="entertainment"> ترفيه / Entertainment</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="shopping"> تسوق / Shopping</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="finance"> مالية / Finance</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="tools"> أدوات / Tools</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="productivity"> إنتاجية / Productivity</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="education"> تعليم / Education</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="health"> صحة / Health</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="social"> اجتماعي / Social</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="news"> أخبار / News</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="travel"> سفر / Travel</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="utilities"> خدمات / Utilities</label>
+            <label class="cat-pick"><input type="checkbox" name="catPick" value="other"> أخرى / Other</label>
+
+          </div>
+          <div class="form-hint" data-lang="ar">اختر حتى ثلاثة تصنيفات</div>
+          <input type="hidden" id="editCategory" value="other">
+        </div>
+        <div class="form-group">
+          <label data-lang="ar">اللون الأساسي</label>
+          <label data-lang="en">Primary color</label>
+          <input id="editColor" type="color" value="#7c3aed">
+        </div>
         <div class="form-group"><label>إعلان المتجر</label><div id="cmpEd"></div></div>
         <div class="form-group"><label>معاينات التطبيق</label><div id="slEd"></div></div>
-        <button class="btn btn-primary btn-block" type="submit" id="editSaveBtn"><i class="fa-solid fa-floppy-disk"></i> حفظ التعديلات / Save</button>
+        <button class="btn btn-primary btn-block" type="submit" id="editSaveBtn"><i class="fa-solid fa-floppy-disk"></i> <span data-lang="ar">حفظ التعديلات</span><span data-lang="en">Save</span></button>
       </form>
     </div>
   </aside>
@@ -3321,6 +3387,219 @@ body.light .su-meta small{color:#6b6880}
   });
 
   console.info('[AMGZRNT] V4 full search UI ready');
+})();
+</script>
+
+
+<style id="v4-cat-picks">
+.cat-picks{display:flex;flex-wrap:wrap;gap:8px}
+.cat-pick{
+  display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+  padding:8px 12px;border-radius:999px;border:1px solid var(--border);
+  background:rgba(255,255,255,.04);font-size:.82rem;font-weight:700;
+  user-select:none;
+}
+.cat-pick input{accent-color:#7c3aed}
+.cat-pick:has(input:checked){
+  background:rgba(124,58,237,.22);border-color:rgba(167,139,250,.55);color:#e9d5ff;
+}
+body.light .cat-pick:has(input:checked){color:#5b21b6}
+</style>
+
+
+<script id="v4-form-unify-js">
+(function(){
+  'use strict';
+  function $(id){ return document.getElementById(id); }
+  function getCats(boxId){
+    var box=$(boxId); if(!box) return [];
+    var list=[];
+    box.querySelectorAll('input[name="catPick"]:checked').forEach(function(c){ list.push(c.value); });
+    return list.slice(0,3);
+  }
+  function setCats(boxId, cats){
+    var box=$(boxId); if(!box) return;
+    var set={};
+    (cats||[]).forEach(function(c){ set[c]=1; });
+    box.querySelectorAll('input[name="catPick"]').forEach(function(c){ c.checked=!!set[c.value]; });
+  }
+  function limitCats(box){
+    if(!box) return;
+    box.addEventListener('change', function(e){
+      if(!e.target || e.target.name!=='catPick') return;
+      var checked=box.querySelectorAll('input[name="catPick"]:checked');
+      if(checked.length>3){
+        e.target.checked=false;
+        if(typeof showToast==='function') showToast('حد أقصى 3 تصنيفات');
+      }
+    });
+  }
+  limitCats($('appCatPicks'));
+  limitCats($('editCatPicks'));
+
+  // Patch early handleUpload payload if present
+  var _hu = window.handleUpload;
+  window.handleUpload = function(e){
+    // sync hidden primary category before original runs
+    var cats=getCats('appCatPicks');
+    var hid=$('appCategory');
+    if(hid) hid.value = cats[0] || 'other';
+    var r = _hu.apply(this, arguments);
+    // also write categories after if possible - hook via temporary flag
+    return r;
+  };
+
+  // Stronger: wrap Firestore add by intercepting after successful path - patch later handleUpload that uses cmps
+  // Override editApp fill
+  var _ed = window.editApp;
+  window.editApp = function(id){
+    var r = _ed.apply(this, arguments);
+    var a = (typeof findApp==='function'?findApp(id):null) || (window.allApps||[]).find(function(x){return x&&x.id===id;});
+    if(!a) return r;
+    try{
+      if($('editNameAr')) $('editNameAr').value = a.nameAr || a.name || '';
+      if($('editNameEn')) $('editNameEn').value = a.nameEn || '';
+      if($('editDescAr')) $('editDescAr').value = a.descriptionAr || a.description || '';
+      if($('editDescEn')) $('editDescEn').value = a.descriptionEn || '';
+      if($('editUrl')) $('editUrl').value = a.url || '';
+      if($('editIcon')) $('editIcon').value = a.icon || '';
+      if($('editColor')) $('editColor').value = a.primaryColor || '#7c3aed';
+      if($('editDevStatus')) $('editDevStatus').value = a.devStatus || 'live';
+      if($('editFeaturedRibbon')) $('editFeaturedRibbon').checked = !!a.featured;
+      var cats = Array.isArray(a.categories) && a.categories.length ? a.categories : (a.category ? [a.category] : ['other']);
+      setCats('editCatPicks', cats.slice(0,3));
+      if($('editCategory')) $('editCategory').value = cats[0] || 'other';
+      if(window.previewCustomIcon) previewCustomIcon('editIcon','editIconPreview');
+    }catch(err){}
+    return r;
+  };
+
+  // Override saveAppEdit to include all fields
+  var _sv = window.saveAppEdit;
+  window.saveAppEdit = async function(e){
+    if(e && e.preventDefault) e.preventDefault();
+    var id = $('editAppId') && $('editAppId').value;
+    if(!id || !window.db || !auth.currentUser) return _sv && _sv.apply(this, arguments);
+    var cats = getCats('editCatPicks');
+    if(!cats.length) cats = [($('editCategory')&&$('editCategory').value)||'other'];
+    var nameAr = ($('editNameAr')&&$('editNameAr').value.trim())||'';
+    var nameEn = ($('editNameEn')&&$('editNameEn').value.trim())||'';
+    var descAr = ($('editDescAr')&&$('editDescAr').value.trim())||'';
+    var descEn = ($('editDescEn')&&$('editDescEn').value.trim())||'';
+    var payload = {
+      nameAr: nameAr,
+      nameEn: nameEn,
+      name: nameAr || nameEn,
+      descriptionAr: descAr,
+      descriptionEn: descEn,
+      description: descAr || descEn,
+      category: cats[0] || 'other',
+      categories: cats,
+      icon: ($('editIcon')&&$('editIcon').value.trim())||'',
+      primaryColor: ($('editColor')&&$('editColor').value)||'#7c3aed',
+      url: ($('editUrl')&&$('editUrl').value.trim())||'',
+      devStatus: ($('editDevStatus')&&$('editDevStatus').value)||'live',
+      featured: !!( $('editFeaturedRibbon') && $('editFeaturedRibbon').checked ),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    // include slides/ad if composers exist
+    try{
+      if(typeof sls!=='undefined' && sls.ed){ var sv=sls.ed.get(); payload.slides=sv.slides; payload.autoShots=sv.auto; }
+      if(typeof cmps!=='undefined' && cmps.ed){ payload.ad=cmps.ed.get(); }
+    }catch(x){}
+    var btn=$('editSaveBtn');
+    try{ if(typeof setBtnLoading==='function') setBtnLoading(btn,true); }catch(x){}
+    try{
+      await db.collection('apps').doc(id).update(payload);
+      var a=(typeof findApp==='function'?findApp(id):null);
+      if(a) Object.assign(a, payload);
+      if(typeof filterApps==='function') filterApps();
+      if(typeof showToast==='function') showToast('تم الحفظ');
+      if(typeof closeDrawer==='function') closeDrawer('edit');
+    }catch(er){
+      var err=$('editError'); if(err){ err.textContent=er.message||'error'; err.classList.add('show'); }
+    }
+    try{ if(typeof setBtnLoading==='function') setBtnLoading(btn,false); }catch(x){}
+  };
+
+  // Intercept collection add to inject categories + featured + en fields for any handleUpload path
+  if(window.db && db.collection){
+    var origCollection = db.collection.bind(db);
+    // lighter: listen submit on upload form
+    var uf=$('uploadForm');
+    if(uf){
+      uf.addEventListener('submit', function(){
+        var cats=getCats('appCatPicks');
+        var hid=$('appCategory'); if(hid) hid.value=cats[0]||'other';
+        // stash for later merge
+        window.__pendingCats = cats;
+        window.__pendingFeatured = !!( $('appFeaturedRibbon') && $('appFeaturedRibbon').checked );
+        window.__pendingNameEn = ($('appNameEn')&&$('appNameEn').value.trim())||'';
+        window.__pendingDescEn = ($('appDescEn')&&$('appDescEn').value.trim())||'';
+        window.__pendingDevStatus = ($('appDevStatus')&&$('appDevStatus').value)||'live';
+      }, true);
+    }
+  }
+
+  // Patch after apps added - update last created is hard; instead patch handleUpload bodies via wrapping firestore add
+  // Safer: wrap window.handleUpload completely by reading form ourselves if early path
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    if(typeof window.handleUpload!=='function' || window.handleUpload._cats) { if(tries>40) clearInterval(iv); return; }
+    var prev=window.handleUpload;
+    window.handleUpload=function(e){
+      if(e&&e.preventDefault) e.preventDefault();
+      var cats=getCats('appCatPicks');
+      if(!cats.length) cats=['other'];
+      var hid=$('appCategory'); if(hid) hid.value=cats[0];
+      // Call previous - then try to fix last app is unreliable
+      // Better rewrite: if we can call firebase directly when auth present
+      var u=auth&&auth.currentUser;
+      if(!u){ return prev.apply(this, arguments); }
+      // Prefer using previous for UI, but also write categories on success by monkeypatching add once
+      var col=db.collection('apps');
+      var _add=col.add.bind(col);
+      col.add=function(data){
+        data=data||{};
+        data.categories = cats;
+        data.category = cats[0]||'other';
+        data.featured = !!( $('appFeaturedRibbon') && $('appFeaturedRibbon').checked );
+        data.devStatus = ($('appDevStatus')&&$('appDevStatus').value)|| data.devStatus || 'live';
+        data.nameEn = ($('appNameEn')&&$('appNameEn').value.trim()) || data.nameEn || '';
+        data.descriptionEn = ($('appDescEn')&&$('appDescEn').value.trim()) || data.descriptionEn || '';
+        data.nameAr = ($('appName')&&$('appName').value.trim()) || data.nameAr || data.name || '';
+        data.descriptionAr = ($('appDesc')&&$('appDesc').value.trim()) || data.descriptionAr || data.description || '';
+        return _add(data).then(function(ref){ col.add=_add; return ref; }, function(err){ col.add=_add; throw err; });
+      };
+      try { return prev.apply(this, arguments); }
+      finally { setTimeout(function(){ try{ col.add=_add; }catch(x){} }, 8000); }
+    };
+    window.handleUpload._cats=true;
+    clearInterval(iv);
+  }, 200);
+
+  // Filter: match any of categories
+  var _gf=window.getFiltered;
+  if(typeof _gf==='function'){
+    window.getFiltered=function(){
+      var list=_gf.apply(this, arguments);
+      // re-filter category if needed
+      if(typeof activeCategory!=='undefined' && activeCategory && activeCategory!=='all'){
+        list=(window.allApps||[]).filter(function(a){
+          var cats=Array.isArray(a.categories)&&a.categories.length?a.categories:[a.category||'other'];
+          var q=($('searchInput')&&$('searchInput').value||'').trim().toLowerCase();
+          var t=((a.nameAr||'')+' '+(a.name||'')+' '+(a.nameEn||'')+' '+(a.description||'')+' '+(a.devName||'')).toLowerCase();
+          var catOk=cats.indexOf(activeCategory)>=0;
+          var qOk=!q || t.indexOf(q)>=0;
+          return catOk && qOk;
+        });
+      }
+      return list;
+    };
+  }
+
+  console.info('[AMGZRNT] V4 form unify: multi-cats max 3, edit=create');
 })();
 </script>
 
