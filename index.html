@@ -4386,67 +4386,65 @@ html body .install-done .wv-svg { display:none!important; }
 </script>
 
 
+
 <style id="v4-clean">
 .auth-main-tabs .tab-btn{flex:1;font-size:.82rem;padding:8px 4px}
 .auth-sub.on{background:var(--primary)!important;color:#fff!important;border-color:transparent!important}
 #catsPage.app-page{z-index:280}
-.cat-bento{display:grid;grid-template-columns:1.15fr 1fr;grid-auto-rows:minmax(110px,auto);gap:12px}
-.cat-tile{position:relative;overflow:hidden;border:0;cursor:pointer;text-align:start;border-radius:28px;padding:18px 16px 16px;min-height:118px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;color:#fff;box-shadow:0 14px 36px rgba(0,0,0,.32);transition:transform .28s cubic-bezier(.3,1.5,.5,1)}
+.cat-bento{display:grid;grid-template-columns:1.15fr 1fr;grid-auto-rows:minmax(108px,auto);gap:12px}
+.cat-tile{position:relative;overflow:hidden;border:0;cursor:pointer;text-align:start;border-radius:26px;padding:16px 14px;min-height:112px;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;color:#fff;box-shadow:0 10px 28px rgba(0,0,0,.28);-webkit-tap-highlight-color:transparent}
 .cat-tile:active{transform:scale(.97)}
-.cat-tile .ct-ico{position:absolute;top:14px;inset-inline-end:14px;width:54px;height:54px;border-radius:18px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:1.45rem;z-index:2}
-.cat-tile .ct-title{position:relative;z-index:2;font-size:1.12rem;font-weight:900;margin:0 0 4px}
-.cat-tile .ct-sub{position:relative;z-index:2;font-size:.78rem;opacity:.88;font-weight:600}
-.cat-tile::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 25%,rgba(0,0,0,.38))}
-.cat-tile.span2{grid-column:1/-1;min-height:132px}
-.cat-tile.tall{min-height:160px}
+.cat-tile .ct-ico{position:absolute;top:12px;left:12px;width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.18);font-size:1.3rem;z-index:2}
+.cat-tile .ct-title{position:relative;z-index:2;font-size:1.08rem;font-weight:900;margin:0 0 2px}
+.cat-tile .ct-sub{position:relative;z-index:2;font-size:.78rem;opacity:.9;font-weight:600}
+.cat-tile::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.42))}
+.cat-tile.span2{grid-column:1/-1;min-height:120px}
+.cat-tile.tall{min-height:150px}
 .cat-tile.wide{grid-column:1/-1}
-.cat-tile .ct-blob{position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.12);z-index:0;top:-30px;inset-inline-start:-24px}
-.ico-wrap{position:relative;display:inline-block;flex-shrink:0;overflow:hidden;background:var(--card2)}
-.ico-wrap>img,.ico-wrap>.app-icon-placeholder{position:absolute;inset:0;width:100%!important;height:100%!important;object-fit:cover;border-radius:inherit;margin:0}
-.ico-wrap.row-icon{width:64px;height:64px;border-radius:18px}
-.ico-wrap.tile-icon{width:96px;height:96px;border-radius:28px}
-.ico-wrap.ap-icon{width:96px;height:96px;border-radius:26px}
-.ico-wrap.sug-i{width:44px;height:44px;border-radius:13px}
+.app-page .ap-bar .btn-icon,
+.app-page .ap-top .btn-icon,
+#appPage .ap-bar .btn-icon,
+#devPage .ap-bar .btn-icon,
+#admPage .ap-bar .btn-icon,
+#catsPage .ap-top .btn-icon{
+  width:48px!important;height:48px!important;min-width:48px;min-height:48px;
+  border-radius:14px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:rgba(255,255,255,.08)!important;
+  color:#fff!important;font-size:1.1rem!important;
+}
+.app-page .ap-bar,.app-page .ap-top{gap:10px;padding:10px 12px;align-items:center}
+#devPage{z-index:285}
+#appPage{z-index:300}
+#admPage{z-index:310}
+#catsPage{z-index:280}
 </style>
 <script id="v4-clean-js">
 (function(){
   'use strict';
-  var T = window.T || function(a,e){ return document.body.classList.contains('en') ? e : a; };
+  function T(a,e){ try{ return (typeof isEn==='function'?isEn():document.body.classList.contains('en')) ? e : a; }catch(x){ return a; } }
   function $(id){ return document.getElementById(id); }
-  function findA(id){ return (typeof findApp==='function'?findApp(id):null) || (window.allApps||[]).find(function(a){return a&&String(a.id)===String(id);}); }
-  function mayAccess(a){
-    if (!a || !a.suspended) return true;
-    try { if (typeof isAdmin==='function' && isAdmin()) return true; if (typeof canSee==='function' && canSee(a)) return true; } catch(e){}
-    return false;
-  }
-  function blockMsg(){ if (typeof showToast==='function') showToast(T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.','You cannot download, open, or preview this app — suspended by admin.')); }
+  function findA(id){ try{ if(typeof findApp==='function'){ var a=findApp(id); if(a) return a; } }catch(e){} return (window.allApps||[]).find(function(x){return x&&String(x.id)===String(id);}); }
+  function mayAccess(a){ if(!a||!a.suspended) return true; try{ if(typeof isAdmin==='function'&&isAdmin()) return true; if(typeof canSee==='function'&&canSee(a)) return true; }catch(e){} return false; }
+  function blockMsg(){ if(typeof showToast==='function') showToast(T('لا يمكنك تنزيل أو فتح أو معاينة هذا التطبيق — تم إيقافه من الإدارة.','You cannot download, open, or preview this app — suspended by admin.')); }
 
-  /* ---- Auth: 3 portals without breaking existing handlers ---- */
-  var portal = 'user', sub = 'login';
+  var portal='user', sub='login';
   function syncAuthUI(){
-    ['tabUser','tabDev','tabAdmin'].forEach(function(id){
-      var el=$(id); if(!el) return;
-      el.classList.toggle('active', (id==='tabUser'&&portal==='user')||(id==='tabDev'&&portal==='dev')||(id==='tabAdmin'&&portal==='admin'));
-    });
+    ['tabUser','tabDev','tabAdmin'].forEach(function(id){ var el=$(id); if(!el) return; el.classList.toggle('active', (id==='tabUser'&&portal==='user')||(id==='tabDev'&&portal==='dev')||(id==='tabAdmin'&&portal==='admin')); });
     var subTabs=$('authSubTabs'), devRow=$('devTypeRow'), nameG=$('nameGroup'), hint=$('authHint');
-    if (portal==='admin'){
-      if(subTabs) subTabs.style.display='none';
-      if(devRow) devRow.style.display='none';
-      if(nameG) nameG.style.display='none';
-      try { authMode='admin'; } catch(e){}
-      if(hint) hint.textContent=T('دخول الإدارة فقط','Admin access only');
-    } else {
+    if(portal==='admin'){ if(subTabs) subTabs.style.display='none'; if(devRow) devRow.style.display='none'; if(nameG) nameG.style.display='none'; try{authMode='admin';}catch(e){} if(hint) hint.textContent=T('دخول الإدارة فقط','Admin only'); }
+    else {
       if(subTabs) subTabs.style.display='flex';
       document.querySelectorAll('.auth-sub').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-sub')===sub); });
-      if(devRow) devRow.style.display = portal==='dev' ? 'block' : 'none';
-      if(nameG) nameG.style.display = sub==='register' ? 'block' : 'none';
-      try { authMode = sub==='register' ? (portal==='user'?'user':'register') : (portal==='user'?'login':'login'); } catch(e){}
-      if (portal==='user' && sub==='register') { try { authMode='user'; } catch(e){} }
-      if (portal==='dev' && sub==='register') { try { authMode = ($('authCollective')&&$('authCollective').checked)?'collective':'register'; } catch(e){} }
-      if (portal==='dev' && sub==='login') { try { authMode='login'; } catch(e){} }
-      if (portal==='user' && sub==='login') { try { authMode='login'; } catch(e){} }
-      window._pendingRole = portal==='dev' ? 'dev' : 'user';
-      if(hint) hint.textContent = portal==='dev' ? T('حساب المطوّر يمكنه نشر التطبيقات','Developer can publish apps') : T('حساب عادي لحفظ التطبيقات المثبّتة','Regular account to save installed apps');
+      if(devRow) devRow.style.display=portal==='dev'?'block':'none';
+      if(nameG) nameG.style.display=sub==='register'?'block':'none';
+      window._pendingRole=portal==='dev'?'dev':'user';
+      if(hint) hint.textContent=portal==='dev'?T('حساب المطوّر يمكنه نشر التطبيقات','Developer can publish'):T('حساب عادي لحفظ التطبيقات المثبّتة','Regular account for installed apps');
+      try{
+        if(portal==='user'&&sub==='register') authMode='user';
+        else if(portal==='dev'&&sub==='register') authMode=($('authCollective')&&$('authCollective').checked)?'collective':'register';
+        else authMode='login';
+      }catch(e){}
     }
     var btn=$('authSubmit');
     if(btn){
@@ -4455,184 +4453,179 @@ html body .install-done .wv-svg { display:none!important; }
       else btn.innerHTML='<i class="fa-solid fa-user-plus"></i><span>'+T('إنشاء حساب','Create account')+'</span>';
     }
   }
-  var _st = window.switchTab;
-  window.switchTab = function(mode){
-    if (mode==='user'||mode==='dev'||mode==='admin'){ portal=mode; syncAuthUI(); return; }
-    if (mode==='login'||mode==='register'||mode==='collective'||mode==='user'){
-      if (mode==='collective'){ portal='dev'; sub='register'; var c=$('authCollective'); if(c) c.checked=true; }
-      else if (mode==='register'){ sub='register'; if(portal==='admin') portal='dev'; }
-      else if (mode==='login'){ sub='login'; }
-      else if (mode==='user'){ portal='user'; sub='register'; }
+  var _st=window.switchTab;
+  window.switchTab=function(mode){
+    if(mode==='user'||mode==='dev'||mode==='admin'){ portal=mode; syncAuthUI(); return; }
+    if(mode==='login'||mode==='register'||mode==='collective'||mode==='user'){
+      if(mode==='collective'){ portal='dev'; sub='register'; var c=$('authCollective'); if(c) c.checked=true; }
+      else if(mode==='register'){ sub='register'; if(portal==='admin') portal='dev'; }
+      else if(mode==='login'){ sub='login'; }
+      else if(mode==='user'){ portal='user'; sub='register'; }
       syncAuthUI();
-      if (_st) {
-        // map to legacy modes for underlying handlers
-        var legacy = portal==='admin' ? 'admin' : (sub==='register' ? (portal==='user'?'user':( ($('authCollective')&&$('authCollective').checked)?'collective':'register')) : 'login');
-        try { _st(legacy); } catch(e){}
-      }
-      syncAuthUI();
-      return;
+      if(_st){ var legacy=portal==='admin'?'admin':(sub==='register'?(portal==='user'?'user':(($('authCollective')&&$('authCollective').checked)?'collective':'register')):'login'); try{_st(legacy);}catch(e){} }
+      syncAuthUI(); return;
     }
-    if (_st) return _st.apply(this, arguments);
+    if(_st) return _st.apply(this,arguments);
   };
-  window.setAuthSub = function(s){ sub=s; window.switchTab(portal); };
+  window.setAuthSub=function(s){ sub=s; window.switchTab(portal); };
 
-  /* ---- Categories bento page ---- */
-  var ORDER = [
-    {c:'all', span:'span2', g:'linear-gradient(135deg,#7c3aed,#4c1d95 55%,#1e1b4b)', ic:'fa-border-all'},
-    {c:'games', span:'tall', g:'linear-gradient(145deg,#f97316,#ea580c 45%,#9a3412)', ic:'fa-gamepad'},
-    {c:'entertainment', span:'', g:'linear-gradient(145deg,#6366f1,#4f46e5 50%,#312e81)', ic:'fa-tv'},
-    {c:'shopping', span:'', g:'linear-gradient(145deg,#ec4899,#db2777 50%,#9d174d)', ic:'fa-bag-shopping'},
-    {c:'finance', span:'', g:'linear-gradient(145deg,#10b981,#059669 50%,#064e3b)', ic:'fa-coins'},
-    {c:'tools', span:'', g:'linear-gradient(145deg,#0ea5e9,#0284c7 50%,#0c4a6e)', ic:'fa-screwdriver-wrench'},
-    {c:'productivity', span:'', g:'linear-gradient(145deg,#8b5cf6,#7c3aed 50%,#4c1d95)', ic:'fa-briefcase'},
-    {c:'education', span:'', g:'linear-gradient(145deg,#14b8a6,#0d9488 50%,#115e59)', ic:'fa-graduation-cap'},
-    {c:'health', span:'', g:'linear-gradient(145deg,#f43f5e,#e11d48 50%,#9f1239)', ic:'fa-heart-pulse'},
-    {c:'social', span:'', g:'linear-gradient(145deg,#3b82f6,#2563eb 50%,#1e3a8a)', ic:'fa-users'},
-    {c:'news', span:'', g:'linear-gradient(145deg,#64748b,#475569 50%,#1e293b)', ic:'fa-newspaper'},
-    {c:'travel', span:'', g:'linear-gradient(145deg,#06b6d4,#0891b2 50%,#155e75)', ic:'fa-plane'},
-    {c:'utilities', span:'', g:'linear-gradient(145deg,#a78bfa,#8b5cf6 50%,#5b21b6)', ic:'fa-sliders'},
-    {c:'other', span:'wide', g:'linear-gradient(145deg,#78716c,#57534e 50%,#292524)', ic:'fa-shapes'}
+  var ORDER=[
+    {c:'all', span:'span2', g:'linear-gradient(135deg,#7c3aed,#4c1d95 55%,#1e1b4b)', ic:'fa-border-all', ar:'كل التطبيقات', en:'All apps'},
+    {c:'games', span:'tall', g:'linear-gradient(145deg,#f97316,#ea580c 45%,#9a3412)', ic:'fa-gamepad', ar:'ألعاب', en:'Games'},
+    {c:'entertainment', span:'', g:'linear-gradient(145deg,#6366f1,#4f46e5 50%,#312e81)', ic:'fa-tv', ar:'ترفيه', en:'Entertainment'},
+    {c:'shopping', span:'', g:'linear-gradient(145deg,#ec4899,#db2777 50%,#9d174d)', ic:'fa-bag-shopping', ar:'تسوق', en:'Shopping'},
+    {c:'finance', span:'', g:'linear-gradient(145deg,#10b981,#059669 50%,#064e3b)', ic:'fa-coins', ar:'مالية', en:'Finance'},
+    {c:'tools', span:'', g:'linear-gradient(145deg,#0ea5e9,#0284c7 50%,#0c4a6e)', ic:'fa-screwdriver-wrench', ar:'أدوات', en:'Tools'},
+    {c:'productivity', span:'', g:'linear-gradient(145deg,#8b5cf6,#7c3aed 50%,#4c1d95)', ic:'fa-briefcase', ar:'إنتاجية', en:'Productivity'},
+    {c:'education', span:'', g:'linear-gradient(145deg,#14b8a6,#0d9488 50%,#115e59)', ic:'fa-graduation-cap', ar:'تعليم', en:'Education'},
+    {c:'health', span:'', g:'linear-gradient(145deg,#f43f5e,#e11d48 50%,#9f1239)', ic:'fa-heart-pulse', ar:'صحة', en:'Health'},
+    {c:'social', span:'', g:'linear-gradient(145deg,#3b82f6,#2563eb 50%,#1e3a8a)', ic:'fa-users', ar:'اجتماعي', en:'Social'},
+    {c:'news', span:'', g:'linear-gradient(145deg,#64748b,#475569 50%,#1e293b)', ic:'fa-newspaper', ar:'أخبار', en:'News'},
+    {c:'travel', span:'', g:'linear-gradient(145deg,#06b6d4,#0891b2 50%,#155e75)', ic:'fa-plane', ar:'سفر', en:'Travel'},
+    {c:'utilities', span:'', g:'linear-gradient(145deg,#a78bfa,#8b5cf6 50%,#5b21b6)', ic:'fa-sliders', ar:'خدمات', en:'Utilities'},
+    {c:'other', span:'wide', g:'linear-gradient(145deg,#78716c,#57534e 50%,#292524)', ic:'fa-shapes', ar:'أخرى', en:'Other'}
   ];
-  function catLabel(c){ return (typeof catName==='function') ? catName(c) : c; }
   function countCat(c){
     var list=window.allApps||[];
-    return list.filter(function(a){ return (c==='all'||(a.category||'other')===c) && (!a.suspended || mayAccess(a)); }).length;
+    return list.filter(function(a){ return (c==='all'||(a.category||'other')===c) && (!a.suspended||mayAccess(a)); }).length;
   }
-  window.openCatsPage = function(){
+  window.openCatsPage=function(){
     var page=$('catsPage'), body=$('catsBody'); if(!page||!body) return;
-    body.innerHTML = '<div class="cat-bento">'+ORDER.map(function(it){
-      var title = it.c==='all' ? T('كل التطبيقات','All apps') : catLabel(it.c);
-      return '<button type="button" class="cat-tile '+(it.span||'')+'" data-cat="'+it.c+'" style="background:'+it.g+'">'+
-        '<span class="ct-blob"></span><span class="ct-ico"><i class="fa-solid '+it.ic+'"></i></span>'+
-        '<span class="ct-title">'+title+'</span><span class="ct-sub">'+countCat(it.c)+' '+T('تطبيق','apps')+'</span></button>';
-    }).join('')+'</div>';
-    body.querySelectorAll('.cat-tile').forEach(function(btn){
-      btn.onclick=function(){
-        var c=btn.getAttribute('data-cat');
-        window.closeCatsPage();
-        var chip=document.querySelector('.chip[data-cat="'+c+'"]');
-        if (typeof setCategory==='function') setCategory(c, chip||document.body);
-        window.scrollTo({top:0,behavior:'smooth'});
-      };
-    });
+    var html='<div class="cat-bento">';
+    for(var i=0;i<ORDER.length;i++){
+      var it=ORDER[i];
+      html+='<button type="button" class="cat-tile '+(it.span||'')+'" data-cat="'+it.c+'" style="background:'+it.g+'">'+
+        '<span class="ct-ico"><i class="fa-solid '+it.ic+'"></i></span>'+
+        '<span class="ct-title">'+T(it.ar,it.en)+'</span>'+
+        '<span class="ct-sub">'+countCat(it.c)+' '+T('تطبيق','apps')+'</span></button>';
+    }
+    html+='</div>';
+    body.innerHTML=html;
+    body.onclick=function(ev){
+      var btn=ev.target.closest('.cat-tile'); if(!btn) return;
+      var c=btn.getAttribute('data-cat');
+      window.closeCatsPage();
+      var chip=document.querySelector('.chip[data-cat="'+c+'"]');
+      if(typeof setCategory==='function') setCategory(c, chip||document.body);
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
     page.classList.add('active'); document.body.style.overflow='hidden';
   };
-  window.closeCatsPage = function(){
+  window.closeCatsPage=function(){
     var page=$('catsPage'); if(page) page.classList.remove('active');
     if(!document.querySelector('.app-page.active')) document.body.style.overflow='';
   };
 
-  /* ---- Suspend hard block (guards only, no recursive wrappers of install pipeline) ---- */
-  document.addEventListener('click', function(e){
-    var t = e.target.closest && e.target.closest('[onclick*="startAppInstall"],[onclick*="openPreview"],.install-wave,#sheetInstallBtn');
-    if (!t) return;
-    var id = t.getAttribute('data-app-id') || (window.selectedApp && window.selectedApp.id);
-    if (!id) {
-      var m = /startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'') || /openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||'');
-      if (m) id = m[1];
-    }
-    if (!id) return;
-    var a = findA(id);
-    if (a && a.suspended && !mayAccess(a)) {
-      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-      blockMsg();
-    }
-  }, true);
+  document.addEventListener('click',function(e){
+    var t=e.target.closest&&e.target.closest('[onclick*="startAppInstall"],[onclick*="openPreview"],.install-wave,#sheetInstallBtn');
+    if(!t) return;
+    var id=t.getAttribute('data-app-id')||(window.selectedApp&&window.selectedApp.id);
+    if(!id){ var m=/startAppInstall\('([^']+)'/.exec(t.getAttribute('onclick')||'')||/openPreview\('([^']+)'/.exec(t.getAttribute('onclick')||''); if(m) id=m[1]; }
+    if(!id) return;
+    var a=findA(id);
+    if(a&&a.suspended&&!mayAccess(a)){ e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); blockMsg(); }
+  },true);
 
-  /* After openAppPage renders, replace actions if suspended */
-  var _oap = window.openAppPage;
-  if (typeof _oap === 'function' && !_oap._v4c) {
-    window.openAppPage = function(id, fromHash){
-      var r = _oap.apply(this, arguments);
-      var a = findA(id);
-      if (a && a.suspended && !mayAccess(a)) {
+  var _oap=window.openAppPage;
+  if(typeof _oap==='function'&&!_oap._v4c){
+    window.openAppPage=function(id,fromHash){
+      try{ closeCatsPage(); }catch(e){}
+      var r=_oap.apply(this,arguments);
+      var a=findA(id);
+      if(a&&a.suspended&&!mayAccess(a)){
         setTimeout(function(){
-          var actions = document.querySelector('#apBody .ap-actions');
-          if (actions) actions.innerHTML = '<button type="button" class="btn btn-outline" disabled style="opacity:.75;flex:1"><i class="fa-solid fa-ban"></i> '+T('لا يمكنك تنزيل أو فتح هذا التطبيق','You cannot download or open this app')+'</button>';
-        }, 0);
+          var actions=document.querySelector('#apBody .ap-actions');
+          if(actions) actions.innerHTML='<button type="button" class="btn btn-outline" disabled style="opacity:.75;flex:1"><i class="fa-solid fa-ban"></i> '+T('لا يمكنك تنزيل أو فتح هذا التطبيق','You cannot download or open this app')+'</button>';
+        },0);
       }
       return r;
     };
-    window.openAppPage._v4c = true;
+    window.openAppPage._v4c=true;
   }
 
-  /* ---- URL autofill ---- */
-  window.mirrorNameEn = function(){
+  var BAD=/access\s*denied|reference\s*#|cloudflare|just a moment|attention required|captcha|forbidden|403|404 not found|error\s*\d{3}/i;
+  function isBad(s){ return !s || BAD.test(String(s)) || String(s).length<2; }
+  function hostTitle(url){
+    try{ var h=new URL(url).hostname.replace(/^www\./,''); var p=h.split('.')[0]||h; return p.charAt(0).toUpperCase()+p.slice(1); }catch(e){ return ''; }
+  }
+  window.mirrorNameEn=function(){
     var ar=$('appName'), en=$('appNameEn'); if(!ar||!en) return;
     if(!en.value.trim()||en.dataset.m==='1'){ en.value=ar.value; en.dataset.m='1'; }
   };
-  window.mirrorDescEn = function(){
+  window.mirrorDescEn=function(){
     var ar=$('appDesc'), en=$('appDescEn'); if(!ar||!en) return;
     if(!en.value.trim()||en.dataset.m==='1'){ en.value=ar.value; en.dataset.m='1'; }
   };
-  document.addEventListener('input', function(e){
+  document.addEventListener('input',function(e){
     if(e.target&&e.target.id==='appNameEn') e.target.dataset.m='0';
     if(e.target&&e.target.id==='appDescEn') e.target.dataset.m='0';
-  }, true);
-  function setMeta(msg, ok){
+  },true);
+  function setMeta(msg,ok){
     var el=$('urlMetaStatus'); if(!el) return;
     el.style.display=msg?'block':'none';
     el.style.color=ok===false?'#f87171':(ok?'#34d399':'var(--muted)');
     el.textContent=msg||'';
   }
-  function applyMeta(m){
+  function applyMeta(m, force){
     if(!m) return;
     var name=(m.title||'').trim(), desc=(m.description||'').trim(), icon=(m.image||'').trim();
+    if(isBad(name)) name='';
+    if(isBad(desc)) desc='';
     var n=$('appName'), ne=$('appNameEn'), d=$('appDesc'), de=$('appDescEn'), ic=$('appIcon');
-    if(name){ if(n&&!n.value.trim()) n.value=name; if(ne&&(!ne.value.trim()||ne.dataset.m==='1')){ne.value=name;ne.dataset.m='1';} }
-    if(desc){ if(d&&!d.value.trim()) d.value=desc.slice(0,500); if(de&&(!de.value.trim()||de.dataset.m==='1')){de.value=desc.slice(0,500);de.dataset.m='1';} }
+    if(name){ if(n&&(force||!n.value.trim()||isBad(n.value))) n.value=name; if(ne&&(force||!ne.value.trim()||isBad(ne.value)||ne.dataset.m==='1')){ ne.value=name; ne.dataset.m='1'; } }
+    if(desc){ if(d&&(force||!d.value.trim()||isBad(d.value))) d.value=desc.slice(0,500); if(de&&(force||!de.value.trim()||isBad(de.value)||de.dataset.m==='1')){ de.value=desc.slice(0,500); de.dataset.m='1'; } }
     if(icon&&ic&&!ic.value.trim()) ic.value=icon;
     mirrorNameEn(); mirrorDescEn();
     if(typeof previewIcon==='function') previewIcon();
   }
-  window.autoFillFromUrl = function(){
+  window.autoFillFromUrl=function(){
     var urlEl=$('appUrl'); if(!urlEl) return;
     var url=urlEl.value.trim();
-    if(url && !/^https?:\/\//i.test(url)) { url='https://'+url.replace(/^\/\//,''); urlEl.value=url; }
+    if(url&&!/^https?:\/\//i.test(url)){ url='https://'+url.replace(/^\/\//,''); urlEl.value=url; }
     if(!/^https?:\/\//i.test(url)) return;
+    var fallback=hostTitle(url);
     setMeta(T('جاري قراءة الموقع…','Reading site…'));
-    fetch('https://api.microlink.io?url='+encodeURIComponent(url)).then(function(r){return r.json();}).then(function(j){
+    ['appName','appNameEn','appDesc','appDescEn'].forEach(function(id){ var el=$(id); if(el&&isBad(el.value)) el.value=''; });
+    fetch('https://api.microlink.io?url='+encodeURIComponent(url)+'&palette=false').then(function(r){return r.json();}).then(function(j){
       var d=j&&j.data; if(!d) throw 0;
+      var title=d.title||d.publisher||'';
+      var desc=d.description||'';
       var img=(d.image&&(d.image.url||d.image))||(d.logo&&(d.logo.url||d.logo))||'';
-      applyMeta({title:d.title||d.publisher||'', description:d.description||'', image:typeof img==='string'?img:''});
-      setMeta(T('تم جلب الاسم والوصف','Name & description filled'), true);
+      if(isBad(title)) title=fallback;
+      if(isBad(desc)) desc='';
+      applyMeta({title:title, description:desc, image:typeof img==='string'?img:''}, true);
+      if(isBad(d.title)&&!desc) setMeta(T('الموقع محمي — تم اقتراح الاسم من الرابط (عدّله يدوياً)','Site protected — suggested name from URL (edit it)'), false);
+      else setMeta(T('تم جلب البيانات','Data filled'), true);
     }).catch(function(){
-      try {
-        var h=new URL(url).hostname.replace(/^www\./,'');
-        var base=h.split('.')[0];
-        applyMeta({title:base.charAt(0).toUpperCase()+base.slice(1), description:'', image:''});
-      } catch(e){}
-      setMeta(T('تعذر قراءة الموقع بالكامل','Could not read full metadata'), false);
+      applyMeta({title:fallback, description:'', image:''}, true);
+      setMeta(T('تعذر قراءة الموقع — استخدم الاسم المقترح وعدّله','Could not read site — edit the suggested name'), false);
     });
   };
 
-  /* ---- Role: keep developers as developers (no recursive auth loops) ---- */
-  if (window.auth) {
+  if(window.auth){
     auth.onAuthStateChanged(function(u){
-      if (!u || !window.db) return;
-      var ref = db.collection('users').doc(u.uid);
+      if(!u||!window.db) return;
+      var ref=db.collection('users').doc(u.uid);
       ref.get().then(function(doc){
-        var data = doc.exists ? (doc.data()||{}) : {};
-        var role = data.role;
-        var hasApps = (window.allApps||[]).some(function(a){ return a.ownerUid===u.uid || a.devId===u.uid; });
-        var pending = window._pendingRole;
-        var next = (u.email==='admin@amgzrnt.app') ? 'admin' : (role==='admin'||role==='dev'||pending==='dev'||hasApps) ? (role==='admin'?'admin':'dev') : (role||pending||'user');
-        if ((role==='dev'||role==='admin') && next==='user') next = role;
-        if (hasApps && next==='user') next = 'dev';
-        var patch = { role: next, email: u.email||'', name: u.displayName||data.name||'' };
-        if ($('authCollective') && $('authCollective').checked) patch.collective = true;
-        // only write if needed
-        if (data.role !== next || !doc.exists) ref.set(patch, {merge:true}).catch(function(){});
+        var data=doc.exists?(doc.data()||{}):{};
+        var role=data.role;
+        var hasApps=(window.allApps||[]).some(function(a){return a.ownerUid===u.uid||a.devId===u.uid;});
+        var pending=window._pendingRole;
+        var next=(u.email==='admin@amgzrnt.app')?'admin':(role==='admin'||role==='dev'||pending==='dev'||hasApps)?(role==='admin'?'admin':'dev'):(role||pending||'user');
+        if((role==='dev'||role==='admin')&&next==='user') next=role;
+        if(hasApps&&next==='user') next='dev';
+        if(data.role!==next||!doc.exists) ref.set({role:next,email:u.email||'',name:u.displayName||data.name||''},{merge:true}).catch(function(){});
         var up=$('btnUpload'), ds=$('btnDevSettings');
-        if (next==='dev'||next==='admin'){ if(up) up.style.display=''; if(ds) ds.style.display=''; }
+        if(next==='dev'||next==='admin'){ if(up) up.style.display=''; if(ds) ds.style.display=''; }
         else { if(up) up.style.display='none'; if(ds) ds.style.display='none'; }
       }).catch(function(){});
     });
   }
 
-  console.info('[AMGZRNT] V4 clean enhancements ready');
+  console.info('[AMGZRNT] V4 clean fix2');
 })();
 </script>
+
 
 </body>
 </html>
