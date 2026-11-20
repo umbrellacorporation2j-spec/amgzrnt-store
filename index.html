@@ -1298,6 +1298,15 @@ body{padding-bottom:110px}
       <span class="switch"><input type="checkbox" id="optGlass" role="switch"><span class="track"></span></span>
     </label>
 
+    <label class="setting-row device-size-row" for="optMobile">
+      <span class="setting-label">
+        <span class="setting-ico"><i class="fa-solid fa-mobile-screen-button"></i></span>
+        <span id="deviceSizeLabelAr" data-lang="ar">حجم الجوال</span>
+        <span id="deviceSizeLabelEn" data-lang="en">Mobile size</span>
+      </span>
+      <span class="switch switch-green"><input type="checkbox" id="optMobile" role="switch" checked><span class="track"></span></span>
+    </label>
+
     <label class="setting-row" for="optLight">
       <span class="setting-label">
         <span class="setting-ico"><i class="fa-solid fa-circle-half-stroke"></i></span>
@@ -2054,19 +2063,25 @@ body{padding-bottom:110px}
       var btn = document.getElementById('btnSettings');
       var optGlass = document.getElementById('optGlass');
       var optLight = document.getElementById('optLight');
+      var optMobile = document.getElementById('optMobile');
       var saveBtn = document.getElementById('settingsSave');
       var handle = document.getElementById('settingsHandle');
-      if (!sheet || !overlay || !btn || !optGlass || !optLight || !saveBtn) return;
+      if (!sheet || !overlay || !btn || !optGlass || !optLight || !optMobile || !saveBtn) return;
 
       function readSaved() {
         try {
           var s = JSON.parse(localStorage.getItem(KEY) || 'null') || {};
-          return { glass: s.glass !== false, light: s.light === true };
-        } catch (e) { return { glass: true, light: false }; }
+          return { glass: s.glass !== false, light: s.light === true, mobile: s.mobile !== false };
+        } catch (e) { return { glass: true, light: false, mobile: true }; }
       }
       function applySettings(s) {
         body.classList.toggle('no-glass', !s.glass);
         body.classList.toggle('light', !!s.light);
+        body.classList.toggle('desktop-mode', s.mobile === false);
+        var ar = document.getElementById('deviceSizeLabelAr'), en = document.getElementById('deviceSizeLabelEn');
+        if (ar) ar.textContent = s.mobile === false ? 'تفعيل الكمبيوتر' : 'حجم الجوال';
+        if (en) en.textContent = s.mobile === false ? 'Enable desktop layout' : 'Mobile size';
+        var row = document.querySelector('.device-size-row'); if (row) row.classList.toggle('desktop-choice', s.mobile === false);
       }
       function notify(msg) {
         if (typeof window.showToast === 'function') { window.showToast(msg); return; }
@@ -2081,6 +2096,8 @@ body{padding-bottom:110px}
         var s = readSaved();
         optGlass.checked = s.glass;   // discard any unsaved changes
         optLight.checked = s.light;
+        optMobile.checked = s.mobile !== false;
+        applySettings(s);
         sheet.style.transform = '';
         overlay.classList.add('active');
         sheet.classList.add('active');
@@ -2100,7 +2117,7 @@ body{padding-bottom:110px}
       });
 
       saveBtn.addEventListener('click', function () {
-        var s = { glass: optGlass.checked, light: optLight.checked };
+        var s = { glass: optGlass.checked, light: optLight.checked, mobile: optMobile.checked };
         var ok = true;
         try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { ok = false; }
         applySettings(s);
@@ -5080,9 +5097,11 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
   function progress(p,msg,failed){var panel=$('siteAnalysisPanel');if(!panel)return;panel.classList.add('show');panel.classList.toggle('failed',!!failed);$('analysisProgress').style.width=Math.max(0,Math.min(100,p))+'%';$('analysisStatus').textContent=msg||'';$('analysisHead').classList.toggle('loading',p<100&&!failed);$('analysisResult').innerHTML=failed?'<i class="fa-solid fa-triangle-exclamation"></i><span>'+esc(msg)+'</span>':(p>=100?'<i class="fa-solid fa-circle-check"></i><span>'+T('انتهى التحليل — راجع الحقول قبل النشر','Analysis complete — review the fields before publishing')+'</span>':'')}
   function setVal(id,v){var el=$(id);if(el&&v)el.value=v}
   function infer(text){text=String(text||'').toLowerCase();var rules={finance:/finance|bank|wallet|payment|money|budget|invoice|محاسب|مالي|دفع|محفظة|بنك/,shopping:/shop|store|cart|ecommerce|market|shopping|تسوق|متجر|سوق/,games:/game|gaming|play|puzzle|لعبة|ألعاب/,education:/learn|course|school|academy|education|study|تعليم|دورة|مدرسة/,productivity:/task|todo|project|calendar|notes|productivity|إنتاجية|مهام|تقويم/,social:/social|chat|community|message|friends|اجتماعي|محادثة/,health:/health|fitness|medical|doctor|صحة|لياقة|طبي/,entertainment:/music|video|movie|stream|entertainment|ترفيه|فيديو|موسيقى/,news:/news|journal|magazine|أخبار|مجلة/};for(var k in rules)if(rules[k].test(text))return k;return 'tools'}
-  async function translate(text){if(!text)return '';try{var u='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=en|ar';var r=await fetch(u,{headers:{Accept:'application/json'}});if(!r.ok)throw Error('translation');var j=await r.json();return j&&j.responseData&&j.responseData.translatedText?j.responseData.translatedText:''}catch(e){return ''}}
-  function parseHtml(html,url){var doc=new DOMParser().parseFromString(html,'text/html'),meta=function(n){var e=doc.querySelector('meta[name="'+n+'"],meta[property="'+n+'"]');return e?String(e.content||'').trim():''};var title=meta('og:site_name')||doc.title.trim();var desc=meta('description')||meta('og:description');var icon=(doc.querySelector('link[rel~="icon"],link[rel="shortcut icon"]')||{}).href||'';try{icon=new URL(icon||'/favicon.ico',url).href}catch(e){icon=''}return {title:title,desc:desc,icon:icon}}
-  async function analyze(force){var raw=$('appUrl')&&$('appUrl').value.trim(),url=normUrl(raw);if(!url){if(raw)progress(0,T('الرابط غير صالح — اكتب نطاقًا صحيحًا مثل example.com','Invalid link — enter a valid domain such as example.com'),true);return}var run=++analysisRun;progress(10,T('جارٍ الاتصال بالموقع…','Connecting to the website…'));try{progress(24,T('قراءة عنوان الموقع والوصف…','Reading the site title and description…'));var r=await fetch(url,{mode:'cors',redirect:'follow'});if(run!==analysisRun)return;if(!r.ok)throw Error('http');var html=await r.text();if(run!==analysisRun)return;var d=parseHtml(html,url);progress(52,T('استخراج البيانات الأساسية…','Extracting core metadata…'));var enName=d.title||new URL(url).hostname;var enDesc=d.desc||'';var arName=await translate(enName);if(run!==analysisRun)return;progress(72,T('محاولة ترجمة الوصف…','Attempting description translation…'));var arDesc=await translate(enDesc);if(run!==analysisRun)return;var category=infer(enName+' '+enDesc);setVal('appName',enName);setVal('appNameAr',arName||enName);setVal('appDescEn',enDesc);setVal('appDesc',arDesc||enDesc);if(d.icon){setVal('appIcon',d.icon);if(window.previewIcon)previewIcon()}if($('appCategory'))$('appCategory').value=category;window.setSelectedCategories('upload',[category]);progress(100,T('تم استخراج البيانات بنجاح. راجعها وعدّلها قبل النشر.','Data extracted successfully. Review and edit before publishing.'))}catch(e){if(run!==analysisRun)return;progress(100,T('تعذر تحليل الموقع تلقائيًا. قد يمنع الموقع القراءة أو لا يسمح بطلبات CORS؛ أكمل الحقول يدويًا.','Automatic analysis failed. The site may block reading or CORS requests; complete the fields manually.'),true)}}
+  function hasArabic(text){return /[\u0600-\u06ff]/.test(String(text||''))}
+  async function translate(text){if(!text||hasArabic(text))return hasArabic(text)?text:'';var q=String(text).slice(0,700), urls=['https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair=auto|ar','https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+encodeURIComponent(q)];for(var i=0;i<urls.length;i++){try{var r=await fetch(urls[i],{headers:{Accept:'application/json'}});if(!r.ok)continue;var j=await r.json();var out=i===0?(j&&j.responseData&&j.responseData.translatedText||''):((j&&j[0]||[]).map(function(x){return x[0]||''}).join(''));if(out)return out}catch(e){}}return ''}
+  function parseHtml(html,url){var doc=new DOMParser().parseFromString(html,'text/html'),meta=function(n){var e=doc.querySelector('meta[name="'+n+'"],meta[property="'+n+'"],meta[itemprop="'+n+'"]');return e?String(e.content||'').trim():''};var title=meta('og:site_name')||meta('og:title')||meta('twitter:title')||meta('application-name')||doc.title.trim();var desc=meta('description')||meta('og:description')||meta('twitter:description')||meta('description');var icon=(doc.querySelector('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]')||{}).href||'';try{icon=new URL(icon||'/favicon.ico',url).href}catch(e){icon=''}var ld=doc.querySelectorAll('script[type="application/ld+json"]');for(var i=0;i<ld.length;i++){try{var x=JSON.parse(ld[i].textContent||'{}');if(Array.isArray(x))x=x[0]||{};title=title||x.name||'';desc=desc||x.description||''}catch(e){}}return {title:title.replace(/\s+/g,' ').trim(),desc:desc.replace(/\s+/g,' ').trim(),icon:icon}}
+  async function fetchSite(url){var targets=[url,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://r.jina.ai/http://'+url.replace(/^https?:\/\//,'')];var last=null;for(var i=0;i<targets.length;i++){try{var r=await fetch(targets[i],{mode:'cors',redirect:'follow'});if(r.ok){var html=await r.text();if(html&&html.length>80)return {html:html,via:i}}}catch(e){last=e}}throw last||Error('fetch')}
+  async function analyze(force){var raw=$('appUrl')&&$('appUrl').value.trim(),url=normUrl(raw);if(!url){if(raw)progress(0,T('الرابط غير صالح — اكتب نطاقًا صحيحًا مثل example.com','Invalid link — enter a valid domain such as example.com'),true);return}var run=++analysisRun;progress(8,T('جارٍ الاتصال بالموقع…','Connecting to the website…'));try{progress(22,T('محاولة قراءة الموقع بأكثر من طريقة…','Trying multiple site-reading methods…'));var fetched=await fetchSite(url);if(run!==analysisRun)return;progress(48,T('استخراج العنوان والوصف والأيقونة…','Extracting title, description and icon…'));var d=parseHtml(fetched.html,url);var enName=d.title||new URL(url).hostname;var enDesc=d.desc||'';progress(64,T('ترجمة البيانات وتحسينها…','Translating and improving the data…'));var arName=await translate(enName);var arDesc=await translate(enDesc);if(run!==analysisRun)return;var category=infer(enName+' '+enDesc);setVal('appName',enName);setVal('appNameAr',arName||enName);setVal('appDescEn',enDesc);setVal('appDesc',arDesc||enDesc);if(d.icon){setVal('appIcon',d.icon);if(window.previewIcon)previewIcon()}if($('appCategory'))$('appCategory').value=category;window.setSelectedCategories('upload',[category]);progress(100,T('تم التحليل بنجاح. راجع البيانات وعدّلها قبل النشر.','Analysis completed. Review and edit the data before publishing.'))}catch(e){if(run!==analysisRun)return;progress(100,T('تعذر الوصول للموقع من المتصفح. يمكنك متابعة الإدخال يدويًا، ولم يتم رفض الرابط نفسه.','The site could not be read from this browser. You can continue manually; the link itself was not rejected.'),true)}}
   window.startSiteAnalysisDebounced=function(force){clearTimeout(analysisTimer);analysisTimer=setTimeout(function(){analyze(force)},force?80:650)};
   window.closeCategoriesSheet=function(){var o=$('categoriesOverlay'),s=$('categoriesSheet');if(o)o.classList.remove('active');if(s){s.classList.remove('active');s.setAttribute('aria-hidden','true')}document.body.style.overflow=''};
   window.openCategoriesSheet=function(){var o=$('categoriesOverlay'),s=$('categoriesSheet'),g=$('categoriesSheetGrid');if(!o||!s||!g)return;g.innerHTML=Object.keys(CAT_DATA).map(function(k){var x=CAT_DATA[k];return '<button type="button" class="category-sheet-card" onclick="closeCategoriesSheet();setCategory(\''+k+'\',this)"><i class="fa-solid '+x[2]+'"></i><span>'+T(x[0],x[1])+'<small>'+x[1]+'</small></span></button>'}).join('');o.classList.add('active');s.classList.add('active');s.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'};
@@ -5214,5 +5233,9 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
  var adm=window.openAdmin;window.openAdmin=function(){var r=adm&&adm.apply(this,arguments);setTimeout(function(){moveStats('admBody')},250);return r};
 })();
 </script>
+<style id="amg-desktop-layout-and-device-toggle">
+.switch-green .track{border-color:#22c55e!important;background:rgba(34,197,94,.18)!important}.switch-green input:checked+.track{background:#22c55e!important;border-color:#22c55e!important}.device-size-row.desktop-choice .setting-ico{color:#22c55e!important}.device-size-row.desktop-choice .switch-green .track{background:#22c55e!important}
+@media(min-width:701px){body.desktop-mode .drawer{width:min(760px,92vw)}body.desktop-mode .upload-drawer-wide{width:min(900px,94vw)}body.desktop-mode .drawer-body{padding:30px 38px 42px}body.desktop-mode .drawer-header{padding:24px 38px}body.desktop-mode #authDrawer .tabs{max-width:720px;margin-inline:auto}body.desktop-mode #authDrawer .auth-role-tabs{min-height:70px}body.desktop-mode #authDrawer .auth-role-tabs button{font-size:1rem;padding:17px 12px}body.desktop-mode #authDrawer .auth-subtabs{justify-content:center;gap:28px;margin-top:18px}body.desktop-mode #authDrawer .auth-subtabs button{font-size:.95rem;padding:12px 20px}body.desktop-mode .form-group{margin-bottom:18px}body.desktop-mode .form-control,body.desktop-mode .md-field{min-height:52px;font-size:1rem}body.desktop-mode .btn{min-height:48px;padding:12px 20px;font-size:.95rem}body.desktop-mode .tgrid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))!important;gap:18px!important}body.desktop-mode .app-tile{padding:20px;min-height:230px}body.desktop-mode .tile-icon{width:78px!important;height:78px!important}body.desktop-mode .main,body.desktop-mode main{max-width:1440px;margin-inline:auto}body.desktop-mode .toolbar{grid-template-columns:minmax(280px,1fr) auto auto;gap:14px}body.desktop-mode .bnav{width:min(720px,70vw);bottom:22px}body.desktop-mode .settings-sheet{width:min(620px,92vw)}body.desktop-mode .auth-role-tabs,.desktop-mode .auth-subtabs{flex-shrink:0}}
+</style>
 </body>
 </html>
