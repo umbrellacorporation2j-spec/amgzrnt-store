@@ -1,12 +1,12 @@
 'use strict';
-/* AMGZRNT STORE — Service Worker V4.5
+/* AMGZRNT STORE — Service Worker V4.8
    - Precache is tolerant: one missing file can no longer break the whole install.
    - Pages: network first (3.5s) then cached copy, so the store always opens even on slow/no network.
    - Same-origin assets: stale-while-revalidate.
    - Fonts / icons / Firebase SDK scripts (cross-origin): cached so the UI also loads offline.
    - Firestore / Auth / app websites are never cached. */
-const VERSION = 'v45';
-const CACHE_NAME = "amg-store-v45";
+const VERSION = 'v481';
+const CACHE_NAME = "amg-store-v481";
 const RUNTIME = 'amgzrnt-store-runtime-' + VERSION;
 const APP_SHELL = [
   './', './index.html', './manifest.json', './icon.svg',
