@@ -893,6 +893,20 @@ body{padding-bottom:110px}
 .adm-row .row-icon{width:52px;height:52px;border-radius:15px}.adm-row .info{flex:1;min-width:0}.adm-row .info b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.adm-row small{color:var(--muted)}
 .adm-act{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.adm-act .btn{width:38px;height:38px;padding:0}
 @media(max-width:560px){.adm-row{flex-wrap:wrap}.adm-act{width:100%;justify-content:flex-start}}
+
+/* AMGZRNT V4.1 additions: taxonomy, analyzer and full categories sheet */
+.app-tags{display:flex;flex-wrap:wrap;gap:6px;margin:5px 0 12px}
+.app-tag{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(124,58,237,.28);background:rgba(124,58,237,.10);color:var(--primary-light);border-radius:999px;padding:4px 9px;font:700 .68rem Cairo,sans-serif;cursor:pointer;transition:transform .2s,background .2s,border-color .2s}
+.app-tag:hover{transform:translateY(-1px);background:rgba(124,58,237,.2);border-color:var(--primary)}
+.category-picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:18px}
+.category-pick{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;color:var(--muted);font-size:.82rem;cursor:pointer;transition:background .2s,color .2s}
+.category-pick:has(input:checked){background:rgba(124,58,237,.18);color:var(--text)}
+.category-pick input{accent-color:var(--primary)}
+.analysis-panel{display:none;margin:0 0 16px;padding:14px;border:1px solid rgba(59,130,246,.35);background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(124,58,237,.10));border-radius:18px;animation:fadeSlide .35s var(--ease)}
+.analysis-panel.show{display:block}.analysis-head{display:flex;align-items:center;gap:10px;font-weight:800}.analysis-head i{color:#60a5fa}.analysis-head.loading i{animation:spin .8s linear infinite}.analysis-track{height:7px;border-radius:99px;background:rgba(255,255,255,.10);overflow:hidden;margin:11px 0 7px}.analysis-progress{height:100%;width:0;background:linear-gradient(90deg,#3b82f6,#a78bfa);border-radius:inherit;transition:width .35s var(--ease)}.analysis-status{font-size:.78rem;color:var(--muted);min-height:1.4em}.analysis-result{display:flex;gap:7px;align-items:center;color:#6ee7b7;font-size:.78rem;margin-top:7px}.analysis-result i{font-size:.72rem}.analysis-panel.failed{border-color:rgba(245,158,11,.4)}.analysis-panel.failed .analysis-result{color:#fcd34d}
+.taxonomy-note{font-size:.75rem;color:var(--muted);margin:6px 2px 0}.sheet-wide{max-width:680px!important;max-height:88vh;overflow-y:auto}.categories-sheet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:10px;padding:8px 0 12px}.category-sheet-card{display:flex;align-items:center;gap:9px;padding:14px 12px;border:1px solid var(--border);background:var(--card2);border-radius:18px;color:var(--text);font:700 .86rem Cairo,sans-serif;cursor:pointer;text-align:start;transition:transform .25s var(--spring),border-color .2s,background .2s}.category-sheet-card:hover{transform:translateY(-2px);border-color:var(--primary)}.category-sheet-card i{width:34px;height:34px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;background:rgba(124,58,237,.16);color:var(--primary-light)}.category-sheet-card small{display:block;color:var(--muted);font:500 .7rem Inter,sans-serif;margin-top:2px}.categories-sheet-sub{color:var(--muted);font-size:.82rem;margin:-7px 0 10px}
+@media(max-width:520px){.category-picks{grid-template-columns:1fr}.categories-sheet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-sheet-card{padding:12px 9px}}
+
 </style>
 </head>
 <body>
@@ -1076,16 +1090,18 @@ body{padding-bottom:110px}
       </div>
       <form id="uploadForm" onsubmit="handleUpload(event)">
         <div class="form-group">
-          <label data-lang="ar">اسم التطبيق</label>
-          <label data-lang="en">App Name</label>
-          <input type="text" id="appName" required placeholder="منظم المهام">
+          <label data-lang="ar">رابط الموقع — ابدأ من هنا</label>
+          <label data-lang="en">Website URL — start here</label>
+          <input type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" id="appUrl" required oninput="previewIcon(); startSiteAnalysisDebounced()" onblur="var n=AMG.normalizeUrl(this.value);if(n)this.value=n; startSiteAnalysisDebounced(true)" placeholder="myapp.example.com">
+          <div class="form-hint" data-lang="ar">أدخل الرابط ليحاول المتجر قراءة بيانات الموقع تلقائياً. يجب أن يكون الموقع مستضافاً ويعمل كـ PWA.</div><div id="iconPreview" class="icon-preview"></div>
+          <div class="form-hint" data-lang="en">Enter the link to analyze the site automatically. It must be hosted and work as a PWA.</div>
+        </div>
+        <div class="analysis-panel" id="siteAnalysisPanel" aria-live="polite"><div class="analysis-head" id="analysisHead"><i class="fa-solid fa-wand-magic-sparkles"></i><span id="analysisTitle">تحليل الموقع</span></div><div class="analysis-track"><div class="analysis-progress" id="analysisProgress"></div></div><div class="analysis-status" id="analysisStatus"></div><div class="analysis-result" id="analysisResult"></div></div>
+        <div class="form-group">
+          <label data-lang="ar">اسم التطبيق بالعربية</label><label data-lang="en">Arabic app name</label><input type="text" id="appNameAr" required placeholder="اسم التطبيق">
         </div>
         <div class="form-group">
-          <label data-lang="ar">رابط التطبيق</label>
-          <label data-lang="en">App URL</label>
-          <input type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" id="appUrl" required oninput="previewIcon()" onblur="var n=AMG.normalizeUrl(this.value);if(n)this.value=n" placeholder="myapp.example.com">
-          <div class="form-hint" data-lang="ar">اكتب الرابط كما تشاء (مع https:// أو بدونها، مع www أو بدونها) وسيُضبط تلقائياً. يجب أن يكون الموقع مستضافاً ويعمل كـ PWA</div><div id="iconPreview" class="icon-preview"></div>
-          <div class="form-hint" data-lang="en">Must be hosted and work as a PWA</div>
+          <label data-lang="ar">اسم التطبيق بالإنجليزية</label><label data-lang="en">English app name</label><input type="text" id="appName" required placeholder="My App">
         </div>
         <div class="form-group">
           <label data-lang="ar">رابط الأيقونة</label>
@@ -1095,18 +1111,14 @@ body{padding-bottom:110px}
         <div class="form-group">
           <label data-lang="ar">الوصف</label>
           <label data-lang="en">Description</label>
-          <textarea id="appDesc" required placeholder="وصف مختصر..."></textarea>
+          <textarea id="appDesc" required placeholder="وصف مختصر بالعربية..."></textarea>
+          <textarea id="appDescEn" rows="3" placeholder="Original English description" style="margin-top:8px"></textarea>
         </div>
         <div class="form-group">
           <label data-lang="ar">التصنيف</label>
           <label data-lang="en">Category</label>
-          <select id="appCategory">
-            <option value="tools">أدوات / Tools</option>
-            <option value="productivity">إنتاجية / Productivity</option>
-            <option value="education">تعليم / Education</option>
-            <option value="social">اجتماعي / Social</option>
-            <option value="other">أخرى / Other</option>
-          </select>
+          <select id="appCategory"><option value="tools">أدوات / Tools</option><option value="finance">مالية / Finance</option><option value="shopping">تسوق / Shopping</option><option value="games">ألعاب / Games</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="health">صحة / Health</option><option value="entertainment">ترفيه / Entertainment</option><option value="news">أخبار / News</option><option value="other">أخرى / Other</option></select>
+          <div class="taxonomy-note">يمكن اختيار 3 تصنيفات كحد أقصى.</div><div class="category-picks" id="uploadCategoryPicks"></div>
         </div>
         <div class="form-group"><label>حالة التطبيق</label><select id="appStatus"><option value="live">منشور</option><option value="dev">تحت التطوير (تظهر شارة للمستخدمين)</option></select></div>
         <div class="form-group"><label>إعلان المتجر (مستطيل عريض) — خلفية + إيموجي + عنوان</label><div id="cmpUp"></div></div>
@@ -1204,7 +1216,7 @@ body{padding-bottom:110px}
         <div class="form-group"><label>الاسم بالإنجليزية / English name</label><input id="editNameEn"></div>
         <div class="form-group"><label>الوصف بالعربية / Arabic description</label><textarea id="editDescAr" rows="3"></textarea></div>
         <div class="form-group"><label>الوصف بالإنجليزية / English description</label><textarea id="editDescEn" rows="3"></textarea></div>
-        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="other">أخرى / Other</option></select></div>
+        <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="finance">مالية / Finance</option><option value="shopping">تسوق / Shopping</option><option value="games">ألعاب / Games</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="health">صحة / Health</option><option value="entertainment">ترفيه / Entertainment</option><option value="news">أخبار / News</option><option value="other">أخرى / Other</option></select><div class="taxonomy-note">يمكن اختيار 3 تصنيفات كحد أقصى.</div><div class="category-picks" id="editCategoryPicks"></div></div>
         <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" onblur="var n=AMG.normalizeImg(this.value);if(n)this.value=n"></div>
         <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
         <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" required onblur="var n=AMG.normalizeUrl(this.value);if(n)this.value=n"></div>
@@ -1283,6 +1295,12 @@ body{padding-bottom:110px}
       <span data-lang="ar">حفظ الإعدادات</span>
       <span data-lang="en">Save settings</span>
     </button>
+  </div>
+
+  <div class="sheet-overlay" id="categoriesOverlay" onclick="closeCategoriesSheet()"></div>
+  <div class="bottom-sheet sheet-wide" id="categoriesSheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="categoriesTitle">
+    <div class="sheet-handle"></div><div class="drawer-header" style="padding:8px 0 14px;border:0"><h3 id="categoriesTitle"><i class="fa-solid fa-table-cells-large"></i> <span data-lang="ar">الأقسام</span><span data-lang="en">Categories</span></h3><button class="btn btn-ghost btn-icon" onclick="closeCategoriesSheet()" aria-label="إغلاق"><i class="fa-solid fa-xmark"></i></button></div>
+    <p class="categories-sheet-sub" data-lang="ar">اختر قسمًا لعرض جميع التطبيقات التابعة له.</p><p class="categories-sheet-sub" data-lang="en">Choose a category to see all related apps.</p><div class="categories-sheet-grid" id="categoriesSheetGrid"></div>
   </div>
 
   <div class="app-page" id="appPage">
@@ -1474,7 +1492,7 @@ body{padding-bottom:110px}
     function getFiltered() {
       var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
       return (typeof window.getFiltered === 'function' ? window.getFiltered() : allApps.filter(function(a) {
-        var catOk = activeCategory === 'all' || a.category === activeCategory;
+        var catOk = activeCategory === 'all' || appCats(a).indexOf(activeCategory) > -1;
         var text = [a.name,a.nameAr,a.nameEn,a.description,a.descriptionAr,a.descriptionEn,a.devName].filter(Boolean).join(' ').toLowerCase();
         return catOk && (!q || text.indexOf(q) !== -1);
       }));
@@ -1523,7 +1541,7 @@ body{padding-bottom:110px}
             '<div class="app-info"><h3>' + escHTML((isEn() && app.nameEn) ? app.nameEn : (app.nameAr || app.name)) + '</h3>' +
             '<div class="dev">' + escHTML(app.devName || app.devEmail || '') + '</div>' +
             '<span class="badge"><i class="fa-solid fa-mobile-screen"></i> PWA</span></div></div>' +
-          '<p class="app-desc">' + escHTML((isEn() && app.descriptionEn) ? app.descriptionEn : (app.descriptionAr || app.description || '')) + '</p>' +
+          '<p class="app-desc">' + escHTML((isEn() && app.descriptionEn) ? app.descriptionEn : (app.descriptionAr || app.description || '')) + '</p>' + ((window.catNames && window.catNames(app).length) ? '<div class="app-tags">' + window.catNames(app).map(function(c){return '<span class="app-tag">'+escHTML(c)+'</span>';}).join('') + '</div>' : '') +
           '<div class="app-actions">' +
             '<button class="btn btn-primary btn-sm" onclick="openAppSheet(\'' + esc(app.id) + '\')">' +
               '<i class="fa-solid fa-download"></i>' +
@@ -2173,7 +2191,11 @@ body{padding-bottom:110px}
   AMG.normalizeUrl = normalizeUrl; AMG.normalizeImg = normalizeImg; AMG.host = host;
   function iconSrc(a) { var u = normalizeImg(a.icon), h = host(normalizeUrl(a.url) || a.url); return u || (h ? 'https://www.google.com/s2/favicons?sz=128&domain=' + h : ''); }
   window.iconSrc = iconSrc;
-  var CAT = { tools: ['أدوات', 'Tools'], productivity: ['إنتاجية', 'Productivity'], education: ['تعليم', 'Education'], social: ['اجتماعي', 'Social'], other: ['أخرى', 'Other'] };
+  var CAT = { finance: ['مالية', 'Finance'], shopping: ['تسوق', 'Shopping'], games: ['ألعاب', 'Games'], education: ['تعليم', 'Education'], productivity: ['إنتاجية', 'Productivity'], tools: ['أدوات', 'Tools'], social: ['اجتماعي', 'Social'], health: ['صحة', 'Health'], entertainment: ['ترفيه', 'Entertainment'], news: ['أخبار', 'News'], other: ['أخرى', 'Other'] };
+  function appCats(a) { var list = Array.isArray(a && a.categories) ? a.categories.slice(0,3) : []; if (!list.length && a && a.category) list = [a.category]; return list.filter(function(c){ return !!CAT[c]; }); }
+  function catNames(a) { return appCats(a).map(function(c){ return catName(c); }); }
+  window.appCats = appCats; window.catNames = catNames;
+  function catTagHTML(a) { return appCats(a).map(function(c){ return '<button type="button" class="app-tag" onclick="event.stopPropagation();gotoCat(\'' + c + '\')"><i class="fa-solid ' + (CATI[c] || 'fa-shapes') + '"></i>' + escHTML(catName(c)) + '</button>'; }).join(''); }
   function catName(c) { var x = CAT[c] || CAT.other; return isEn() ? x[1] : x[0]; }
   function isCol(u) { return !!(u && u.email && u.email.indexOf(COL) > 0); }
 
@@ -2237,10 +2259,10 @@ body{padding-bottom:110px}
       '<div class="row-info"><h3>' + escHTML(nm(a)) + '</h3><div class="row-meta">' + escHTML(a.devName || '') + ' • ' + catName(a.category) + '</div></div>' +
       '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openAppSheet(\'' + a.id + '\')">' + T('تثبيت', 'Install') + '</button></div></div>';
   }
-  var CATI = { tools: 'fa-screwdriver-wrench', productivity: 'fa-briefcase', education: 'fa-graduation-cap', social: 'fa-users', other: 'fa-shapes' };
+  var CATI = { finance: 'fa-coins', shopping: 'fa-bag-shopping', games: 'fa-gamepad', education: 'fa-graduation-cap', productivity: 'fa-briefcase', tools: 'fa-screwdriver-wrench', social: 'fa-users', health: 'fa-heart-pulse', entertainment: 'fa-film', news: 'fa-newspaper', other: 'fa-shapes' };
   function tileHTML(a, i) {
     return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.06, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
-      '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
+      '<h4>' + escHTML(nm(a)) + '</h4>' + (catTagHTML(a) ? '<div class="app-tags">' + catTagHTML(a) + '</div>' : '') + '<div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div></div>';
   }
   function secHTML(icon, title, apps, cat) {
     return '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid ' + icon + '"></i></span>' + title + '</div>' +
@@ -2272,7 +2294,7 @@ body{padding-bottom:110px}
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
       Object.keys(CAT).forEach(function (c) {
-        var list = apps.filter(function (a) { return (a.category || 'other') === c; });
+        var list = apps.filter(function (a) { return appCats(a).indexOf(c) > -1; });
         if (list.length) h += secHTML(CATI[c], catName(c), list, c);
       });
       h += '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-grip"></i></span>' + T('كل التطبيقات', 'All apps') + '</div></div><div class="apps-list">' +
@@ -2303,7 +2325,7 @@ body{padding-bottom:110px}
       '<div class="ap-actions"><button class="btn btn-primary ap-install" onclick="openAppSheet(\'' + a.id + '\')"><i class="fa-solid fa-download"></i><span>' + T('تثبيت', 'Install') + '</span></button><button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i><span>' + T('معاينة', 'Preview') + '</span></button></div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span> <button class="btn btn-outline btn-sm" onclick="editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button> <button class="btn btn-outline btn-sm" onclick="deleteApp(\'' + a.id + '\');closeAppPage()"><i class="fa-solid fa-trash"></i></button></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
-      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
+      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p>' + (catTagHTML(a) ? '<div class="app-tags">' + catTagHTML(a) + '</div>' : '') + '<div id="apRatings"></div>';
     var p = $('appPage'); p.scrollTop = 0; p.classList.add('active'); document.body.style.overflow = 'hidden';
     fetchRatings(id).then(function (r) { if (curId === id) renderRatings(a, r); });
   };
@@ -2449,8 +2471,8 @@ body{padding-bottom:110px}
     }
     $('appUrl').value = nUrl; if (nIcon) $('appIcon').value = nIcon;
     var data = {
-      name: $('appName').value.trim(), url: nUrl, icon: nIcon,
-      description: $('appDesc').value.trim(), category: $('appCategory').value,
+      name: $('appName').value.trim(), nameAr: $('appNameAr') ? $('appNameAr').value.trim() : $('appName').value.trim(), nameEn: $('appName').value.trim(), url: nUrl, icon: nIcon,
+      description: $('appDesc').value.trim(), descriptionAr: $('appDesc').value.trim(), descriptionEn: $('appDescEn') ? $('appDescEn').value.trim() : '', category: $('appCategory').value, categories: getSelectedCategories('upload').slice(0,3),
       pwaKitAvailable: true, pwaKitVersion: '4.0', devStatus: ($('appStatus') && $('appStatus').value === 'dev') ? 'dev' : 'live',
       screenshots: [], ad: cmps.up.get(), slides: sls.up.get().slides, autoShots: sls.up.get().auto,
       ownerUid: u.uid, ownerEmail: u.email || '', ownerName: u.displayName || '', devId: u.uid, devEmail: u.email || '',
@@ -2471,7 +2493,7 @@ body{padding-bottom:110px}
   var _ed = window.editApp;
   window.editApp = function (id) {
     _ed(id); var a = findApp(id);
-    if (a) { cmps.ed.set(a.ad); sls.ed.set(a); }
+    if (a) { cmps.ed.set(a.ad); sls.ed.set(a); setSelectedCategories('edit', appCats(a)); }
     if ($('editStatus')) $('editStatus').value = (a && a.devStatus === 'dev') ? 'dev' : 'live';
   };
   var _sv = window.saveAppEdit;
@@ -2485,7 +2507,7 @@ body{padding-bottom:110px}
     }
     $('editUrl').value = nUrl; $('editIcon').value = nIcon;
     $('editScreenshots').value = $('editScreenshots').value.split(/\r?\n/).map(normalizeImg).filter(Boolean).join('\n');
-    var sv = sls.ed.get(); var extra = { ad: cmps.ed.get(), slides: sv.slides, autoShots: sv.auto, devStatus: ($('editStatus') && $('editStatus').value === 'dev') ? 'dev' : 'live' };
+    var sv = sls.ed.get(); var extra = { ad: cmps.ed.get(), slides: sv.slides, autoShots: sv.auto, categories: getSelectedCategories('edit').slice(0,3), devStatus: ($('editStatus') && $('editStatus').value === 'dev') ? 'dev' : 'live' };
     await _sv(e);
     try { await db.collection('apps').doc(id).update(extra); if (a) Object.assign(a, extra); filterApps(); } catch (x) {}
   };
@@ -2620,6 +2642,8 @@ body{padding-bottom:110px}
 
 
 
+
+
 </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
     var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
@@ -2732,7 +2756,7 @@ body{padding-bottom:110px}
   }
   window.getFiltered = function () {
     var toks = arNorm($('searchInput').value).split(' ').filter(Boolean);
-    var list = allApps.filter(function (a) { return activeCategory === 'all' || a.category === activeCategory; });
+    var list = allApps.filter(function (a) { return activeCategory === 'all' || appCats(a).indexOf(activeCategory) > -1; });
     if (!toks.length) return list;
     return list.map(function (a) { return { a: a, s: scoreApp(a, toks) }; })
       .filter(function (x) { return x.s > 0; })
@@ -2937,7 +2961,7 @@ body{padding-bottom:110px}
     var b = mg ? '<div class="tile-mg"><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();editApp(\'' + a.id + '\')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-outline btn-icon btn-sm" onclick="event.stopPropagation();deleteApp(\'' + a.id + '\')"><i class="fa-solid fa-trash"></i></button></div>' : '';
     var f = (a.devStatus === 'dev' && !a.suspended ? '<span class="bdg gold">' + T('تحت التطوير', 'In development') + '</span> ' : '') + (a.suspended ? '<span class="bdg red">' + T('موقوف', 'Suspended') + '</span> ' : '') + (a.adminNote && canSee(a) ? '<span class="bdg gold">⚠ ' + T('تنبيه', 'Notice') + '</span>' : '');
     return '<div class="app-tile" style="animation-delay:' + Math.min(i * 0.05, 0.5) + 's" onclick="openAppPage(\'' + a.id + '\')">' + iconHTML(a, 'tile-icon') +
-      '<h4>' + escHTML(nm(a)) + '</h4><div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div>' + f + b + '</div>';
+      '<h4>' + escHTML(nm(a)) + '</h4>' + (catTagHTML(a) ? '<div class="app-tags">' + catTagHTML(a) + '</div>' : '') + '<div class="row-meta" data-rate="' + a.id + '">' + rateTxt(ratingsCache[a.id]) + '</div>' + f + b + '</div>';
   }
   function secHTML(icon, title, apps, cat) {
     return '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid ' + icon + '"></i></span>' + title + '</div>' +
@@ -2962,7 +2986,7 @@ body{padding-bottom:110px}
       var ads = apps.filter(function (a) { return (a.ad || a.adText || a.adImage) && !a.suspended; });
       if (ads.length) h += '<div class="ads-scroll">' + ads.map(adHTML).join('') + '</div>';
       h += secHTML('fa-wand-magic-sparkles', T('الأحدث', 'New'), apps.slice(0, 12));
-      Object.keys(CAT).forEach(function (c) { var l = apps.filter(function (a) { return (a.category || 'other') === c; }); if (l.length) h += secHTML(CATI[c], catName(c), l, c); });
+      Object.keys(CAT).forEach(function (c) { var l = apps.filter(function (a) { return appCats(a).indexOf(c) > -1; }); if (l.length) h += secHTML(CATI[c], catName(c), l, c); });
       h += '<section class="sec reveal"><div class="sec-head"><div class="sec-title"><span class="sec-ico"><i class="fa-solid fa-grip"></i></span>' + T('كل التطبيقات', 'All apps') + '</div></div><div class="tgrid">' + apps.map(function (a, i) { return tileHTML(a, i); }).join('') + '</div></section>';
     }
     box.innerHTML = h; reveal(); loadAllRatings(apps);
@@ -3091,7 +3115,7 @@ body{padding-bottom:110px}
       '<button class="btn btn-outline" onclick="openPreview(\'' + a.id + '\')"><i class="fa-solid fa-mobile-screen-button"></i></button></div>' +
       (isAdmin() ? '<div style="margin-bottom:16px"><span class="adm-badge"><i class="fa-solid fa-shield-halved"></i>' + T('وضع المدير', 'Admin') + '</span></div>' : '') +
       (shots ? '<div class="ap-shots">' + shots + '</div>' : '') +
-      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p><div id="apRatings"></div>';
+      '<h2 class="ap-h">' + T('لمحة عن هذا التطبيق', 'About this app') + '</h2><p class="ap-desc">' + escHTML(ds(a)) + '</p>' + (catTagHTML(a) ? '<div class="app-tags">' + catTagHTML(a) + '</div>' : '') + '<div id="apRatings"></div>';
     var p = $('appPage'); p.scrollTop = 0; p.classList.add('active'); lock();
     fetchRatings(id).then(function (r) { if (curId === id) renderRatings(a, r); });
   };
@@ -4212,6 +4236,7 @@ html body .install-wave, html body #sheetInstallBtn { position:relative!importan
   background:linear-gradient(135deg,#6d28d9,#4c1d95)!important; color:#fff!important; transition:background .35s ease, transform .2s ease!important; -webkit-tap-highlight-color:transparent; }
 html body .install-wave.wave-loading, html body #sheetInstallBtn.wave-loading { background:linear-gradient(135deg,#34187a,#241050)!important; cursor:progress!important; filter:none!important; }
 html body .install-wave.install-done, html body #sheetInstallBtn.install-done { background:linear-gradient(135deg,#059669,#047857)!important; box-shadow:0 10px 26px rgba(5,150,105,.25)!important; }
+html body .install-wave.app-devblocked, html body #sheetInstallBtn.app-devblocked { background:linear-gradient(135deg,#3b2b13,#291d0b)!important; color:#fde68a!important; cursor:not-allowed!important; box-shadow:none!important; }
 html body .install-wave.app-blocked, html body #sheetInstallBtn.app-blocked { background:linear-gradient(135deg,#4b2230,#33141f)!important; color:#fecaca!important; cursor:not-allowed!important; box-shadow:none!important; }
 html body .install-wave.v4-pop, html body #sheetInstallBtn.v4-pop { animation:v4pop .6s cubic-bezier(.2,.8,.2,1); }
 @keyframes v4pop { 0%{transform:scale(1)} 35%{transform:scale(1.04)} 100%{transform:scale(1)} }
@@ -4389,6 +4414,8 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
 
   /* ---------- suspension guard (client side, re-checked live) ---------- */
   function isBlockedApp(a) { return !!(a && a.suspended && !isAdminUser()); }
+  function isInstallBlocked(a) { return !!(a && (a.suspended || a.devStatus === 'dev')); }
+  function installBlockedMsg(a) { return a && a.suspended ? blockedMsg() : T('التطبيق تحت التطوير ولا يمكنك تثبيته حاليًا.', 'This app is under development and cannot be installed right now.'); }
   function blockedId(id) {
     if (isAdminUser()) return false;
     var a = findApp(id); if (a) return !!a.suspended;
@@ -4467,6 +4494,7 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
     var id = btn.getAttribute('data-app-id'); if (!id) return;
     var lab = ensureMarkup(btn), st, pct = 0;
     if (blockedId(id)) st = 'blocked';
+    else if (isInstallBlocked(findApp(id))) st = 'devblocked';
     else if (installed(id)) st = 'done';
     else if (jobs[id]) { st = 'loading'; pct = Math.max(0, Math.min(99, Math.floor((Date.now() - jobs[id].start) / jobs[id].total * 100))); }
     else st = 'idle';
@@ -4476,15 +4504,16 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
     btn.dataset.sig = sig;
     btn.classList.toggle('wave-loading', st === 'loading');
     btn.classList.toggle('install-done', st === 'done');
-    btn.classList.toggle('app-blocked', st === 'blocked');
+    btn.classList.toggle('app-blocked', st === 'blocked' || st === 'devblocked');
+    btn.classList.toggle('app-devblocked', st === 'devblocked');
     if (st === 'done' && was === 'loading') { btn.classList.remove('v4-pop'); void btn.offsetWidth; btn.classList.add('v4-pop'); }
-    btn.disabled = st === 'loading' || st === 'blocked';
+    btn.disabled = st === 'loading' || st === 'blocked' || st === 'devblocked';
     btn.style.setProperty('--wave-progress', (st === 'loading' ? pct : 0) + '%');
-    var txt = st === 'blocked' ? T('التطبيق موقوف', 'App suspended') : st === 'done' ? T('فتح التطبيق', 'Open app') : st === 'loading' ? T('جارٍ التثبيت ', 'Installing ') + pct + '%' : T('تثبيت', 'Install');
-    var ico = st === 'blocked' ? 'fa-ban' : st === 'done' ? 'fa-arrow-up-right-from-square' : st === 'loading' ? 'fa-circle-notch fa-spin' : 'fa-download';
+    var txt = st === 'blocked' ? T('التطبيق موقوف', 'App suspended') : st === 'devblocked' ? T('تحت التطوير — التثبيت غير متاح', 'In development — install unavailable') : st === 'done' ? T('فتح التطبيق', 'Open app') : st === 'loading' ? T('جارٍ التثبيت ', 'Installing ') + pct + '%' : T('تثبيت', 'Install');
+    var ico = st === 'blocked' ? 'fa-ban' : st === 'devblocked' ? 'fa-flask' : st === 'done' ? 'fa-arrow-up-right-from-square' : st === 'loading' ? 'fa-circle-notch fa-spin' : 'fa-download';
     lab.innerHTML = '<i class="fa-solid ' + ico + '"></i><span>' + txt + '</span>';
     btn.setAttribute('aria-label', txt);
-    if (btn.id === 'sheetInstallBtn') { var o = $('sheetOpenBtn'); if (o) { o.style.display = (st === 'done' || st === 'blocked') ? 'none' : ''; } }
+    if (btn.id === 'sheetInstallBtn') { var o = $('sheetOpenBtn'); if (o) { o.style.display = (st === 'done' || st === 'blocked') ? 'none' : ''; } if (st === 'devblocked') { btn.title = installBlockedMsg(findApp(btn.getAttribute('data-app-id'))); var hint = $('sheetAppHint'); if (hint) hint.textContent = installBlockedMsg(findApp(btn.getAttribute('data-app-id'))); } }
     if (st === 'blocked') {                       /* the preview button on the app page must not be a back door */
       var pv = btn.parentNode && btn.parentNode.querySelector('[onclick^="openPreview"]');
       if (pv && !isAdminUser()) { pv.disabled = true; pv.title = blockedMsg(); }
@@ -4503,7 +4532,8 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
   function finish(id, j) {
     live(id, 2500).then(function (r) {
       var a = r.app;
-      if ((r.gone && !isAdminUser()) || isBlockedApp(a)) { toast(blockedMsg()); paintAll(); return; }   /* suspended while installing */
+      if ((r.gone && !isAdminUser()) || isBlockedApp(a)) { toast(blockedMsg()); paintAll(); return; }
+      if (isInstallBlocked(a)) { toast(installBlockedMsg(a)); paintAll(); return; }   /* suspended while installing */
       inst[id] = { at: Date.now(), last: 0, opens: 0, name: appName(a) || j.name || '', url: normalize(a && a.url) || j.url || '', icon: cap(appIcon(a)) || j.icon || '', sync: false, susp: false };
       save(); push(id); buzz([18, 40, 18]);
       toast(T('تم تثبيت «' + (inst[id].name || '') + '» — اضغط فتح التطبيق', '“' + (inst[id].name || '') + '” installed — tap Open app'));
@@ -4539,12 +4569,14 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
   function onInstall(id) {
     ready().then(function () {
       if (blockedId(id)) { notifyBlocked(); paintAll(); return; }
+      var known = findApp(id); if (known && isInstallBlocked(known)) { toast(installBlockedMsg(known)); paintAll(); return; }
       if (installed(id)) { openApp(id); return; }
       if (jobs[id]) return;
       if (!auth.currentUser) { requireAccount(id); return; }
       live(id, 3500).then(function (r) {
         var a = r.app;
         if (isBlockedApp(a) || (r.gone && !isAdminUser())) { notifyBlocked(); paintAll(); return; }
+        if (isInstallBlocked(a)) { toast(installBlockedMsg(a)); paintAll(); return; }
         var url = normalize(a && a.url);
         if (!a || !url) { toast(T('لم أجد رابطًا صالحًا لهذا التطبيق.', 'No valid link for this app.')); return; }
         startJob(id, { name: appName(a), url: url, icon: cap(appIcon(a)) });
@@ -4920,6 +4952,34 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
     ready().then(function () { if (hs === '#search') { var si = $('searchInput'); if (si) si.focus(); } else if (auth.currentUser) openLibrary(); else openDrawer('auth'); });
   }
   shortcut();
+})();
+</script>
+
+<script id="amg-analysis-and-taxonomy">
+(function(){
+  'use strict';
+  var CAT_DATA={finance:['مالية','Finance','fa-coins'],shopping:['تسوق','Shopping','fa-bag-shopping'],games:['ألعاب','Games','fa-gamepad'],education:['تعليم','Education','fa-graduation-cap'],productivity:['إنتاجية','Productivity','fa-briefcase'],tools:['أدوات','Tools','fa-screwdriver-wrench'],social:['اجتماعي','Social','fa-users'],health:['صحة','Health','fa-heart-pulse'],entertainment:['ترفيه','Entertainment','fa-film'],news:['أخبار','News','fa-newspaper'],other:['أخرى','Other','fa-shapes']};
+  var analysisTimer=null, analysisRun=0;
+  function $(id){return document.getElementById(id)}
+  function T(ar,en){return document.body.classList.contains('en')?en:ar}
+  function normUrl(v){try{return window.AMG&&AMG.normalizeUrl?AMG.normalizeUrl(v):''}catch(e){return ''}}
+  function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function selected(prefix){return Array.prototype.slice.call(document.querySelectorAll('#'+prefix+'CategoryPicks input:checked')).map(function(x){return x.value}).slice(0,3)}
+  window.getSelectedCategories=selected;
+  window.setSelectedCategories=function(prefix,list){var set={};(list||[]).forEach(function(x){set[x]=1});document.querySelectorAll('#'+prefix+'CategoryPicks input').forEach(function(i){i.checked=!!set[i.value]});syncChoice(prefix)};
+  function syncChoice(prefix){var picks=document.querySelectorAll('#'+prefix+'CategoryPicks input'), n=selected(prefix).length;picks.forEach(function(i){i.disabled=!i.checked&&n>=3})}
+  function mountChoices(prefix){var box=$(prefix+'CategoryPicks');if(!box)return;box.innerHTML=Object.keys(CAT_DATA).map(function(k){var x=CAT_DATA[k];return '<label class="category-pick"><input type="checkbox" value="'+k+'"><i class="fa-solid '+x[2]+'"></i><span>'+x[0]+' / '+x[1]+'</span></label>'}).join('');box.addEventListener('change',function(){var all=selected(prefix);var main=$(prefix==='upload'?'appCategory':'editCategory');if(main&&all[0])main.value=all[0];syncChoice(prefix)})}
+  mountChoices('upload');mountChoices('edit');
+  function progress(p,msg,failed){var panel=$('siteAnalysisPanel');if(!panel)return;panel.classList.add('show');panel.classList.toggle('failed',!!failed);$('analysisProgress').style.width=Math.max(0,Math.min(100,p))+'%';$('analysisStatus').textContent=msg||'';$('analysisHead').classList.toggle('loading',p<100&&!failed);$('analysisResult').innerHTML=failed?'<i class="fa-solid fa-triangle-exclamation"></i><span>'+esc(msg)+'</span>':(p>=100?'<i class="fa-solid fa-circle-check"></i><span>'+T('انتهى التحليل — راجع الحقول قبل النشر','Analysis complete — review the fields before publishing')+'</span>':'')}
+  function setVal(id,v){var el=$(id);if(el&&v)el.value=v}
+  function infer(text){text=String(text||'').toLowerCase();var rules={finance:/finance|bank|wallet|payment|money|budget|invoice|محاسب|مالي|دفع|محفظة|بنك/,shopping:/shop|store|cart|ecommerce|market|shopping|تسوق|متجر|سوق/,games:/game|gaming|play|puzzle|لعبة|ألعاب/,education:/learn|course|school|academy|education|study|تعليم|دورة|مدرسة/,productivity:/task|todo|project|calendar|notes|productivity|إنتاجية|مهام|تقويم/,social:/social|chat|community|message|friends|اجتماعي|محادثة/,health:/health|fitness|medical|doctor|صحة|لياقة|طبي/,entertainment:/music|video|movie|stream|entertainment|ترفيه|فيديو|موسيقى/,news:/news|journal|magazine|أخبار|مجلة/};for(var k in rules)if(rules[k].test(text))return k;return 'tools'}
+  async function translate(text){if(!text)return '';try{var u='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=en|ar';var r=await fetch(u,{headers:{Accept:'application/json'}});if(!r.ok)throw Error('translation');var j=await r.json();return j&&j.responseData&&j.responseData.translatedText?j.responseData.translatedText:''}catch(e){return ''}}
+  function parseHtml(html,url){var doc=new DOMParser().parseFromString(html,'text/html'),meta=function(n){var e=doc.querySelector('meta[name="'+n+'"],meta[property="'+n+'"]');return e?String(e.content||'').trim():''};var title=meta('og:site_name')||doc.title.trim();var desc=meta('description')||meta('og:description');var icon=(doc.querySelector('link[rel~="icon"],link[rel="shortcut icon"]')||{}).href||'';try{icon=new URL(icon||'/favicon.ico',url).href}catch(e){icon=''}return {title:title,desc:desc,icon:icon}}
+  async function analyze(force){var raw=$('appUrl')&&$('appUrl').value.trim(),url=normUrl(raw);if(!url){if(raw)progress(0,T('الرابط غير صالح — اكتب نطاقًا صحيحًا مثل example.com','Invalid link — enter a valid domain such as example.com'),true);return}var run=++analysisRun;progress(10,T('جارٍ الاتصال بالموقع…','Connecting to the website…'));try{progress(24,T('قراءة عنوان الموقع والوصف…','Reading the site title and description…'));var r=await fetch(url,{mode:'cors',redirect:'follow'});if(run!==analysisRun)return;if(!r.ok)throw Error('http');var html=await r.text();if(run!==analysisRun)return;var d=parseHtml(html,url);progress(52,T('استخراج البيانات الأساسية…','Extracting core metadata…'));var enName=d.title||new URL(url).hostname;var enDesc=d.desc||'';var arName=await translate(enName);if(run!==analysisRun)return;progress(72,T('محاولة ترجمة الوصف…','Attempting description translation…'));var arDesc=await translate(enDesc);if(run!==analysisRun)return;var category=infer(enName+' '+enDesc);setVal('appName',enName);setVal('appNameAr',arName||enName);setVal('appDescEn',enDesc);setVal('appDesc',arDesc||enDesc);if(d.icon){setVal('appIcon',d.icon);if(window.previewIcon)previewIcon()}if($('appCategory'))$('appCategory').value=category;window.setSelectedCategories('upload',[category]);progress(100,T('تم استخراج البيانات بنجاح. راجعها وعدّلها قبل النشر.','Data extracted successfully. Review and edit before publishing.'))}catch(e){if(run!==analysisRun)return;progress(100,T('تعذر تحليل الموقع تلقائيًا. قد يمنع الموقع القراءة أو لا يسمح بطلبات CORS؛ أكمل الحقول يدويًا.','Automatic analysis failed. The site may block reading or CORS requests; complete the fields manually.'),true)}}
+  window.startSiteAnalysisDebounced=function(force){clearTimeout(analysisTimer);analysisTimer=setTimeout(function(){analyze(force)},force?80:650)};
+  window.closeCategoriesSheet=function(){var o=$('categoriesOverlay'),s=$('categoriesSheet');if(o)o.classList.remove('active');if(s){s.classList.remove('active');s.setAttribute('aria-hidden','true')}document.body.style.overflow=''};
+  window.openCategoriesSheet=function(){var o=$('categoriesOverlay'),s=$('categoriesSheet'),g=$('categoriesSheetGrid');if(!o||!s||!g)return;g.innerHTML=Object.keys(CAT_DATA).map(function(k){var x=CAT_DATA[k];return '<button type="button" class="category-sheet-card" onclick="closeCategoriesSheet();setCategory(\''+k+'\',this)"><i class="fa-solid '+x[2]+'"></i><span>'+T(x[0],x[1])+'<small>'+x[1]+'</small></span></button>'}).join('');o.classList.add('active');s.classList.add('active');s.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'};
+  var bn=document.getElementById('bnav');if(bn){bn.addEventListener('click',function(e){var b=e.target.closest('[data-k]');if(b&&b.dataset.k==='cats'){e.preventDefault();e.stopImmediatePropagation();window.openCategoriesSheet()}},true)}
 })();
 </script>
 
