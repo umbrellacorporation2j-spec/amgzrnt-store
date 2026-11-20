@@ -3269,6 +3269,12 @@ body{padding-bottom:110px}
       else { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : (window._pendingRole || 'dev'), name: u.displayName || '', email: u.email || '', collective: isCol(u) }; db.collection('users').doc(u.uid).set(Object.assign({ createdAt: firebase.firestore.FieldValue.serverTimestamp() }, prof)).catch(function () {}); }
     } catch (e) { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : 'dev' }; }
     if (prof.deleted) { auth.signOut(); showToast(T('تم حذف هذا الحساب من قبل الإدارة', 'This account was removed by admin')); return; }
+    /* Restore developer role for legacy accounts that already own applications. */
+    if (u.email !== ADMIN_EMAIL && prof.role === 'user') {
+      var owns = await db.collection('apps').where('ownerUid', '==', u.uid).limit(1).get().catch(function(){ return {empty:true}; });
+      if (owns.empty) owns = await db.collection('apps').where('devId', '==', u.uid).limit(1).get().catch(function(){ return {empty:true}; });
+      if (!owns.empty) { prof.role = 'dev'; db.collection('users').doc(u.uid).set({role:'dev'},{merge:true}).catch(function(){}); }
+    }
     usersCache[u.uid] = prof; role = u.email === ADMIN_EMAIL ? 'admin' : prof.role; applyRole();
   });
   window.userSignup = async function (e) {
@@ -5140,7 +5146,13 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
         return db.collection('users').doc(c.user.uid).get().then(function(d){
           var p=d.exists?d.data():{};
           if(p.deleted)return auth.signOut().then(function(){throw {code:'auth/user-disabled',message:'تم حذف هذا الحساب من قبل الإدارة'};});
-          if(role==='dev'&&p.role&&p.role!=='dev'&&p.role!=='admin')return auth.signOut().then(function(){throw {code:'wrong-role',message:'هذا الحساب مستخدم وليس حساب مطور'};});
+          if(role==='dev'&&p.role&&p.role!=='dev'&&p.role!=='admin'){
+            /* Repair legacy accounts that own apps but were saved as ordinary users. */
+            return db.collection('users').doc(c.user.uid).set({role:'dev',email:email,name:p.name||c.user.displayName||''},{merge:true}).then(function(){return c;});
+          }
+          if(role==='dev'&&!p.role){
+            return db.collection('users').doc(c.user.uid).set({role:'dev',email:email,name:c.user.displayName||''},{merge:true}).then(function(){return c;});
+          }
           return c;
         });
       });
