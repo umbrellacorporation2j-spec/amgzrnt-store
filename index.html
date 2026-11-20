@@ -2718,18 +2718,19 @@ body{padding-bottom:110px}
 .chips{min-width:0;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .report-nav-btn{
-  width:40px;height:40px;min-width:40px;min-height:40px;padding:0;
-  border:1px solid rgba(245,158,11,.45);
-  border-radius:14px;
-  background:linear-gradient(145deg,rgba(245,158,11,.22),rgba(234,88,12,.14));
-  color:#fbbf24;
-  display:inline-flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  box-shadow:0 6px 16px rgba(234,88,12,.2);
+  width:42px;height:42px;min-width:42px;min-height:42px;padding:0 !important;
+  border:1.5px solid rgba(245,158,11,.55) !important;
+  border-radius:14px !important;
+  background:linear-gradient(145deg,rgba(245,158,11,.28),rgba(234,88,12,.16)) !important;
+  color:#fbbf24 !important;
+  display:inline-flex !important;align-items:center;justify-content:center;
+  cursor:pointer !important;
+  box-shadow:0 6px 18px rgba(234,88,12,.28);
   transition:transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
   flex-shrink:0;
   position:relative;
-  z-index:5;
+  z-index:120 !important;
+  pointer-events:auto !important;
 }
 .report-nav-btn i{font-size:1.15rem;line-height:1;pointer-events:none}
 .report-nav-btn:hover{
@@ -2843,6 +2844,178 @@ var oldOpen=window.openAppPage;window.openAppPage=function(){var r=oldOpen&&oldO
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,900)});else setTimeout(boot,900);
 })();
 </script>
+
+<script id="amg-report-fix">
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  function toast(msg) {
+    if (typeof showToast === 'function') showToast(msg);
+    else try { alert(msg); } catch (e) {}
+  }
+  function lockBody(on) {
+    try {
+      if (typeof syncBodyLock === 'function') syncBodyLock();
+      else document.body.style.overflow = on ? 'hidden' : '';
+    } catch (e) {}
+  }
+  function appsList() {
+    try {
+      if (Array.isArray(window.allApps)) return window.allApps.filter(function (a) { return a && !a.suspended; });
+    } catch (e) {}
+    return [];
+  }
+  function appName(a) {
+    if (!a) return '';
+    try { if (typeof nm === 'function') return nm(a); } catch (e) {}
+    return a.nameAr || a.name || a.title || a.id || '';
+  }
+  function findApp(id) {
+    return appsList().find(function (a) { return String(a.id) === String(id); });
+  }
+
+  window.toggleReportAppSelect = function () {
+    var scope = $('reportScope'), g = $('reportAppGroup');
+    if (!scope || !g) return;
+    g.style.display = scope.value === 'store' ? 'none' : 'block';
+  };
+
+  window.closeReportSheet = function () {
+    var o = $('reportOverlay'), s = $('reportSheet');
+    if (o) o.classList.remove('active');
+    if (s) {
+      s.classList.remove('active', 'dragging');
+      s.style.transform = '';
+      s.setAttribute('aria-hidden', 'true');
+    }
+    lockBody(false);
+  };
+
+  window.openReportForm = function (ev) {
+    if (ev && ev.preventDefault) ev.preventDefault();
+    var sheet = $('reportSheet'), overlay = $('reportOverlay');
+    if (!sheet || !overlay) {
+      toast('تعذر فتح نموذج البلاغ');
+      return;
+    }
+    var as = appsList();
+    var sel = $('reportApp');
+    if (sel) {
+      if (!as.length) {
+        sel.innerHTML = '<option value="">— لا توجد تطبيقات حالياً —</option>';
+      } else {
+        sel.innerHTML = as.map(function (a) {
+          return '<option value="' + String(a.id).replace(/"/g, '') + '">' + String(appName(a)).replace(/</g, '&lt;') + '</option>';
+        }).join('');
+      }
+    }
+    var desc = $('reportDesc'); if (desc) desc.value = '';
+    var scope = $('reportScope'); if (scope) scope.value = 'app';
+    window.toggleReportAppSelect();
+    var btn = $('reportSend'); if (btn) btn.disabled = false;
+    sheet.style.transform = '';
+    overlay.classList.add('active');
+    sheet.classList.add('active');
+    sheet.setAttribute('aria-hidden', 'false');
+    lockBody(true);
+  };
+
+  window.submitReport = function () {
+    var scope = ($('reportScope') && $('reportScope').value) || 'app';
+    var d = (($('reportDesc') && $('reportDesc').value) || '').trim();
+    if (d.length < 8) {
+      toast('اكتب وصفاً واضحاً من 8 أحرف على الأقل');
+      return;
+    }
+    if (typeof db === 'undefined' || !db) {
+      toast('قاعدة البيانات غير جاهزة، حاول مرة أخرى');
+      return;
+    }
+    var u = (typeof auth !== 'undefined' && auth.currentUser) ? auth.currentUser : null;
+    var data = {
+      reporterUid: u ? u.uid : 'anonymous',
+      reporterEmail: (u && u.email) || '',
+      type: ($('reportType') && $('reportType').value) || 'أخرى',
+      description: d.slice(0, 1000),
+      status: 'open',
+      scope: scope,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      userAgent: (navigator.userAgent || '').slice(0, 300)
+    };
+    if (scope === 'app') {
+      var a = findApp($('reportApp') && $('reportApp').value);
+      if (!a) {
+        toast('اختر تطبيقاً للإبلاغ عنه');
+        return;
+      }
+      data.appId = String(a.id);
+      data.appName = appName(a);
+      data.developerUid = a.ownerUid || a.devId || '';
+      data.developerEmail = a.devEmail || a.ownerEmail || '';
+    } else {
+      data.appId = '';
+      data.appName = 'المتجر / Store';
+      data.developerUid = '';
+      data.developerEmail = '';
+      data.scope = 'store';
+    }
+    var b = $('reportSend');
+    if (b) b.disabled = true;
+    db.collection('reports').add(data).then(function () {
+      window.closeReportSheet();
+      toast('تم إرسال البلاغ إلى المطور والإدارة');
+    }).catch(function (e) {
+      if (b) b.disabled = false;
+      toast('تعذر إرسال البلاغ: ' + (e && e.message ? e.message : ''));
+    });
+  };
+
+  function bind() {
+    var btn = $('btnReport');
+    if (!btn) return;
+    btn.onclick = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.openReportForm(e);
+    };
+    // Extra direct binding
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.openReportForm(e);
+    }, true);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bind);
+  } else {
+    bind();
+  }
+  // Re-bind after a short delay in case nav is rebuilt
+  setTimeout(bind, 800);
+  setTimeout(bind, 2000);
+
+  // Escape closes report sheet
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var s = $('reportSheet');
+      if (s && s.classList.contains('active')) window.closeReportSheet();
+    }
+  });
+})();
+</script>
+
+
+<style id="report-btn-fix">
+.report-nav-btn,#btnReport{
+  z-index:120!important;pointer-events:auto!important;
+}
+.report-nav-btn i,#btnReport i{pointer-events:none!important}
+#reportSheet.bottom-sheet.active,#reportOverlay.sheet-overlay.active{pointer-events:auto!important;visibility:visible!important}
+#reportOverlay.sheet-overlay.active{opacity:1!important}
+#reportSheet.bottom-sheet.active{transform:translateY(0)!important;visibility:visible!important}
+</style>
+
 </body> -->\n<script src="./pwa-install.js" defer><\/script>\n`;
     var readme = `حزمة تجهيز PWA — ${appName}\n\nالمحتويات:\n- manifest.json: تعريف التطبيق وأيقونته.\n- sw.js: Service Worker للتخزين المؤقت والعمل دون اتصال جزئياً.\n- pwa-install.js: زر «حمّل تطبيقنا» وإظهار مطالبة التثبيت عندما يدعمها المتصفح.\n- integration-snippet.html: أسطر الربط المطلوبة.\n\nالتركيب:\n1) ارفع الملفات الأربعة إلى جذر استضافة الموقع نفسه (نفس مجلد index.html).\n2) افتح integration-snippet.html وانسخ السطور إلى صفحة HTML الرئيسية في المواضع الموضحة.\n3) تأكد أن الموقع يعمل عبر HTTPS وأن الأيقونة المشار إليها في manifest متاحة.\n4) افتح الموقع من Chrome ثم استخدم «حمّل تطبيقنا».\n\nمهم: لا يمكن لمتجر خارجي تعديل ملفات موقع آخر بمجرد حفظ رابطه. يجب أن تملك صلاحية استضافة الموقع لرفع هذه الملفات وإضافة سطور الربط. بعض المواقع أو المتصفحات قد لا تدعم التثبيت.\n`;
     var files = {'manifest.json': JSON.stringify(manifest,null,2), 'sw.js':sw, 'pwa-install.js':installJs, 'integration-snippet.html':snippet, 'README-ar.txt':readme};
