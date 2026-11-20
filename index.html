@@ -1116,7 +1116,9 @@ body{padding-bottom:110px}
         <div class="form-group">
           <label data-lang="ar">رابط الأيقونة</label>
           <label data-lang="en">Icon URL</label>
-          <input type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" id="appIcon" oninput="previewIcon()" onblur="var n=AMG.normalizeImg(this.value);if(n)this.value=n" placeholder="https://.../icon-192.png"><div class="form-hint">ألصق رابط الصورة مباشرة (png / jpg / webp / svg). روابط Google Drive وDropbox وGitHub وImgur تُحوَّل تلقائياً. اتركه فارغاً لاستخدام شعار موقعك.</div>
+          <input type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" id="appIcon" oninput="previewIcon()" onblur="var n=AMG.normalizeImg(this.value);if(n)this.value=n" placeholder="https://.../icon-192.png">
+          <div class="icon-upload-row"><label class="btn btn-outline icon-file-btn" for="appIconFile"><i class="fa-solid fa-upload"></i><span data-lang="ar">رفع صورة من الجهاز</span><span data-lang="en">Upload from device</span></label><input id="appIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" onchange="makeIconDataUrl(this, 'appIcon')" hidden><span id="appIconFileStatus" class="form-hint"></span></div>
+          <div class="form-hint">ألصق رابط الصورة أو ارفعها من جهازك. سيتم تصغيرها وتحويلها إلى رابط نصي داخلي محفوظ مع بيانات التطبيق، بدون Imgbb أو تخزين صور خارجي. الحد الأقصى 8 ميجابايت.</div>
         </div>
         <div class="form-group">
           <label data-lang="ar">الوصف</label>
@@ -1230,14 +1232,14 @@ body{padding-bottom:110px}
         <div class="form-group"><label>الوصف بالعربية / Arabic description</label><textarea id="editDescAr" rows="3"></textarea></div>
         <div class="form-group"><label>الوصف بالإنجليزية / English description</label><textarea id="editDescEn" rows="3"></textarea></div>
         <div class="form-group"><label>التصنيف / Category</label><select id="editCategory"><option value="tools">أدوات / Tools</option><option value="finance">مالية / Finance</option><option value="shopping">تسوق / Shopping</option><option value="games">ألعاب / Games</option><option value="productivity">إنتاجية / Productivity</option><option value="education">تعليم / Education</option><option value="social">اجتماعي / Social</option><option value="health">صحة / Health</option><option value="entertainment">ترفيه / Entertainment</option><option value="news">أخبار / News</option><option value="other">أخرى / Other</option></select><div class="taxonomy-note">يمكن اختيار 3 تصنيفات كحد أقصى.</div><div class="category-picks" id="editCategoryPicks"></div></div>
-        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" onblur="var n=AMG.normalizeImg(this.value);if(n)this.value=n"></div>
+        <div class="form-group"><label>رابط الأيقونة / Icon URL</label><input id="editIcon" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" oninput="if(window.previewEditIcon) window.previewEditIcon()" onblur="var n=AMG.normalizeImg(this.value);if(n)this.value=n"><div class="icon-upload-row"><label class="btn btn-outline icon-file-btn" for="editIconFile"><i class="fa-solid fa-upload"></i><span>رفع صورة من الجهاز / Upload from device</span></label><input id="editIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" onchange="makeIconDataUrl(this, 'editIcon')" hidden><span id="editIconFileStatus" class="form-hint"></span></div><div class="form-hint">يمكن حفظ الأيقونة كنص داخلي مضغوط بدون خدمة تخزين صور خارجية.</div></div>
         <div class="form-group"><label>اللون الأساسي / Primary color</label><input id="editColor" type="color" value="#7c3aed"></div>
         <div class="form-group"><label>رابط التطبيق / App URL</label><input id="editUrl" type="text" inputmode="url" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" required onblur="var n=AMG.normalizeUrl(this.value);if(n)this.value=n"></div>
         <div class="form-group"><label>حالة التطبيق / Status</label><select id="editStatus"><option value="live">منشور / Published</option><option value="dev">تحت التطوير / In development</option></select></div>
         <div class="form-group"><label>الفئة العمرية المناسبة / Age rating</label><select id="editAge"><option value="all">مناسب للجميع / Everyone</option><option value="7+">7+</option><option value="12+">12+</option><option value="16+">16+</option><option value="18+">18+</option></select></div>
         <div class="form-group"><label>رابط الشروط / Terms URL</label><input id="editTerms" type="url"></div>
         <div class="form-group"><label>رابط سياسة الخصوصية / Privacy URL</label><input id="editPrivacy" type="url"></div>
-        <div class="update-editor-box"><div class="update-editor-title"><i class="fa-solid fa-rotate"></i><b>إعلان التحديث داخل التطبيق</b><small>يظهر للمستخدمين بعد حفظ أي تعديل جديد</small></div><div class="form-group"><label>نوع التحديث</label><select id="editUpdateType"><option value="important">تحديث هام</option><option value="experimental">تحديث تجريبي</option><option value="event">تحديث فعالية</option><option value="security">تحديث أمني</option><option value="design">تحديث تصميم</option></select></div><div class="form-group"><label>عنوان التحديث</label><input id="editUpdateTitle" maxlength="90" placeholder="تحديث جديد ومهم"></div><div class="form-group"><label>النص المختصر</label><textarea id="editUpdateText" rows="3" maxlength="500" placeholder="أضفنا تحسينات مهمة وتجربة أسرع..."></textarea></div><div class="form-group"><label>التعديلات بالتفصيل</label><textarea id="editUpdateChanges" rows="3" maxlength="800" placeholder="الرابط الجديد، الصور الجديدة، تحسينات الأداء..."></textarea></div><div class="form-group"><label>خلفية بطاقة التحديث</label><select id="editUpdateBg"><option value="space">نجوم الفضاء</option><option value="stadium">الملعب</option><option value="sky">السماء</option><option value="ocean">البحر</option><option value="beach">الشاطئ</option><option value="forest">الغابة</option><option value="tech">التقنية</option><option value="art">الفن والرسم</option><option value="sunset">الغروب</option><option value="aurora">الشفق القطبي</option><option value="city">المدينة</option><option value="desert">الصحراء</option><option value="rain">المطر</option><option value="neon">نيون</option><option value="paper">ورق إبداعي</option></select></div><label class="update-check"><input id="editUpdateImportant" type="checkbox" checked> <span>تمييزه كتحديث هام</span></label></div>
+        <div class="update-editor-box"><div class="update-editor-title"><i class="fa-solid fa-rotate"></i><b>إعلان التحديث داخل التطبيق</b><small>يُنشئ إصدارًا جديدًا بعد الحفظ، ويظهر زر تحديث للمستخدمين الذين لديهم النسخة السابقة فقط</small></div><div class="form-group"><label>نوع التحديث</label><select id="editUpdateType"><option value="important">تحديث هام</option><option value="experimental">تحديث تجريبي</option><option value="event">تحديث فعالية</option><option value="security">تحديث أمني</option><option value="design">تحديث تصميم</option></select></div><div class="form-group"><label>عنوان التحديث</label><input id="editUpdateTitle" maxlength="90" placeholder="تحديث جديد ومهم"></div><div class="form-group"><label>النص المختصر</label><textarea id="editUpdateText" rows="3" maxlength="500" placeholder="أضفنا تحسينات مهمة وتجربة أسرع..."></textarea></div><div class="form-group"><label>التعديلات بالتفصيل</label><textarea id="editUpdateChanges" rows="3" maxlength="800" placeholder="الرابط الجديد، الصور الجديدة، تحسينات الأداء..."></textarea></div><div class="form-group"><label>خلفية بطاقة التحديث</label><select id="editUpdateBg"><option value="space">نجوم الفضاء</option><option value="stadium">الملعب</option><option value="sky">السماء</option><option value="ocean">البحر</option><option value="beach">الشاطئ</option><option value="forest">الغابة</option><option value="tech">التقنية</option><option value="art">الفن والرسم</option><option value="sunset">الغروب</option><option value="aurora">الشفق القطبي</option><option value="city">المدينة</option><option value="desert">الصحراء</option><option value="rain">المطر</option><option value="neon">نيون</option><option value="paper">ورق إبداعي</option></select></div><label class="update-check"><input id="editUpdateImportant" type="checkbox" checked> <span>تمييزه كتحديث هام</span></label></div>
         <div class="form-group"><label>لقطات الشاشة (روابط، كل رابط في سطر) / Screenshots (one URL per line)</label><textarea id="editScreenshots" rows="4"></textarea></div>
         <div class="form-group"><label>إعلان المتجر</label><div id="cmpEd"></div></div>
         <div class="form-group"><label>معاينات التطبيق</label><div id="slEd"></div></div>
@@ -2173,6 +2175,7 @@ body{padding-bottom:110px}
   function nm(a) { return (isEn() && a.nameEn) ? a.nameEn : (a.nameAr || a.name || ''); }
   function ds(a) { return (isEn() && a.descriptionEn) ? a.descriptionEn : (a.descriptionAr || a.description || ''); }
   function host(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
+  .icon-upload-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:9px}.icon-file-btn{display:inline-flex;align-items:center;gap:8px;cursor:pointer}.icon-upload-row .form-hint{margin:0;color:var(--muted);font-size:.82rem}
   /* ===== V4: link normalization (app URL + image URL) ===== */
   function normalizeUrl(v) {
     var s = String(v == null ? '' : v).trim().replace(/^[\s"'`<(]+|[\s"'`>)]+$/g, '');
@@ -2191,6 +2194,29 @@ body{padding-bottom:110px}
     if (/^(10\.|127\.|0\.|192\.168\.|169\.254\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h)) return '';
     return u.href;
   }
+  /* Local icon upload: compress to a small data URL and store it as text in Firestore. */
+  window.makeIconDataUrl = function (input, targetId) {
+    var file = input && input.files && input.files[0], target = $(targetId), status = $(targetId + 'FileStatus');
+    if (!file || !target) return;
+    if (!/^image\/(png|jpeg|webp|gif|svg\+xml)$/i.test(file.type)) { if (status) status.textContent = T('اختر صورة PNG أو JPG أو WebP أو SVG.', 'Choose a PNG, JPG, WebP or SVG image.'); input.value = ''; return; }
+    if (file.size > 8 * 1024 * 1024) { if (status) status.textContent = T('حجم الصورة أكبر من 8 ميجابايت.', 'The image is larger than 8 MB.'); input.value = ''; return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var img = new Image();
+      img.onload = function () {
+        var max = 192, scale = Math.min(1, max / Math.max(img.width, img.height)), w = Math.max(1, Math.round(img.width * scale)), h = Math.max(1, Math.round(img.height * scale)), c = document.createElement('canvas');
+        c.width = w; c.height = h; var ctx = c.getContext('2d'); ctx.clearRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
+        var data = c.toDataURL('image/webp', .86); if (!data || data === 'data:,') data = c.toDataURL('image/png');
+        if (data.length > 360000) { c.width = Math.min(w,128); c.height = Math.min(h,128); ctx = c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); ctx.drawImage(img,0,0,c.width,c.height); data = c.toDataURL('image/webp', .78); }
+        if (data.length > 390000) { if (status) status.textContent = T('تعذر ضغط الصورة إلى حجم مناسب.', 'Could not compress this image to a safe size.'); return; }
+        target.value = data; target.dispatchEvent(new Event('input', {bubbles:true})); if (window.previewIcon && targetId === 'appIcon') previewIcon();
+        if (status) status.textContent = T('تم تجهيز الصورة وحفظها كرابط نصي داخلي.', 'Image converted to an internal text data link.');
+      };
+      img.onerror = function () { if (status) status.textContent = T('تعذر قراءة الصورة.', 'Could not read the image.'); };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
   function normalizeImg(v) {
     var s = String(v == null ? '' : v).trim().replace(/^[\s"'`<(]+|[\s"'`>)]+$/g, '');
     if (!s) return '';
@@ -2215,6 +2241,15 @@ body{padding-bottom:110px}
     }
     if (h === 'imgur.com') {                                             /* imgur.com/abc123 -> i.imgur.com/abc123.png */
       m = u.pathname.match(/^\/([A-Za-z0-9]{5,8})$/); if (m) return 'https://i.imgur.com/' + m[1] + '.png';
+    }
+    /* Imgbb share pages are HTML, not image files. Resolve known share links
+       to the direct i.ibb.co resource so previews and saved app icons load. */
+    if (h === 'ibb.co' || h === 'imgbb.com') {
+      var imgbbDirect = {
+        'bgSSLxfV': 'https://i.ibb.co/6R33b2dS/image.png'
+      };
+      var imgbbKey = (u.pathname.match(/^\/([^/]+)/) || [])[1];
+      if (imgbbKey && imgbbDirect[imgbbKey]) return imgbbDirect[imgbbKey];
     }
     if (/(wikipedia|wikimedia)\.org$/.test(h)) {                         /* File: pages -> direct file */
       m = u.pathname.match(/^\/wiki\/(?:File|Image|ملف|صورة):(.+)$/i);
@@ -2681,17 +2716,22 @@ body{padding-bottom:110px}
 
 
 <style id="amg-v4-2-polish">
-/* V4.2 mobile polish: search and suggestions never overlap cards or controls. */
-.toolbar{position:relative;z-index:80;display:grid;grid-template-columns:minmax(240px,1fr) auto;align-items:start;gap:12px}
+/* V4.3 search cleanup: the search field gets its own row and controls never overlap. */
+.toolbar{position:relative;z-index:80;display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:12px}
 .search-box{position:relative;z-index:90;min-width:0}
+.search-box input{min-height:50px;padding:13px 48px!important;border-radius:18px!important}
+.search-box>i{inset-inline-start:auto;inset-inline-end:16px}
+.sb-clear{inset-inline-start:12px;inset-inline-end:auto}
+body.en .search-box>i{inset-inline-start:16px;inset-inline-end:auto}
+body.en .sb-clear{inset-inline-start:auto;inset-inline-end:12px}
 .sug-box{top:calc(100% + 10px);max-height:min(52vh,440px);overflow-y:auto;overscroll-behavior:contain;isolation:isolate}
-.chips{min-width:0;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:none}
+.chips{min-width:0;width:100%;overflow-x:auto;overscroll-behavior:contain;scrollbar-width:none;padding:2px 2px 5px}
 .chips::-webkit-scrollbar{display:none}
 .report-home-btn{min-height:46px;border:1px solid rgba(239,68,68,.45);border-radius:16px;padding:0 16px;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;font:800 .88rem inherit;white-space:nowrap;cursor:pointer;box-shadow:0 8px 20px rgba(185,28,28,.22)}
 .report-home-btn:active{transform:translateY(1px)}
 .store-stats-panel{margin:20px 0 8px;padding:18px;border:1px solid var(--border);border-radius:26px;background:linear-gradient(145deg,rgba(124,58,237,.16),rgba(17,24,39,.28));box-shadow:0 16px 42px rgba(0,0,0,.14)}
 .store-stats-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.store-stats-head h2{margin:4px 0 0;font-size:1.05rem}.store-stats-mark{font-size:2rem;color:var(--primary-light);opacity:.8}.store-stats-grid,.app-extra-stats,.dev-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.store-stat,.metric-card{min-width:0;padding:12px;border:1px solid var(--border);border-radius:17px;background:rgba(255,255,255,.04);text-align:center}.store-stat b,.metric-card b{display:block;font-size:1.18rem}.store-stat small,.metric-card small{display:block;color:var(--muted);font-size:.72rem;margin-top:3px}.stat-loading{text-align:center;color:var(--muted);grid-column:1/-1;padding:12px}.app-extra-stats{margin:0 0 16px;grid-template-columns:repeat(4,minmax(0,1fr))}.app-extra-stats .metric-card{padding:10px}.report-row .report-ico{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:rgba(239,68,68,.14);color:#f87171;flex:0 0 42px}.report-row .info small{white-space:normal}.report-row .adm-act{flex-wrap:wrap}.dev-reports{margin-top:14px;padding:14px;border:1px solid rgba(239,68,68,.25);border-radius:18px;background:rgba(239,68,68,.06)}.dev-reports h3{margin:0 0 8px;font-size:.95rem}.dev-report-item{padding:9px 0;border-top:1px solid var(--border);font-size:.82rem}.dev-report-item:first-of-type{border-top:0}.dev-report-item small{display:block;color:var(--muted);margin-top:3px}
-@media(max-width:700px){.toolbar{grid-template-columns:1fr;gap:9px}.report-home-btn{width:100%}.sug-box{position:absolute;left:0;right:0}.store-stats-grid,.app-extra-stats,.dev-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.store-stats-panel{padding:14px;border-radius:22px}.search-box input{font-size:16px}.app-tile,.app-row{min-width:0;overflow:hidden}.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}}
+@media(max-width:700px){.toolbar{grid-template-columns:1fr;gap:9px}.report-home-btn{width:100%}.sug-box{position:absolute;left:0;right:0}.store-stats-grid,.app-extra-stats,.dev-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.store-stats-panel{padding:14px;border-radius:22px}.search-box input{font-size:16px;min-height:52px}.app-tile,.app-row{min-width:0;overflow:hidden}.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}}
 @media(max-width:380px){.tgrid{grid-template-columns:1fr!important}}
 </style>
 <script id="amg-v4-2-features">
@@ -2707,11 +2747,11 @@ body{padding-bottom:110px}
     var a=app(id)||{};
     var views=db.collection('apps').doc(id).collection('views').get().then(function(s){return s.size}).catch(function(){return Number(a.viewCount||a.viewsCount||0)})
     var ratings=db.collection('apps').doc(id).collection('ratings').get().then(function(s){var n=0,sum=0;s.forEach(function(d){var x=d.data()||{};if((x.kind||'review')==='review'&&Number(x.stars)>0){n++;sum+=Number(x.stars)}});return {count:n,avg:n?sum/n:0}}).catch(function(){return {count:0,avg:0}})
-    var installs=db.collectionGroup('installedApps').get().then(function(s){var n=0;s.forEach(function(d){if(d.id===String(id)&&!(d.data()||{}).del)n++});return n}).catch(function(){return Number(a.installCount||a.installs||0)})
+    var installs=db.collection('apps').doc(String(id)).collection('installs').get().then(function(s){var n=0;s.forEach(function(d){if(!(d.data()||{}).del)n++});return n}).catch(function(){return Number(a.installCount||a.installs||0)})
     return Promise.all([views,ratings,installs]).then(function(x){return statCache[id]={views:x[0],ratings:x[1],installs:x[2]}})
   }
   window.AMGMetrics={get:metric,clear:function(){statCache={}}};
-  function metricCards(m,a){return '<div class="metric-card"><b>'+m.installs+'</b><small>'+t('تثبيت','Installs')+'</small></div><div class="metric-card"><b>'+m.views+'</b><small>'+t('مشاهدة','Views')+'</small></div><div class="metric-card"><b>'+(m.ratings.count?m.ratings.avg.toFixed(1)+' ★':'—')+'</b><small>'+m.ratings.count+' '+t('تقييم','ratings')+'</small></div><div class="metric-card"><b>'+esc(a.ageRating||'all')+'</b><small>'+t('الفئة العمرية','Age rating')+'</small></div>'}
+  function metricCards(m,a){var cats=typeof catNames==='function'?catNames(a).join(' · '):(a.category||'tools');return '<div class="metric-card"><b><i class="fa-solid fa-download"></i> '+m.installs+'</b><small>'+t('تنزيل فعلي','Real downloads')+'</small></div><div class="metric-card"><b><i class="fa-solid fa-arrow-up-right-from-square"></i> '+m.views+'</b><small>'+t('زيارة فتح','Open visits')+'</small></div><div class="metric-card"><b><i class="fa-solid fa-star"></i> '+(m.ratings.count?m.ratings.avg.toFixed(1):'—')+'</b><small>'+m.ratings.count+' '+t('تقييم','ratings')+'</small></div><div class="metric-card"><b><i class="fa-solid fa-user-shield"></i> '+esc(a.ageRating||'all')+'</b><small>'+t('التصنيف العمري','Age rating')+'</small></div><div class="metric-card"><b><i class="fa-solid fa-layer-group"></i> '+esc(cats)+'</b><small>'+t('التصنيف','Category')+'</small></div><div class="metric-card"><b><i class="fa-solid fa-code-branch"></i> '+versionLabel(a.updateVersion||0)+'</b><small>'+t('الإصدار الحالي','Current version')+'</small></div>}
   function renderAppMetrics(a){var box=q('apExtraStats');if(!box)return;box.innerHTML='<div class="stat-loading"><i class="fa-solid fa-circle-notch fa-spin"></i></div>';metric(String(a.id)).then(function(m){if(q('apExtraStats'))q('apExtraStats').innerHTML=metricCards(m,a)})}
   function renderDevMetrics(uid,apps,views){var sum={installs:0,views:0,ratings:{count:0,avg:0}};return Promise.all(apps.map(function(a){return metric(String(a.id))})).then(function(ms){ms.forEach(function(m){sum.installs+=m.installs;sum.views+=m.views;sum.ratings.count+=m.ratings.count;sum.ratings.avg+=m.ratings.avg*m.ratings.count});if(sum.ratings.count)sum.ratings.avg/=sum.ratings.count;return sum})}
   function storeStats(){var as=list().filter(function(a){return !a.suspended});var ids={};as.forEach(function(a){ids[a.ownerUid||a.devId||'unknown']=1});return Promise.all(as.slice(0,120).map(function(a){return metric(String(a.id))})).then(function(ms){var views=0,installs=0,ratings=0;ms.forEach(function(m){views+=m.views;installs+=m.installs;ratings+=m.ratings.count});var g=q('storeStatsGrid');if(g)g.innerHTML='<div class="store-stat"><b>'+as.length+'</b><small>'+t('تطبيق نشط','Active apps')+'</small></div><div class="store-stat"><b>'+Object.keys(ids).filter(function(x){return x!=="unknown"}).length+'</b><small>'+t('مطور','Developers')+'</small></div><div class="store-stat"><b>'+installs+'</b><small>'+t('تثبيت','Installs')+'</small></div><div class="store-stat"><b>'+views+'</b><small>'+t('مشاهدة','Views')+'</small></div><div class="store-stat"><b>'+ratings+'</b><small>'+t('تقييم','Ratings')+'</small></div>'})}
@@ -2742,7 +2782,20 @@ body{padding-bottom:110px}
   function updateCard(a){var body=q('apBody');if(!body||!a||!a.updateMeta)return;var old=body.querySelector('.app-update-card');if(old)old.remove();var m=a.updateMeta||{}, type=TYPE[m.type]||TYPE.important, cls=BG[m.background]||BG.space, installed=userInstalled(a.id), latest=Number(a.updateVersion||m.version||0), mine=installed&&Number(installed.version||0), needs=installed&&latest>mine;var card=document.createElement('section');card.className='app-update-card '+cls+(m.important?' update-important':'');card.innerHTML='<div class="update-kicker"><i class="fa-solid '+type[2]+'"></i><span>'+h(txt(type[0],type[1]))+'</span><span>· '+window.amgVersionLabel(latest)+'</span></div><h2>'+h(m.title||txt('تحديث جديد','New update'))+'</h2><p>'+h(m.text||txt('تم تحسين التطبيق.','The app has been improved.'))+'</p>'+(m.changes?'<div class="update-changes"><b>'+txt('أبرز التعديلات:','What’s changed:')+'</b><br>'+h(m.changes)+'</div>':'')+'<small class="update-date"><i class="fa-regular fa-clock"></i> '+h(dateText(m.date||m.updatedAt))+'</small><div class="update-action">'+(needs?'<button type="button" class="update-btn" onclick="startAppInstall(\''+h(a.id)+'\')"><i class="fa-solid fa-arrows-rotate"></i> '+txt('تحديث هام','Important update')+'</button><span class="update-state">'+txt('سيتم التحديث على هذا الجهاز فقط','This device only will be updated')+'</span>':installed?'<span class="update-state"><i class="fa-solid fa-circle-check"></i> '+txt('أنت على أحدث نسخة','You have the latest version')+'</span>':'<span class="update-state"><i class="fa-solid fa-circle-info"></i> '+txt('ستحصل على أحدث نسخة عند التثبيت','The latest version installs automatically')+'</span>')+'</div>';var ratings=q('apRatings');if(ratings)body.insertBefore(card,ratings);else body.appendChild(card)}
   function fields(){return {type:(q('editUpdateType')||{}).value||'important',title:(q('editUpdateTitle')||{}).value.trim(),text:(q('editUpdateText')||{}).value.trim(),changes:(q('editUpdateChanges')||{}).value.trim(),background:(q('editUpdateBg')||{}).value||'space',important:!!(q('editUpdateImportant')&&q('editUpdateImportant').checked)}}
   function fill(a){var m=a&&a.updateMeta||{};if(q('editUpdateType'))q('editUpdateType').value=m.type||'important';if(q('editUpdateTitle'))q('editUpdateTitle').value=m.title||'';if(q('editUpdateText'))q('editUpdateText').value=m.text||'';if(q('editUpdateChanges'))q('editUpdateChanges').value=m.changes||'';if(q('editUpdateBg'))q('editUpdateBg').value=m.background||'space';if(q('editUpdateImportant'))q('editUpdateImportant').checked=m.important!==false}
-  function publish(id){var a=app(id);if(!a)return Promise.resolve();var f=fields(), next=Number(a.updateVersion||0)+1,m={version:next,type:f.type,title:f.title||txt('تحديث جديد','New update'),text:f.text||txt('تم تحديث التطبيق وإضافة تحسينات جديدة.','The app was updated with new improvements.'),changes:f.changes,background:f.background,important:f.important,date:Date.now(),updatedBy:(auth.currentUser&&auth.currentUser.uid)||'',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};return db.collection('apps').doc(id).update({updateVersion:next,updateMeta:m,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){Object.assign(a,{updateVersion:next,updateMeta:m,updatedAt:m.updatedAt});updateCard(a);if(typeof showToast==='function')showToast(txt('تم حفظ التعديلات وإنشاء تحديث v'+next,'Changes saved and update v'+next+' created'));return m})}
+  function publish(id){
+    var local=app(id), ref=db.collection('apps').doc(String(id)), f=fields();
+    return ref.get().then(function(snap){
+      if(!snap.exists) return null;
+      var remote=snap.data()||{}, next=Number(remote.updateVersion||0)+1;
+      var m={version:next,type:f.type,title:f.title||txt('تحديث جديد','New update'),text:f.text||txt('تم تحديث التطبيق وإضافة تحسينات جديدة.','The app was updated with new improvements.'),changes:f.changes,background:f.background,important:f.important,date:Date.now(),updatedBy:(auth.currentUser&&auth.currentUser.uid)||'',updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+      return ref.update({updateVersion:next,updateMeta:m,updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){
+        if(local) Object.assign(local,{updateVersion:next,updateMeta:m,updatedAt:m.updatedAt});
+        updateCard(local||Object.assign({id:String(id)},remote,{updateVersion:next,updateMeta:m}));
+        if(typeof showToast==='function')showToast(txt('تم حفظ التعديلات وإنشاء تحديث v'+next,'Changes saved and update v'+next+' created'));
+        return m;
+      });
+    });
+  }
   var oldEdit=window.editApp;window.editApp=function(id){var r=oldEdit&&oldEdit.apply(this,arguments);setTimeout(function(){fill(app(id))},60);return r};
   var oldSave=window.saveAppEdit;window.saveAppEdit=function(e){var id=q('editAppId')&&q('editAppId').value,r=oldSave&&oldSave.apply(this,arguments);return Promise.resolve(r).then(function(){return publish(id)})};
   var oldAdm=window.admUpdate;window.admUpdate=function(id,data,msg){var r=oldAdm&&oldAdm.apply(this,arguments),keys=['name','nameAr','nameEn','url','icon','description','descriptionAr','descriptionEn','screenshots','ad','slides','ageRating','termsUrl','privacyUrl'];var content=Object.keys(data||{}).some(function(k){return keys.indexOf(k)>-1});return Promise.resolve(r).then(function(ok){if(ok&&content)return publish(id);return ok})};
@@ -2919,6 +2972,8 @@ body{padding-bottom:110px}
   sb.addEventListener('input', updateSug);
   sb.addEventListener('focus', updateSug);
   sb.addEventListener('blur', function () { setTimeout(function () { sug.classList.remove('on'); }, 150); });
+  document.addEventListener('click', function (e) { if (!sbWrap.contains(e.target)) sug.classList.remove('on'); });
+  sb.addEventListener('keydown', function (e) { if (e.key === 'Escape') { sug.classList.remove('on'); sb.blur(); } });
   sb.addEventListener('keydown', function (e) { if (e.key === 'Enter') { saveRecent(sb.value); sug.classList.remove('on'); sb.blur(); } });
   $('sbClear').onclick = function () { sb.value = ''; sbWrap.classList.remove('has'); sug.classList.remove('on'); filterApps(); };
   window.openFromSug = function (id) { saveRecent(sb.value); sug.classList.remove('on'); openAppPage(id); };
@@ -3278,27 +3333,46 @@ body{padding-bottom:110px}
     var note = allApps.filter(function (a) { return (a.ownerUid === auth.currentUser.uid || a.devId === auth.currentUser.uid) && (a.adminNote || a.suspended); });
     if (role === 'dev' && note.length && !sessionStorage.getItem('amgz-note')) { sessionStorage.setItem('amgz-note', '1'); showToast(T('لديك تنبيه من الإدارة على أحد تطبيقاتك', 'You have a notice from admin')); }
   }
+  async function amgOwnedAppExists(uid) {
+    try {
+      var q1 = await db.collection('apps').where('ownerUid', '==', uid).limit(1).get();
+      if (!q1.empty) return true;
+      var q2 = await db.collection('apps').where('devId', '==', uid).limit(1).get();
+      return !q2.empty;
+    } catch (e) {
+      return allApps.some(function (a) { return (a.ownerUid === uid || a.devId === uid); });
+    }
+  }
+  window.amgRepairDeveloperRole = async function (u, prof, requestedRole) {
+    if (!u || u.email === ADMIN_EMAIL) return Object.assign({}, prof, { role: 'admin' });
+    prof = prof || {};
+    var rememberedRole = '';
+    try { rememberedRole = localStorage.getItem('amgzrnt-account-role:' + u.uid) || ''; } catch(e) {}
+    var owns = false;
+    if (prof.role === 'dev' || rememberedRole === 'dev' || requestedRole === 'dev') owns = true;
+    if (!owns && prof.role === 'user') owns = await amgOwnedAppExists(u.uid);
+    if (owns) {
+      prof.role = 'dev';
+      try { localStorage.setItem('amgzrnt-account-role:' + u.uid, 'dev'); } catch(e) {}
+      try { await db.collection('users').doc(u.uid).set({role:'dev', email:prof.email || u.email || '', name:prof.name || u.displayName || ''},{merge:true}); } catch(e) {}
+    } else if (!prof.role) {
+      prof.role = requestedRole === 'user' ? 'user' : 'dev';
+    }
+    return prof;
+  };
   auth.onAuthStateChanged(async function (u) {
     role = null; if (!u) { return; }
     var prof;
     try {
       var d = await db.collection('users').doc(u.uid).get();
       if (d.exists) prof = d.data();
-      else { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : (window._pendingRole || 'dev'), name: u.displayName || '', email: u.email || '', collective: isCol(u) }; db.collection('users').doc(u.uid).set(Object.assign({ createdAt: firebase.firestore.FieldValue.serverTimestamp() }, prof)).catch(function () {}); }
+      else { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : (window._pendingRole || 'dev'), name: u.displayName || '', email: u.email || '', collective: isCol(u) }; await db.collection('users').doc(u.uid).set(Object.assign({ createdAt: firebase.firestore.FieldValue.serverTimestamp() }, prof), {merge:true}).catch(function () {}); }
     } catch (e) { prof = { role: u.email === ADMIN_EMAIL ? 'admin' : 'dev' }; }
     if (prof.deleted) { auth.signOut(); showToast(T('تم حذف هذا الحساب من قبل الإدارة', 'This account was removed by admin')); return; }
-    /* Restore developer role for legacy accounts that already own applications. */
-    var rememberedRole = '';
-    try { rememberedRole = localStorage.getItem('amgzrnt-account-role:' + u.uid) || ''; } catch(e) {}
-    if (u.email !== ADMIN_EMAIL && rememberedRole === 'dev' && prof.role !== 'admin') {
-      prof.role = 'dev'; db.collection('users').doc(u.uid).set({role:'dev'},{merge:true}).catch(function(){});
-    }
-    if (u.email !== ADMIN_EMAIL && prof.role === 'user' && rememberedRole !== 'user') {
-      var owns = await db.collection('apps').where('ownerUid', '==', u.uid).limit(1).get().catch(function(){ return {empty:true}; });
-      if (owns.empty) owns = await db.collection('apps').where('devId', '==', u.uid).limit(1).get().catch(function(){ return {empty:true}; });
-      if (!owns.empty) { prof.role = 'dev'; db.collection('users').doc(u.uid).set({role:'dev'},{merge:true}).catch(function(){}); }
-    }
-    usersCache[u.uid] = prof; role = u.email === ADMIN_EMAIL ? 'admin' : prof.role; applyRole();
+    prof = await window.amgRepairDeveloperRole(u, prof, window._pendingRole || '');
+    usersCache[u.uid] = prof; role = u.email === ADMIN_EMAIL ? 'admin' : (prof.role === 'dev' ? 'dev' : 'user');
+    try { localStorage.setItem('amgzrnt-account-role:' + u.uid, role); } catch(e) {}
+    applyRole();
   });
   window.userSignup = async function (e) {
     e.preventDefault();
@@ -5106,8 +5180,8 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
   function infer(text){text=String(text||'').toLowerCase();var rules={finance:/finance|bank|wallet|payment|money|budget|invoice|محاسب|مالي|دفع|محفظة|بنك/,shopping:/shop|store|cart|ecommerce|market|shopping|تسوق|متجر|سوق/,games:/game|gaming|play|puzzle|لعبة|ألعاب/,education:/learn|course|school|academy|education|study|تعليم|دورة|مدرسة/,productivity:/task|todo|project|calendar|notes|productivity|إنتاجية|مهام|تقويم/,social:/social|chat|community|message|friends|اجتماعي|محادثة/,health:/health|fitness|medical|doctor|صحة|لياقة|طبي/,entertainment:/music|video|movie|stream|entertainment|ترفيه|فيديو|موسيقى/,news:/news|journal|magazine|أخبار|مجلة/};for(var k in rules)if(rules[k].test(text))return k;return 'tools'}
   function hasArabic(text){return /[\u0600-\u06ff]/.test(String(text||''))}
   async function translate(text){if(!text||hasArabic(text))return hasArabic(text)?text:'';var q=String(text).slice(0,700), urls=['https://api.mymemory.translated.net/get?q='+encodeURIComponent(q)+'&langpair=auto|ar','https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ar&dt=t&q='+encodeURIComponent(q)];for(var i=0;i<urls.length;i++){try{var r=await fetch(urls[i],{headers:{Accept:'application/json'}});if(!r.ok)continue;var j=await r.json();var out=i===0?(j&&j.responseData&&j.responseData.translatedText||''):((j&&j[0]||[]).map(function(x){return x[0]||''}).join(''));if(out)return out}catch(e){}}return ''}
-  function parseHtml(html,url){var doc=new DOMParser().parseFromString(html,'text/html'),meta=function(n){var e=doc.querySelector('meta[name="'+n+'"],meta[property="'+n+'"],meta[itemprop="'+n+'"]');return e?String(e.content||'').trim():''};var title=meta('og:site_name')||meta('og:title')||meta('twitter:title')||meta('application-name')||doc.title.trim();var desc=meta('description')||meta('og:description')||meta('twitter:description')||meta('description');var icon=(doc.querySelector('link[rel~="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]')||{}).href||'';try{icon=new URL(icon||'/favicon.ico',url).href}catch(e){icon=''}var ld=doc.querySelectorAll('script[type="application/ld+json"]');for(var i=0;i<ld.length;i++){try{var x=JSON.parse(ld[i].textContent||'{}');if(Array.isArray(x))x=x[0]||{};title=title||x.name||'';desc=desc||x.description||''}catch(e){}}return {title:title.replace(/\s+/g,' ').trim(),desc:desc.replace(/\s+/g,' ').trim(),icon:icon}}
-  async function fetchSite(url){var targets=[url,'https://api.allorigins.win/raw?url='+encodeURIComponent(url),'https://r.jina.ai/http://'+url.replace(/^https?:\/\//,'')];var last=null;for(var i=0;i<targets.length;i++){try{var r=await fetch(targets[i],{mode:'cors',redirect:'follow'});if(r.ok){var html=await r.text();if(html&&html.length>80)return {html:html,via:i}}}catch(e){last=e}}throw last||Error('fetch')}
+  function parseHtml(html,url){var doc=new DOMParser().parseFromString(html,'text/html'),meta=function(){for(var i=0;i<arguments.length;i++){var n=arguments[i],e=doc.querySelector('meta[name=\"'+n+'\"],meta[property=\"'+n+'\"],meta[itemprop=\"'+n+'\"]');if(e&&e.content&&String(e.content).trim())return String(e.content).trim()}return ''};var title=meta('og:site_name','og:title','twitter:title','application-name')||(doc.querySelector('h1,h2')||{}).textContent||doc.title.trim();var desc=meta('description','og:description','twitter:description','abstract','summary')||(doc.querySelector('main p,p')||{}).textContent||'';var icon=meta('og:image','twitter:image','twitter:image:src');var links=doc.querySelectorAll('link[rel~=\"icon\"],link[rel=\"shortcut icon\"],link[rel=\"apple-touch-icon\"]');if(!icon&&links.length)icon=links[0].getAttribute('href')||'';var ld=doc.querySelectorAll('script[type=\"application/ld+json\"]');function scan(x){if(!x||typeof x!=='object')return;if(Array.isArray(x)){x.forEach(scan);return}title=title||x.name||x.headline||'';desc=desc||x.description||'';if(x.image&&!icon)icon=typeof x.image==='string'?x.image:(x.image.url||x.image.contentUrl||'');if(x['@graph'])scan(x['@graph'])}for(var i=0;i<ld.length;i++){try{scan(JSON.parse(ld[i].textContent||'{}'))}catch(e){}}try{icon=new URL(icon||'/favicon.ico',url).href}catch(e){icon=''}return {title:String(title).replace(/\s+/g,' ').trim(),desc:String(desc).replace(/\s+/g,' ').trim(),icon:icon}}
+  async function fetchSite(url){var clean=url.replace(/#.*$/,'');var targets=[clean,'https://r.jina.ai/http://'+clean.replace(/^https?:\/\//,'') ,'https://api.allorigins.win/raw?url='+encodeURIComponent(clean),'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(clean)];var last=null;for(var i=0;i<targets.length;i++){try{var ctl=new AbortController(),timer=setTimeout(function(){ctl.abort()},9000),r=await fetch(targets[i],{mode:'cors',redirect:'follow',signal:ctl.signal,headers:{Accept:'text/html,application/xhtml+xml,text/plain'}});clearTimeout(timer);if(r.ok){var html=await r.text();if(html&&html.length>80)return {html:html,via:i}}}catch(e){last=e}}throw last||Error('fetch')}
   async function analyze(force){var raw=$('appUrl')&&$('appUrl').value.trim(),url=normUrl(raw);if(!url){if(raw)progress(0,T('الرابط غير صالح — اكتب نطاقًا صحيحًا مثل example.com','Invalid link — enter a valid domain such as example.com'),true);return}var run=++analysisRun;var nameField=$('appName');if(nameField&&!useful(nameField.value))nameField.value='';progress(8,T('جارٍ الاتصال بالموقع…','Connecting to the website…'));try{progress(22,T('محاولة قراءة الموقع بأكثر من طريقة…','Trying multiple site-reading methods…'));var fetched=await fetchSite(url);if(run!==analysisRun)return;progress(48,T('استخراج العنوان والوصف والأيقونة…','Extracting title, description and icon…'));var d=parseHtml(fetched.html,url);var enName=d.title||new URL(url).hostname;var enDesc=d.desc||'';progress(64,T('ترجمة البيانات وتحسينها…','Translating and improving the data…'));var arName=await translate(enName);var arDesc=await translate(enDesc);if(run!==analysisRun)return;var category=infer(enName+' '+enDesc);setVal('appName',enName);setVal('appNameAr',arName||enName);setVal('appDescEn',enDesc);setVal('appDesc',arDesc||enDesc);if(d.icon){setVal('appIcon',d.icon);if(window.previewIcon)previewIcon()}if($('appCategory'))$('appCategory').value=category;window.setSelectedCategories('upload',[category]);progress(100,T('تم التحليل بنجاح. راجع البيانات وعدّلها قبل النشر.','Analysis completed. Review and edit the data before publishing.'))}catch(e){if(run!==analysisRun)return;progress(100,T('تعذر الوصول للموقع من المتصفح. يمكنك متابعة الإدخال يدويًا، ولم يتم رفض الرابط نفسه.','The site could not be read from this browser. You can continue manually; the link itself was not rejected.'),true)}}
   window.startSiteAnalysisDebounced=function(force){clearTimeout(analysisTimer);analysisTimer=setTimeout(function(){analyze(force)},force?80:650)};
   window.closeCategoriesSheet=function(){var o=$('categoriesOverlay'),s=$('categoriesSheet');if(o)o.classList.remove('active');if(s){s.classList.remove('active');s.setAttribute('aria-hidden','true')}document.body.style.overflow=''};
@@ -5172,12 +5246,8 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
         return db.collection('users').doc(c.user.uid).get().then(function(d){
           var p=d.exists?d.data():{};
           if(p.deleted)return auth.signOut().then(function(){throw {code:'auth/user-disabled',message:'تم حذف هذا الحساب من قبل الإدارة'};});
-          if(role==='dev'&&p.role&&p.role!=='dev'&&p.role!=='admin'){
-            /* Repair legacy accounts that own apps but were saved as ordinary users. */
-            return db.collection('users').doc(c.user.uid).set({role:'dev',email:email,name:p.name||c.user.displayName||''},{merge:true}).then(function(){return c;});
-          }
-          if(role==='dev'&&!p.role){
-            return db.collection('users').doc(c.user.uid).set({role:'dev',email:email,name:c.user.displayName||''},{merge:true}).then(function(){return c;});
+          if(role==='dev' && typeof window.amgRepairDeveloperRole==='function'){
+            return window.amgRepairDeveloperRole(c.user, p, 'dev').then(function(){return c;});
           }
           return c;
         });
@@ -5194,7 +5264,7 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
       fail(er&&er.message&&code==='wrong-role'?er.message:(notFound?'لا يوجد حساب بهذه البيانات.':(typeof friendlyError==='function'?friendlyError(code||er.message):'تعذر إتمام العملية')),role,sub==='login'&&notFound);
     });
   };
-  function roundDownloads(n){n=Number(n)||0;return n?Math.max(5,Math.ceil(n/5)*5):0}
+  function roundDownloads(n){return Math.max(0,Number(n)||0)}
   window.amgVersionLabel=function(n){n=Number(n)||0;var k=Math.max(0,n-1);return 'V'+(Math.floor(k/10)+1)+'.'+(k%10)};function versionLabel(n){return window.amgVersionLabel(n)}
   function metricFor(a){
     var base=db.collection('apps').doc(String(a.id));
@@ -5243,7 +5313,31 @@ html[dir=rtl] .v4-dots button.on::after { transform-origin:right; }
 </script>
 <style id="amg-desktop-layout-and-device-toggle">
 .switch-green .track{border-color:#22c55e!important;background:rgba(34,197,94,.18)!important}.switch-green input:checked+.track{background:#22c55e!important;border-color:#22c55e!important}.device-size-row.desktop-choice .setting-ico{color:#22c55e!important}.device-size-row.desktop-choice .switch-green .track{background:#22c55e!important}
+body.desktop-mode .tgrid{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(230px,260px);grid-template-columns:none!important;grid-template-rows:1fr;overflow-x:auto;overflow-y:hidden;justify-content:start;padding:4px 6px 16px;cursor:grab;scrollbar-width:thin}body.desktop-mode .tgrid:active{cursor:grabbing}body.desktop-mode .tgrid .app-tile{min-width:230px}
 @media(min-width:701px){body.desktop-mode .drawer{width:min(760px,92vw)}body.desktop-mode .upload-drawer-wide{width:min(900px,94vw)}body.desktop-mode .drawer-body{padding:30px 38px 42px}body.desktop-mode .drawer-header{padding:24px 38px}body.desktop-mode #authDrawer .tabs{max-width:720px;margin-inline:auto}body.desktop-mode #authDrawer .auth-role-tabs{min-height:70px}body.desktop-mode #authDrawer .auth-role-tabs button{font-size:1rem;padding:17px 12px}body.desktop-mode #authDrawer .auth-subtabs{justify-content:center;gap:28px;margin-top:18px}body.desktop-mode #authDrawer .auth-subtabs button{font-size:.95rem;padding:12px 20px}body.desktop-mode .form-group{margin-bottom:18px}body.desktop-mode .form-control,body.desktop-mode .md-field{min-height:52px;font-size:1rem}body.desktop-mode .btn{min-height:48px;padding:12px 20px;font-size:.95rem}body.desktop-mode .tgrid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))!important;gap:18px!important}body.desktop-mode .app-tile{padding:20px;min-height:230px}body.desktop-mode .tile-icon{width:78px!important;height:78px!important}body.desktop-mode .main,body.desktop-mode main,body.desktop-mode .container{max-width:1440px;margin-inline:auto;width:calc(100% - 64px)}body.desktop-mode #authDrawer{width:min(760px,92vw)!important}body.desktop-mode .toolbar{grid-template-columns:minmax(280px,1fr) auto auto;gap:14px}body.desktop-mode .bnav{width:min(720px,70vw);bottom:22px}body.desktop-mode .settings-sheet{width:min(620px,92vw)}body.desktop-mode .auth-role-tabs,.desktop-mode .auth-subtabs{flex-shrink:0}}
 </style>
+<style id="amg-auth-tabs-final-fix">
+/* Final isolated auth tabs: two clean rows, no legacy flex/overflow interference. */
+#authDrawer .drawer-body .tabs{display:block!important;overflow:visible!important;width:100%!important;padding:0!important;margin:0 0 18px!important;white-space:normal!important}
+#authDrawer .auth-role-tabs{position:relative!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;direction:rtl!important;gap:6px!important;padding:5px!important;margin:0 0 14px!important;border:1px solid var(--border)!important;border-radius:18px!important;background:var(--card2)!important;overflow:visible!important}
+#authDrawer .auth-role-tabs .role-slider{display:none!important}
+#authDrawer .auth-role-tabs button{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-width:0!important;width:100%!important;height:48px!important;padding:9px 6px!important;border:0!important;border-radius:13px!important;background:transparent!important;color:var(--muted)!important;font:800 .88rem Cairo,sans-serif!important;white-space:nowrap!important;overflow:hidden!important;cursor:pointer!important}
+#authDrawer .auth-role-tabs button.on{background:linear-gradient(135deg,#8b5cf6,#6d28d9)!important;color:#fff!important;box-shadow:0 5px 16px rgba(109,40,217,.3)!important}
+#authDrawer .auth-subtabs{display:grid!important;grid-template-columns:1fr 1fr!important;direction:rtl!important;gap:8px!important;padding:0!important;margin:0 0 14px!important;border:0!important}
+#authDrawer .auth-subtabs button{display:flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;padding:9px 10px!important;border:1px solid var(--border)!important;border-radius:12px!important;background:transparent!important;color:var(--muted)!important;font:800 .82rem Cairo,sans-serif!important;white-space:nowrap!important;cursor:pointer!important}
+#authDrawer .auth-subtabs button.on{background:rgba(124,58,237,.18)!important;border-color:var(--primary)!important;color:var(--primary-light)!important}
+#authDrawer .auth-subtabs button.on:after{display:none!important}
+#authDrawer .auth-slide-copy{margin:0 2px 16px!important;text-align:center!important;line-height:1.7!important}
+@media(min-width:701px){body.desktop-mode #authDrawer .auth-role-tabs button{height:58px!important;font-size:1rem!important}body.desktop-mode #authDrawer .auth-subtabs button{min-height:52px!important;font-size:.95rem!important}}
+</style>
+<script id="amg-desktop-horizontal-drag">(function(){var down=false,x=0,left=0;document.addEventListener('pointerdown',function(e){var g=e.target.closest&&e.target.closest('body.desktop-mode .tgrid');if(!g)return;down=true;x=e.clientX;left=g.scrollLeft;g.setPointerCapture&&g.setPointerCapture(e.pointerId)});document.addEventListener('pointermove',function(e){if(!down)return;var g=e.target.closest&&e.target.closest('body.desktop-mode .tgrid');if(g)g.scrollLeft=left-(e.clientX-x)});document.addEventListener('pointerup',function(){down=false})})();</script>
+<script id="amg-auth-tabs-final-script">
+(function(){
+  function fix(){var box=document.querySelector('#authDrawer .tabs');if(!box)return;box.style.display='block';box.style.overflow='visible';box.querySelectorAll('.tab-btn').forEach(function(x){x.remove()});}
+  fix();
+  var old=window.switchTab;
+  window.switchTab=function(mode){fix();var r=old&&old.apply(this,arguments);fix();return r};
+})();
+</script>
 </body>
 </html>
