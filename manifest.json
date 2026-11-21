@@ -60,6 +60,30 @@
       ]
     },
     {
+      "name": "إحصائيات المطوّر",
+      "short_name": "إحصائياتي",
+      "url": "./index.html#stats",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "إبلاغ عن تطبيق",
+      "short_name": "إبلاغ",
+      "url": "./index.html#report",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "بحث عن تطبيق",
       "short_name": "بحث",
       "url": "./index.html#search",
