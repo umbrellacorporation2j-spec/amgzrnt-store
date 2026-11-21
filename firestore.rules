@@ -2,121 +2,55 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function isAdmin() {
-      return signedIn() && request.auth.token.email == 'admin@amgzrnt.app';
-    }
+    function isAdmin() { return signedIn() && request.auth.token.email == 'admin@amgzrnt.app'; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
-    function ownsApp() {
-      return signedIn() && (
-        resource.data.ownerUid == request.auth.uid ||
-        resource.data.devId == request.auth.uid
-      );
-    }
+    function ownsApp() { return signedIn() && (resource.data.ownerUid == request.auth.uid || resource.data.devId == request.auth.uid); }
     function appOwner(appId) {
       let a = get(/databases/$(database)/documents/apps/$(appId)).data;
       return signedIn() && (a.get('ownerUid', '') == request.auth.uid || a.get('devId', '') == request.auth.uid);
     }
     function validUrl(u) { return u is string && u.matches('^https?://[^ ]+$') && u.size() <= 2000; }
-    // Fields only the admin may change (a developer can never un-suspend or edit the admin's notes).
-    function adminFields() {
-      return ['suspended', 'suspendedReason', 'suspendedAt', 'adminNote', 'adminNoteAt', 'ownerUid', 'devId', 'installCount', 'adViews', 'adClicks'];
-    }
-
+    function adminFields() { return ['suspended', 'suspendedReason', 'suspendedAt', 'adminNote', 'adminNoteAt', 'ownerUid', 'devId']; }
     match /apps/{appId} {
       allow read: if true;
-      allow create: if isAdmin() || (signedIn() &&
-        (request.resource.data.ownerUid == request.auth.uid || request.resource.data.devId == request.auth.uid) &&
-        validUrl(request.resource.data.url) &&
-        (!('suspended' in request.resource.data) || request.resource.data.suspended == false) &&
-        !request.resource.data.keys().hasAny(['adminNote', 'installCount', 'adViews', 'adClicks']));
-      // Public counters: anyone may add exactly +1 to ad impressions / clicks; a signed-in user may add +1 to
-      // installCount only together with creating his own installs/{uid} document in the same batch.
-      function counterBump() {
-        let d = request.resource.data.diff(resource.data).affectedKeys();
-        return (d.hasOnly(['adViews']) && request.resource.data.adViews == resource.data.get('adViews', 0) + 1)
-          || (d.hasOnly(['adClicks']) && request.resource.data.adClicks == resource.data.get('adClicks', 0) + 1)
-          || (signedIn() && d.hasOnly(['installCount'])
-              && request.resource.data.installCount == resource.data.get('installCount', 0) + 1
-              && !exists(/databases/$(database)/documents/apps/$(appId)/installs/$(request.auth.uid))
-              && existsAfter(/databases/$(database)/documents/apps/$(appId)/installs/$(request.auth.uid)));
-      }
-      allow update: if counterBump() || isAdmin() || (ownsApp() &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminFields()) &&
-        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['url']) || validUrl(request.resource.data.url)));
+      allow create: if isAdmin() || (signedIn() && (request.resource.data.ownerUid == request.auth.uid || request.resource.data.devId == request.auth.uid) && validUrl(request.resource.data.url) && (!('suspended' in request.resource.data) || request.resource.data.suspended == false) && !('adminNote' in request.resource.data) && (!('category' in request.resource.data) || request.resource.data.category != 'enterprise') && (!('categories' in request.resource.data) || !request.resource.data.categories.hasAny(['enterprise'])));
+      allow update: if isAdmin() || (ownsApp() && !request.resource.data.diff(resource.data).affectedKeys().hasAny(adminFields()) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['url']) || validUrl(request.resource.data.url)) && (!('category' in request.resource.data) || request.resource.data.category != 'enterprise') && (!('categories' in request.resource.data) || !request.resource.data.categories.hasAny(['enterprise'])));
       allow delete: if isAdmin() || ownsApp();
-
       match /ratings/{ratingId} {
         function validRating() {
           let d = request.resource.data;
-          return d.keys().hasOnly(['stars', 'name', 'text', 'at', 'kind'])
-            && d.kind in ['review', 'complaint', 'suggest']
-            && (!('stars' in d) || (d.stars is number && d.stars >= 0 && d.stars <= 5))
-            && (!('name' in d) || (d.name is string && d.name.size() <= 60))
-            && (!('text' in d) || (d.text is string && d.text.size() <= 600))
-            && (!('at' in d) || d.at == request.time);
+          return d.keys().hasOnly(['stars', 'name', 'text', 'at', 'kind', 'official', 'reply', 'replyAt', 'replyBy', 'replyName', 'pinned', 'edited']) && d.kind in ['review', 'complaint', 'suggest'] && (!('stars' in d) || (d.stars is number && d.stars >= 0 && d.stars <= 5)) && (!('name' in d) || (d.name is string && d.name.size() <= 60)) && (!('text' in d) || (d.text is string && d.text.size() <= 600));
         }
         function mine() { return signedIn() && ratingId.matches(request.auth.uid + '_.*'); }
         allow read: if true;
-        // anyone can post once per device/account id; the admin can post official reviews
         allow create: if isAdmin() || validRating();
-        // signed-in users edit their own review (document id starts with their uid);
-        // the app owner may only add/remove a public reply; the admin may edit anything
-        allow update: if isAdmin()
-          || (mine() && validRating())
-          || (appOwner(appId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply', 'replyAt', 'replyBy', 'replyName']));
+        allow update: if isAdmin() || (mine() && validRating()) || (appOwner(appId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reply', 'replyAt', 'replyBy', 'replyName']));
         allow delete: if isAdmin() || mine();
       }
-      match /installs/{iid} {
-        allow read: if isAdmin() || appOwner(appId) || isOwner(iid);
-        allow create: if signedIn() && iid == request.auth.uid
-          && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at == request.time;
-        allow update, delete: if isAdmin();
-      }
-      match /views/{viewId} {
-        allow read: if true;
-        allow create: if true;
-        allow update, delete: if isAdmin();
-      }
+      match /views/{viewId} { allow read: if true; allow create: if true; allow update, delete: if isAdmin(); }
+      match /installs/{installId} { allow read: if true; allow create: if signedIn() && installId == request.auth.uid; allow update: if isOwner(installId) || isAdmin(); allow delete: if isOwner(installId) || isAdmin(); }
     }
-
-    // User reports about an app: one per user per app (document id = uid_appId). Visible to the admin,
-    // the app's developer and the reporter; only the admin can change the status.
-    match /reports/{rid} {
+    match /reports/{reportId} {
       function validReport() {
         let d = request.resource.data;
-        let app = get(/databases/$(database)/documents/apps/$(d.appId)).data;
-        return signedIn()
-          && d.keys().hasOnly(['appId', 'appName', 'ownerUid', 'reporterUid', 'reason', 'text', 'at', 'status'])
-          && d.reporterUid == request.auth.uid && rid == request.auth.uid + '_' + d.appId
-          && d.status == 'open' && d.at == request.time
-          && d.reason in ['broken', 'harmful', 'scam', 'age', 'rights', 'other']
-          && d.text is string && d.text.size() >= 10 && d.text.size() <= 800
-          && d.appName is string && d.appName.size() <= 100
-          && d.ownerUid == app.get('ownerUid', app.get('devId', ''));
+        return d.keys().hasOnly(['appId','appName','developerUid','developerEmail','reporterUid','reporterEmail','type','description','status','createdAt','userAgent','closedAt','closedBy','adminInbox','developerNotifiedAt']) && d.appId is string && d.appId.size() <= 200 && d.description is string && d.description.size() >= 8 && d.description.size() <= 1000 && d.type is string && d.type.size() <= 80 && d.status == 'open' && d.createdAt == request.time;
       }
       allow create: if validReport();
-      allow read: if isAdmin() || (signedIn() && (resource == null
-        || resource.data.ownerUid == request.auth.uid || resource.data.reporterUid == request.auth.uid));
-      allow update, delete: if isAdmin();
+      allow read: if isAdmin() || (signedIn() && resource.data.developerUid == request.auth.uid) || appOwner(resource.data.appId);
+      allow update: if isAdmin() || (appOwner(resource.data.appId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']));
+      allow delete: if isAdmin();
     }
-
     match /users/{uid} {
       allow get: if isOwner(uid) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isAdmin() || (isOwner(uid) &&
-        (!('role' in request.resource.data) || request.resource.data.role == 'user'));
-      allow update: if isAdmin() || (isOwner(uid) &&
-        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role','deleted']));
+      allow create: if isAdmin() || (isOwner(uid) && (!('role' in request.resource.data) || request.resource.data.role in ['user', 'dev']));
+      allow update: if isAdmin() || (isOwner(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['deleted']) && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || request.resource.data.role in ['user', 'dev']));
       allow delete: if isAdmin();
-
-      match /installedApps/{appId} {
-        allow read, write: if isOwner(uid) || isAdmin();
-      }
+      match /installedApps/{appId} { allow read, write: if isOwner(uid) || isAdmin(); }
       match /notifications/{noticeId} {
         allow read: if isOwner(uid) || isAdmin();
-        allow create: if isAdmin();
-        allow update: if isAdmin() || (isOwner(uid) &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']));
+        allow create: if isAdmin() || (signedIn() && request.resource.data.type == 'report' && request.resource.data.fromReportId is string && get(/databases/$(database)/documents/reports/$(request.resource.data.fromReportId)).data.developerUid == uid && request.resource.data.appId == get(/databases/$(database)/documents/reports/$(request.resource.data.fromReportId)).data.appId);
+        allow update: if isAdmin() || (isOwner(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']));
         allow delete: if isOwner(uid) || isAdmin();
       }
     }
